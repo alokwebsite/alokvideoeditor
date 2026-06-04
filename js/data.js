@@ -98,7 +98,7 @@ const projectData = [
         type: "scripting",
         name: "Copy Pasta",
         description: "Important: Please File name well be (Copy Pasta) This free DaVinci Resolve plugin lets you instantly paste copied images directly into your timeline without downloading or importing files manually. Just copy an image from Google, ChatGPT, Discord, or any app, then paste it straight into DaVinci Resolve to speed up your editing workflow. ✅ Works on Windows and macOS. 📁 Inside the zip you will find 2 folders: Folder 1 → Windows | Folder 2 → Mac",
-        url: "",
+        url: "https://drive.google.com/file/d/1s7fX31qZdaGrGB5nKrxwdZ-afSSOFovg/view?usp=sharing",
         youtube: "https://youtu.be/mxKvsxQB4SI"
     }
 ];
