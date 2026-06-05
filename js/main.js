@@ -398,7 +398,7 @@ function openInfoModal(item) {
     document.getElementById('info-desc').textContent = item.description;
     
     const btn = document.getElementById('info-get-btn');
-    btn.onclick = () => startDownload(item.url, item.name);
+    btn.onclick = () => startDownload(item.file, item.name);
     
     const ytBtn = document.getElementById('info-youtube-btn');
     ytBtn.style.display = 'flex'; // Always show to maintain layout
@@ -418,7 +418,7 @@ function openInfoModal(item) {
     modal.classList.add('active');
 }
 
-window.startDownload = function (url, itemName) {
+window.startDownload = function (filename, itemName) {
     playClickSound();
 
     // Switch views to Downloading
@@ -435,22 +435,15 @@ window.startDownload = function (url, itemName) {
 
     // Simulate Processing Time (give it 3.5 seconds to watch the smooth animation)
     setTimeout(() => {
-        // Trigger Download from URL
-        if (url && url.startsWith('http')) {
-            let finalUrl = url;
-            // Convert Google Drive view links to direct download links
-            const driveRegex = /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
-            const match = url.match(driveRegex);
-            if (match && match[1]) {
-                finalUrl = `https://drive.google.com/uc?export=download&id=${match[1]}`;
-            }
-            
-            // Setting window.location.href triggers the download directly in the same tab,
-            // avoiding popup blockers and preventing a new blank tab from opening.
-            window.location.href = finalUrl;
-        } else {
-            alert('Download link will be added soon! Please update the URL in data.js.');
-        }
+        // Trigger Download
+        const link = document.createElement('a');
+        link.href = filename;
+        // Use only the filename (not full path) — browsers block download attr with path separators
+        link.download = filename.split('/').pop();
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
         // Hide Modal
         closeInfoModal();
