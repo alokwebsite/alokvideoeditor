@@ -94,9 +94,9 @@ const projectData = [
         youtube: "https://www.youtube.com/watch?v=Xr_tLO3KySo"
     },
     {
-        id: "CopyPasta",
+        id: "CopyPasta_2",
         type: "scripting",
-        name: "Copy Pasta",
+        name: "Copy Pasta V2",
         description: "Coming Soon",
         file: "Davinci Scripting Plugin/#"
     }
