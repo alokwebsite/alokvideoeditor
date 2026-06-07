@@ -45,7 +45,7 @@ const projectData = [
     },
 
     {
-        id: "AlokWebText",
+        id: "AlokWebText_Macro",
         type: "macro",
         name: "Alok Web Text",
         description: "Alok Web Text is a free Fusion macro for DaVinci Resolve that adds a realistic blinking cursor animation to any text — just like the typing cursor you see in Google Search, code editors, or any text field.",
@@ -65,7 +65,7 @@ const projectData = [
     },
 
     {
-        id: "AlokWebText",
+        id: "AlokWebText_Plugin",
         type: "plugin",
         name: "Alok Web Text",
         description: "Alok Web Text is a free Plugin for DaVinci Resolve that adds a realistic blinking cursor animation to any text — just like the typing cursor you see in Google Search, code editors, or any text field.",
