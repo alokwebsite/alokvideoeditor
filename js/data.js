@@ -44,6 +44,15 @@ const projectData = [
         youtube: "https://www.youtube.com/watch?v=T9TPsAN91DI"
     },
 
+    {
+        id: "AlokWebText",
+        type: "macro",
+        name: "Alok Web Text",
+        description: "Text Infinite Scroller is a simple DaVinci Resolve (Fusion) macro that creates smooth, continuous scrolling text with a seamless infinite loop. Easily control speed and direction for clean, professional animations.",
+        file: "Macro/Alok Web Text.zip",
+        youtube: "https://youtu.be/Zg_fqEhPDVc"
+    },
+
     //Plugins
 
     {
@@ -54,6 +63,16 @@ const projectData = [
         file: "Plugin/Text Selector.zip",
         youtube: "https://www.youtube.com/watch?v=A0PVe1OZxas"
     },
+
+    {
+        id: "AlokWebText",
+        type: "plugin",
+        name: "Alok Web Text",
+        description: "This is a text highlighter tool, not a standard text selector.",
+        file: "Plugin/Alok Web Text.zip",
+        youtube: "https://youtu.be/Zg_fqEhPDVc"
+    },
+
     {
         id: "CinemaBar",
         type: "plugin",
