@@ -117,6 +117,6 @@ const projectData = [
         type: "scripting",
         name: "Copy Pasta V2",
         description: "Coming Soon",
-        file: "Davinci Scripting Plugin/#",
+        //file: "Davinci Scripting Plugin/#",
     }
 ];
