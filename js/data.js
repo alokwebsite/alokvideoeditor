@@ -109,7 +109,7 @@ const projectData = [
         type: "scripting",
         name: "Auto File Organizer",
         description: "Stop wasting time dragging clips into folders manually. Auto File Organizer scans your entire DaVinci Resolve media pool and sorts every file into the right bin in seconds — Video, Audio, Images, Timelines, Compound Clips, Subtitles, Documents, and more. Works on any project size. Just run the script and your media pool is clean and organized, instantly.",
-        file: "Davinci Scripting Plugin/Auto FileOrganizer.zip",
+        file: "Davinci Scripting Plugin/Auto File Organizer.zip",
         youtube: "https://www.youtube.com/watch?v=Xr_tLO3KySo"
     },
     {
@@ -117,6 +117,6 @@ const projectData = [
         type: "scripting",
         name: "Copy Pasta V2",
         description: "Coming Soon",
-        file: "Davinci Scripting Plugin/#"
+        file: "Davinci Scripting Plugin/#",
     }
 ];
