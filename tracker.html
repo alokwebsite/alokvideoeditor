@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Tracker - Alok Video Editor</title>
+    <link rel="icon" type="image/jpeg" href="images/profile.jpg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/tracker.css">
+</head>
+<body>
+
+    <div class="tracker-container">
+        <!-- Back Button -->
+        <a href="index.html" style="color: var(--primary); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 2rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Home
+        </a>
+
+        <header class="tracker-header fade-in">
+            <h1>Live Download Tracker</h1>
+            <p>Real-time analytics for your Plugins, Macros, and Projects.</p>
+        </header>
+
+        <div id="warning-box" class="warning-box fade-in" style="animation-delay: 0.1s;">
+            <h3>Database Not Connected</h3>
+            <p>You need to update <code>js/firebase-config.js</code> with your Firebase credentials to see live data. Currently showing local placeholder data.</p>
+        </div>
+
+        <div class="stats-overview fade-in" style="animation-delay: 0.2s;">
+            <div class="stat-box">
+                <div class="stat-title">Total Downloads</div>
+                <div class="stat-number" id="total-downloads">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Total Items</div>
+                <div class="stat-number" id="total-items">0</div>
+            </div>
+        </div>
+
+        <div id="tracker-grid" class="tracker-grid fade-in" style="animation-delay: 0.4s;">
+            <!-- JavaScript will populate this grid -->
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/tracker.js"></script>
+
+</body>
+</html>
