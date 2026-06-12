@@ -160,10 +160,6 @@ function renderGrid() {
         }
 
         card.innerHTML = `
-            <div style="position: absolute; top: 12px; right: 12px; background: rgba(0, 242, 255, 0.1); border: 1px solid rgba(0, 242, 255, 0.2); padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; color: #00f2ff; display: flex; align-items: center; gap: 4px;" title="Total Downloads">
-                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                <span id="dl-badge-${item.id}">...</span>
-            </div>
             <div class="card-icon-placeholder" style="margin-bottom: 1.5rem; width: 64px; height: 64px;">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
@@ -177,35 +173,6 @@ function renderGrid() {
 
         grid.appendChild(card);
         observer.observe(card); 
-
-        // Base fake counts that will only appear on the public site
-        const fakeBaseCounts = {
-            "4SmoothAnimation": 109,
-            "Rectangle_V3": 1700,
-            "Text_Infinite_Scroller": 70,
-            "AlokWebText_Macro": 207,
-            "SafeZoneForAD": 10,
-            "SafeZoneForReels": 21,
-            "CinemaBar": 70,
-            "AlokWebText_Plugin": 170,
-            "TextSelector": 380,
-            "AutoFileOrganizer": 229
-        };
-
-        // Fetch live count for this item
-        fetch(`https://api.counterapi.dev/v1/alokvideoeditor/${item.id}`)
-            .then(res => res.json())
-            .then(data => {
-                const badge = document.getElementById(`dl-badge-${item.id}`);
-                const realCount = data.count || 0;
-                const baseCount = fakeBaseCounts[item.id] || 0;
-                if (badge) badge.textContent = realCount + baseCount;
-            })
-            .catch(() => {
-                const badge = document.getElementById(`dl-badge-${item.id}`);
-                const baseCount = fakeBaseCounts[item.id] || 0;
-                if (badge) badge.textContent = baseCount.toString();
-            });
     });
 }
 
@@ -431,7 +398,7 @@ function openInfoModal(item) {
     document.getElementById('info-desc').textContent = item.description;
     
     const btn = document.getElementById('info-get-btn');
-    btn.onclick = () => startDownload(item.file, item.name, item.id);
+    btn.onclick = () => startDownload(item.file, item.name);
     
     const ytBtn = document.getElementById('info-youtube-btn');
     ytBtn.style.display = 'flex'; // Always show to maintain layout
@@ -451,7 +418,7 @@ function openInfoModal(item) {
     modal.classList.add('active');
 }
 
-window.startDownload = function (filename, itemName, itemId) {
+window.startDownload = function (filename, itemName) {
     playClickSound();
 
     // Switch views to Downloading
@@ -465,21 +432,6 @@ window.startDownload = function (filename, itemName, itemId) {
     setTimeout(() => {
         document.getElementById('morph-shape').classList.add('to-circle');
     }, 50);
-
-    // Track download in Google Analytics
-    if (typeof window.gtag === 'function') {
-        window.gtag('event', 'plugin_download', {
-            'event_category': 'Downloads',
-            'event_label': itemName,
-            'file_name': filename
-        });
-    }
-
-    // Track download in CounterAPI (Free, no signup)
-    if (itemId) {
-        fetch(`https://api.counterapi.dev/v1/alokvideoeditor/${itemId}/up`)
-            .catch(err => console.error("Error tracking download:", err));
-    }
 
     // Simulate Processing Time (give it 3.5 seconds to watch the smooth animation)
     setTimeout(() => {
