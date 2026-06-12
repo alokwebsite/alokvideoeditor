@@ -116,7 +116,8 @@ const projectData = [
         id: "CopyPasta_2",
         type: "scripting",
         name: "Copy Pasta V2",
-        description: "Coming Soon",
-        //file: "Davinci Scripting Plugin/#",
+        description: "Copy Pasta V2 is a free DaVinci Resolve plugin that lets you instantly copy any frame from the Edit or Fusion page straight to your clipboard — and paste external images directly into your timeline. No Color Page. No export. Just one click.",
+        file: "Davinci Scripting Plugin/Copy Pasta V2.zip",
+        youtube: "https://www.youtube.com/watch?v=Coming_Soon"
     }
 ];
