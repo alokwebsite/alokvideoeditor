@@ -346,7 +346,7 @@ function createInfoModal() {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
                 <div class="card-icon-placeholder" style="margin: 0 auto 1.5rem auto; width: 80px; height: 80px; background: rgba(0, 242, 255, 0.1); border-radius: 24px; border: 1px solid rgba(0,242,255,0.3);">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path id="info-icon-path" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 </div>
                 <h2 id="info-title" class="info-title"></h2>
                 <div id="info-type" class="card-type" style="margin-bottom: 1.5rem;"></div>
@@ -416,6 +416,17 @@ function openInfoModal(item) {
     document.getElementById('info-details-view').style.display = 'block';
     document.getElementById('info-downloading-view').style.display = 'none';
     document.getElementById('morph-shape').classList.remove('to-circle');
+    
+    // Set Dynamic Icon
+    let iconPath = 'M13 10V3L4 14h7v7l9-11h-7z'; // default plugin
+    if (item.type === 'macro') iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'; // generic doc icon
+    if (item.type === 'project') iconPath = 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z'; // folder
+    if (item.type === 'scripting') iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6'; // code
+    
+    const pathElement = document.getElementById('info-icon-path');
+    if (pathElement) {
+        pathElement.setAttribute('d', iconPath);
+    }
     
     document.getElementById('info-title').textContent = item.name;
     document.getElementById('info-type').textContent = item.type;
