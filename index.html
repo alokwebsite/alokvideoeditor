@@ -62,8 +62,7 @@
 <body>
     <!-- Loading Screen -->
     <div id="loader-wrapper">
-        <div class="particle-ring" id="particle-ring"></div>
-        <div class="loader-text">Loading<span class="dots"></span></div>
+        <div class="loader-text" style="font-size: 2.2rem; font-weight: 800; letter-spacing: 2px;">Alok Video Editor<span class="dots"></span></div>
     </div>
 
     <div id="canvas-container"></div>
@@ -205,28 +204,31 @@
         // Loader Logic
         function initLoader() {
             const ring = document.getElementById('particle-ring');
-            if (!ring) return;
-            const particleCount = 24;
-            for (let i = 0; i < particleCount; i++) {
-                const wrapper = document.createElement('div');
-                wrapper.classList.add('particle-wrapper');
-                const angle = (360 / particleCount) * i;
-                wrapper.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translate(60px)`;
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                particle.style.animationDelay = `-${(i / particleCount) * 2}s`;
-                wrapper.appendChild(particle);
-                ring.appendChild(wrapper);
+            if (ring) {
+                const particleCount = 24;
+                for (let i = 0; i < particleCount; i++) {
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add('particle-wrapper');
+                    const angle = (360 / particleCount) * i;
+                    wrapper.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translate(60px)`;
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    particle.style.animationDelay = `-${(i / particleCount) * 2}s`;
+                    wrapper.appendChild(particle);
+                    ring.appendChild(wrapper);
+                }
             }
             window.addEventListener('load', () => {
                 const loader = document.getElementById('loader-wrapper');
-                setTimeout(() => {
-                    loader.classList.add('fade-out');
+                if (loader) {
                     setTimeout(() => {
-                        loader.style.display = 'none';
-                        window.isInitialLoad = false;
-                    }, 800);
-                }, 1500);
+                        loader.classList.add('fade-out');
+                        setTimeout(() => {
+                            loader.style.display = 'none';
+                            window.isInitialLoad = false;
+                        }, 800);
+                    }, 1500);
+                }
             });
         }
 

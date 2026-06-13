@@ -433,7 +433,6 @@ footer {
     text-transform: uppercase;
     display: flex;
     align-items: center;
-    text-shadow: 0 0 10px var(--primary);
 }
 
 .loader-text .dots::after {

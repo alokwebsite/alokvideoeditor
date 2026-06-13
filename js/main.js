@@ -39,20 +39,22 @@ function initLoader() {
     const particleCount = 24;
 
     // Create Particles
-    for (let i = 0; i < particleCount; i++) {
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('particle-wrapper');
+    if (ring) {
+        for (let i = 0; i < particleCount; i++) {
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('particle-wrapper');
 
-        const angle = (360 / particleCount) * i;
-        wrapper.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translate(60px)`;
+            const angle = (360 / particleCount) * i;
+            wrapper.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translate(60px)`;
 
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        // Stagger animations
-        particle.style.animationDelay = `-${(i / particleCount) * 2}s`;
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            // Stagger animations
+            particle.style.animationDelay = `-${(i / particleCount) * 2}s`;
 
-        wrapper.appendChild(particle);
-        ring.appendChild(wrapper);
+            wrapper.appendChild(particle);
+            ring.appendChild(wrapper);
+        }
     }
 
     // Hide loader when page is fully loaded
