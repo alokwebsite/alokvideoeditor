@@ -1,5 +1,6 @@
 // DOM Elements
 const grid = document.getElementById('content-grid');
+const homeGrid = document.getElementById('home-content-grid');
 const downloadModal = document.getElementById('download-modal');
 const socialTooltip = document.getElementById('social-tooltip');
 const btnPlugins = document.getElementById('btn-plugins');
@@ -18,7 +19,9 @@ function init() {
     const controls = document.getElementById('toggle-controls');
     if (controls) controls.setAttribute('data-active', currentTab);
 
-    renderGrid();
+    if (grid) renderGrid();
+    if (homeGrid) renderHomeOverview();
+
     setupSocialHover();
     createNotificationNav();
     
@@ -121,47 +124,19 @@ function renderGrid() {
         return;
     }
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('show');
-                
-                // Calculate exactly when the transition finishes (delay + 1000ms transition time)
-                const delayStr = entry.target.style.transitionDelay || '0s';
-                const delayMs = parseFloat(delayStr) * 1000;
-                
-                // Fix the hover transition delay glitch by clearing it after animation finishes
-                setTimeout(() => {
-                    if (entry.target) {
-                        entry.target.style.transitionDelay = '0s';
-                        // Remove animation classes to ensure default hover transition applies cleanly
-                        entry.target.classList.remove('hidden-left', 'hidden-right', 'show');
-                    }
-                }, delayMs + 1050); // add a tiny 50ms buffer to ensure transition completes
-                
-                observer.unobserve(entry.target); 
-            }
-        });
-    }, {
-        threshold: 0.1 
-    });
-
-    const baseDelay = window.isInitialLoad === false ? 0 : 1.8;
-    
     filteredData.forEach((item, index) => {
         const card = document.createElement('div');
         card.className = 'card box-card'; 
-        card.style.transitionDelay = `${baseDelay + (index * 0.15)}s`;
 
-        if (index % 2 === 0) {
-            card.classList.add('hidden-left');
-        } else {
-            card.classList.add('hidden-right');
-        }
+        // Set different icons based on type for visual variety
+        let iconPath = 'M13 10V3L4 14h7v7l9-11h-7z'; // default plugin
+        if (item.type === 'macro') iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'; // generic doc icon
+        if (item.type === 'project') iconPath = 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z'; // folder
+        if (item.type === 'scripting') iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6'; // code
 
         card.innerHTML = `
             <div class="card-icon-placeholder" style="margin-bottom: 1.5rem; width: 64px; height: 64px;">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${iconPath}" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h3 class="card-title" style="text-align: center; font-size: 1.2rem;">${item.name}</h3>
             <div class="card-type" style="margin-top: 0.5rem; font-size: 0.65rem;">${item.type}</div>
@@ -172,9 +147,58 @@ function renderGrid() {
         };
 
         grid.appendChild(card);
-        observer.observe(card); 
     });
 }
+
+/**
+ * Render Overview Cards for the Home Page
+ */
+function renderHomeOverview() {
+    if (!homeGrid) return;
+    homeGrid.innerHTML = '';
+
+    // Display specific featured items on the home page
+    const featuredIds = ['Rectangle_V3', 'AutoFileOrganizer'];
+    const displayData = projectData.filter(item => featuredIds.includes(item.id));
+
+    displayData.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'card box-card'; 
+
+        // Set different icons based on type for visual variety
+        let iconPath = 'M13 10V3L4 14h7v7l9-11h-7z'; // default plugin
+        if (item.type === 'macro') iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'; // generic doc icon
+        if (item.type === 'project') iconPath = 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z'; // folder
+        if (item.type === 'scripting') iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6'; // code
+
+        let downloadCountHTML = '';
+        if (item.id === 'Rectangle_V3') {
+            downloadCountHTML = `<div style="position: absolute; top: 12px; right: 12px; background: var(--primary); color: #000; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.65rem; font-weight: 800; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.4); z-index: 10; letter-spacing: 0.5px; text-transform: uppercase;">2000+ Downloads</div>`;
+        } else if (item.id === 'AutoFileOrganizer') {
+            downloadCountHTML = `<div style="position: absolute; top: 12px; right: 12px; background: var(--primary); color: #000; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.65rem; font-weight: 800; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.4); z-index: 10; letter-spacing: 0.5px; text-transform: uppercase;">500+ Downloads</div>`;
+        }
+
+        // Ensure the card can contain the absolute positioned badge
+        card.style.position = 'relative';
+        
+        card.innerHTML = `
+            <div class="card-icon-placeholder" style="margin-bottom: 1.5rem; width: 64px; height: 64px;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${iconPath}" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="card-title" style="text-align: center; font-size: 1.2rem;">${item.name}</h3>
+            <div class="card-type" style="margin-top: 0.5rem; font-size: 0.65rem;">${item.type}</div>
+            ${downloadCountHTML}
+        `;
+
+        card.onclick = () => {
+            // When clicked on home page, open the item in the info modal
+            openInfoModal(item);
+        };
+
+        homeGrid.appendChild(card);
+    });
+}
+
 
 /**
  * Notification Navigation Bar
@@ -496,33 +520,10 @@ function initCustomCursor() {
 }
 
 // =========================================
-// PREMIUM FEATURE 2: Ambient Floating Orbs
+// PREMIUM FEATURE 2: Ambient Floating Orbs - REMOVED
 // =========================================
 function initAmbientOrbs() {
-    const container = document.createElement('div');
-    container.id = 'ambient-orbs';
-    document.body.appendChild(container);
-
-    const orbConfigs = [
-        { color: 'rgba(0, 242, 255, 0.07)', size: 400, left: '10%',  top: '20%',  duration: 18 },
-        { color: 'rgba(0, 100, 255, 0.06)', size: 500, left: '70%',  top: '60%',  duration: 24 },
-        { color: 'rgba(0, 242, 255, 0.05)', size: 300, left: '50%',  top: '10%',  duration: 20 },
-        { color: 'rgba(80, 0, 255, 0.05)',  size: 350, left: '85%',  top: '30%',  duration: 22 },
-        { color: 'rgba(0, 242, 255, 0.04)', size: 250, left: '20%',  top: '75%',  duration: 16 },
-    ];
-
-    orbConfigs.forEach((cfg, i) => {
-        const orb = document.createElement('div');
-        orb.className = 'orb';
-        orb.style.cssText = `
-            width:${cfg.size}px; height:${cfg.size}px;
-            background:${cfg.color};
-            left:${cfg.left}; top:${cfg.top};
-            animation-duration:${cfg.duration}s;
-            animation-delay:-${i * 3.5}s;
-        `;
-        container.appendChild(orb);
-    });
+    // Orbs removed per user request
 }
 
 // =========================================

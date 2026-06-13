@@ -1,12 +1,9 @@
 const footerHTML = `
 <footer class="modern-footer">
     <div class="footer-content">
-        <div class="footer-left">
+        <div class="footer-center" style="text-align: center; width: 100%;">
             <h3 class="footer-brand">Alok Video Editor</h3>
-            <p>Premium Resources for DaVinci Resolve</p>
-        </div>
-        <div class="footer-right">
-            <p>&copy; 2023 - <span id="current-year"></span> Alok Mahato. All rights reserved.</p>
+            <p style="color: var(--text-muted); font-size: 1rem;">Premium Resources for DaVinci Resolve</p>
         </div>
     </div>
 </footer>

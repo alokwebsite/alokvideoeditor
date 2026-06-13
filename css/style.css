@@ -177,14 +177,19 @@ header {
 
 .divider { display: none; }
 
-/* Box Grid Layout */
 .content-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 2rem;
     width: 100%;
     max-width: 1000px;
     padding: 0 1rem;
+}
+
+.content-grid .card {
+    flex: 1 1 260px;
+    max-width: 320px;
 }
 
 /* Slide Animations */
@@ -566,7 +571,6 @@ footer {
 .back-home-btn svg { transition: transform 0.3s ease; }
 .back-home-btn:hover svg { transform: translateX(-3px); }
 
-/* About Section */
 .about-section {
     width: 100%;
     max-width: 900px;
@@ -579,6 +583,29 @@ footer {
     display: flex;
     align-items: center;
     gap: 3rem;
+}
+
+.overview-section {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5rem;
+    padding: 0 1rem;
+}
+
+.section-title {
+    color: #fff;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 2.5rem;
+    background: linear-gradient(180deg, #fff, var(--primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+    text-shadow: 0 10px 30px rgba(0, 242, 255, 0.1);
 }
 
 /* Info Modal Overlay for Plugin Details */
@@ -765,7 +792,7 @@ footer {
 
 .footer-content {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     max-width: 1400px;
     margin: 0 auto;
