@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting... | Alok Video Editor</title>
+    <link rel="icon" type="image/jpeg" href="images/profile.jpg">
+
+    <!-- SEO Meta Tags -->
+    <meta name="robots" content="noindex, follow">
+    <meta http-equiv="refresh" content="0;url=/">
+
+    <script>
+        // Immediately redirect to home page
+        window.location.replace("/");
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Background Animation (Matching main site) -->
+    <div class="bg-animation">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <div class="glass-overlay" style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+
+        <div class="error-container" style="background: rgba(13, 17, 23, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(0, 242, 255, 0.1); padding: 4rem; border-radius: 24px; text-align: center; max-width: 600px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center;">
+            <h1 class="error-code" style="font-size: 8rem; font-weight: 800; color: var(--primary); text-shadow: 0 0 40px rgba(0, 242, 255, 0.4); margin: 0; line-height: 1;">404</h1>
+            <p class="error-message" style="font-size: 2rem; font-weight: 600; color: #fff; margin-top: 1rem; margin-bottom: 1rem;">Oops! Page Not Found</p>
+            <p class="error-detail" style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2.5rem; line-height: 1.6;">The page you are looking for might have been removed or is temporarily unavailable.</p>
+
+            <a href="index.html" class="btn-download" style="display: inline-flex; justify-content: center; text-decoration: none; width: max-content;">
+                <svg viewBox="0 0 24 24" width="20" height="20" style="transform: rotate(180deg);">
+                    <path fill="currentColor"
+                        d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z" />
+                </svg>
+                <span>Go Back Home</span>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

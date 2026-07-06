@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms and Policies - Alok Video Editor</title>
+    <link rel="icon" type="image/jpeg" href="images/profile.jpg">
+    <meta name="description" content="Terms of service, privacy policy, and refund policy for Alok Video Editor's DaVinci Resolve resources.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css?v=2.2">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loader-wrapper">
+        <div class="loader-text" style="font-size: 2.2rem; font-weight: 800; letter-spacing: 2px;">Alok Video Editor<span class="dots"></span></div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <div class="glass-overlay">
+        <header>
+            <div class="logo">
+                <h1><a href="index.html" style="color: inherit; text-decoration: none;">Alok Video Editor</a></h1>
+                <p>TERMS AND POLICIES</p>
+            </div>
+            
+            <div class="social-links">
+                <a href="index.html" style="color: #fff; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid rgba(0, 242, 255, 0.3); border-radius: 8px; background: rgba(0, 242, 255, 0.1);">Back to Home</a>
+            </div>
+        </header>
+
+        <main style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            <section class="about-section" style="max-width: 800px; width: 100%; margin: 2rem auto; padding: 2rem;">
+                <div class="about-text" style="width: 100%;">
+                    <h2 style="color: var(--primary); margin-bottom: 1rem;">Terms of Service</h2>
+                    <p style="margin-bottom: 2rem; color: #fff;">
+                        By accessing and downloading resources from Alok Video Editor, you agree to use them for your personal or commercial video projects. Redistribution or reselling of these exact files without significant modification is strictly prohibited. You are responsible for ensuring that your use of these templates complies with all applicable laws.
+                    </p>
+
+                    <h2 style="color: var(--primary); margin-bottom: 1rem;">Privacy Policy</h2>
+                    <p style="margin-bottom: 2rem; color: #fff;">
+                        We respect your privacy. Any information collected on this site (such as analytics data) is used solely to improve the user experience and the quality of our tools. We do not sell, share, or distribute your personal data to third parties.
+                    </p>
+
+                    <h2 style="color: var(--primary); margin-bottom: 1rem;">Refund Policy</h2>
+                    <p style="margin-bottom: 2rem; color: #fff; font-weight: 600;">
+                        No Refund. All sales and downloads are final. Because these are digital goods and software assets that are immediately accessible upon download, we cannot issue refunds. Please make sure to check compatibility before making any purchase.
+                    </p>
+                </div>
+            </section>
+        </main>
+        
+        <div id="footer-placeholder" style="width: 100%;"></div>
+    </div>
+
+    <script>
+        document.addEventListener('contextmenu', event => {
+            if (event.target.closest('.profile-link')) return;
+            event.preventDefault();
+        });
+    </script>
+    <script src="js/footer.js"></script>
+    <script src="js/main.js?v=2.2"></script>
+</body>
+</html>
