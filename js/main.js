@@ -635,13 +635,30 @@ function openInfoModal(item) {
     }
 
     const btn = document.getElementById('info-get-btn');
-    btn.onclick = () => {
-        if (item.price) {
-            alert('Coming Soon');
-        } else {
-            startDownload(item.file, item.name);
-        }
-    };
+    
+    if (item.comingSoon) {
+        getBtnText.textContent = 'Coming Soon';
+        btn.onclick = () => {
+            alert('This item is coming soon!');
+        };
+    } else {
+        btn.onclick = () => {
+            if (item.price) {
+                const key = item.payhipKey || 'xD79B';
+                const trigger = document.getElementById('payhip-hidden-trigger');
+                
+                if (trigger) {
+                    trigger.href = `https://payhip.com/b/${key}`;
+                    trigger.setAttribute('data-product', key);
+                    trigger.click();
+                } else {
+                    window.open(`https://payhip.com/b/${key}`, '_blank');
+                }
+            } else {
+                startDownload(item.file, item.name);
+            }
+        };
+    }
     
     const ytBtn = document.getElementById('info-youtube-btn');
     ytBtn.style.display = 'flex'; // Always show to maintain layout

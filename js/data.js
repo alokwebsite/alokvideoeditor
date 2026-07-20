@@ -40,8 +40,7 @@ const projectData = [
         type: "macro",
         name: "Opacity",
         description: "Quickly control transparency with an easy-to-use opacity slider. Perfect for fades, overlays, and smooth visibility adjustments.",
-        file: "Macro/Opacity.zip",
-        isNew: true
+        file: "Macro/Opacity.zip"
     },
 
     {
@@ -127,8 +126,7 @@ const projectData = [
         name: "Copy Pasta V2",
         description: "Copy Pasta V2 is a free DaVinci Resolve plugin that lets you instantly copy any frame from the Edit or Fusion page straight to your clipboard — and paste external images directly into your timeline. No Color Page. No export. Just one click.",
         file: "Davinci Scripting Plugin/Copy Pasta V2.zip",
-        youtube: "https://www.youtube.com/watch?v=U9BA1XNA9dE",
-        isNew: true
+        youtube: "https://www.youtube.com/watch?v=U9BA1XNA9dE"
     },
     {
         id: "AutoCapsStyle",
@@ -138,7 +136,8 @@ const projectData = [
         file: "Davinci Scripting Plugin/Auto Caps Style.zip",
         price: 40,
         salePrice: 10,
-        isNew: true
+        isNew: true,
+        comingSoon: true
     },
     {
         id: "EnnerTextFinder",
@@ -146,7 +145,16 @@ const projectData = [
         name: "Enner Text Finder",
         description: "A powerful DaVinci Resolve script to help you quickly find and manage text elements in your projects.",
         file: "Davinci Scripting Plugin/Enner Text finder.zip",
-        youtube: "https://www.youtube.com/watch?v=OR2BBdPkz3o",
+        youtube: "https://www.youtube.com/watch?v=OR2BBdPkz3o"
+    },
+    {
+        id: "FusionExpressionEditor",
+        type: "scripting",
+        name: "Fusion Expression Editor",
+        description: "A powerful scripting tool designed to make writing and managing Fusion expressions inside DaVinci Resolve faster and more intuitive.",
+        file: "Davinci Scripting Plugin/Fusion Expression Editor.zip",
+        price: 30,
+        payhipKey: "YXOTP",
         isNew: true
     }
 ];
