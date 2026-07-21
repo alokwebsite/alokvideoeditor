@@ -61,6 +61,16 @@ const projectData = [
         youtube: "https://youtu.be/Zg_fqEhPDVc"
     },
 
+    {
+        id: "TextSelectorMacro",
+        type: "macro",
+        name: "Text Selector",
+        description: "This is a text highlighter tool, not a standard text selector. Macro version for easy editing.",
+        file: "Macro/Text Selector.zip",
+        youtube: "https://www.youtube.com/watch?v=A0PVe1OZxas",
+        isNew: true
+    },
+
     //Plugins
 
     {
@@ -154,7 +164,14 @@ const projectData = [
         description: "A powerful scripting tool designed to make writing and managing Fusion expressions inside DaVinci Resolve faster and more intuitive.",
         file: "Davinci Scripting Plugin/Fusion Expression Editor.zip",
         price: 30,
-        payhipKey: "YXOTP",
+        payhipKey: "YXOTP"
+    },
+    {
+        id: "CurrencyNumberFormatter",
+        type: "expression",
+        name: "Currency Number Formatter",
+        description: "A Fusion expression to easily format numbers into neat currency strings with commas and decimal points.",
+        file: "Fusion Expression/Currency Number Formatter.zip",
         isNew: true
     }
 ];
