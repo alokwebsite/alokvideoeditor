@@ -142,12 +142,10 @@ const projectData = [
         id: "AutoCapsStyle",
         type: "scripting",
         name: "Auto Cap's Style",
-        description: "Instantly style and format your captions in DaVinci Resolve. Perfect for social media, YouTube shorts, and TikToks. Automatically handles capitalization, spacing, and styling with one click. One time Fee.",
+        description: "Instantly style and format your captions in DaVinci Resolve. Perfect for social media, YouTube shorts, and TikToks. Automatically handles capitalization, spacing, and styling with one click.",
         file: "Davinci Scripting Plugin/Auto Caps Style.zip",
-        price: 40,
-        salePrice: 10,
-        isNew: true,
-        comingSoon: true
+        payhipKey: "kpJtj",
+        isNew: true
     },
     {
         id: "EnnerTextFinder",
@@ -164,7 +162,19 @@ const projectData = [
         description: "A powerful scripting tool designed to make writing and managing Fusion expressions inside DaVinci Resolve faster and more intuitive.",
         file: "Davinci Scripting Plugin/Fusion Expression Editor.zip",
         price: 30,
-        payhipKey: "YXOTP"
+        salePrice: 15,
+        payhipKey: "YXOTP",
+        isNew: true
+    },
+    {
+        id: "AlignAndPivot",
+        type: "scripting",
+        name: "Align & Pivot",
+        description: "A massive time-saver for DaVinci Resolve Fusion. Automate your layout and animation workflow instantly with a sleek UI for 9-point alignment, smart pivot control, and auto keyframing.",
+        file: "Davinci Scripting Plugin/Align & Pivot.zip",
+        price: 5,
+        payhipKey: "dFOVz",
+        isNew: true
     },
     {
         id: "CurrencyNumberFormatter",

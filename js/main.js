@@ -246,7 +246,22 @@ function renderGrid() {
     if (!grid) return;
     grid.innerHTML = '';
 
-    const filteredData = projectData.filter(item => item.type === currentTab);
+    let filteredData = projectData.filter(item => item.type === currentTab);
+
+    // Sort: Paid items first. If same, 'New' items appear before older ones.
+    filteredData.sort((a, b) => {
+        const aIsPaid = a.price ? 1 : 0;
+        const bIsPaid = b.price ? 1 : 0;
+        
+        if (aIsPaid !== bIsPaid) {
+            return bIsPaid - aIsPaid; // Paid on top
+        }
+        
+        // If both are paid or both are free, put NEW ones first
+        const aIsNew = a.isNew ? 1 : 0;
+        const bIsNew = b.isNew ? 1 : 0;
+        return bIsNew - aIsNew;
+    });
 
     if (filteredData.length === 0) {
         grid.innerHTML = `<p style="text-align:center; color:#aaa; grid-column: 1 / -1;">No ${currentTab}s found.</p>`;
@@ -643,7 +658,7 @@ function openInfoModal(item) {
         };
     } else {
         btn.onclick = () => {
-            if (item.price) {
+            if (item.price || item.payhipKey) {
                 const key = item.payhipKey || 'xD79B';
                 const trigger = document.getElementById('payhip-hidden-trigger');
                 
