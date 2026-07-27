@@ -138,17 +138,7 @@ const projectData = [
         file: "Davinci Scripting Plugin/Copy Pasta V2.zip",
         youtube: "https://www.youtube.com/watch?v=U9BA1XNA9dE"
     },
-    {
-        id: "AutoCapsStyle",
-        type: "scripting",
-        name: "Auto Cap's Style",
-        description: "Instantly style and format your captions in DaVinci Resolve. Perfect for social media, YouTube shorts, and TikToks. Automatically handles capitalization, spacing, and styling with one click.",
-        file: "Davinci Scripting Plugin/Auto Caps Style.zip",
-        price: 10,
-        salePrice: 5,
-        payhipKey: "kpJtj",
-        isNew: true
-    },
+
     {
         id: "EnnerTextFinder",
         type: "scripting",
