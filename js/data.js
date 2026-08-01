@@ -148,6 +148,14 @@ const projectData = [
         youtube: "https://www.youtube.com/watch?v=OR2BBdPkz3o"
     },
     {
+        id: "AutoConnectNodes",
+        type: "scripting",
+        name: "Auto Connect Nodes",
+        description: "A fast and efficient DaVinci Resolve scripting plugin to automatically connect nodes in your Fusion compositions, saving you time on repetitive tasks.",
+        file: "Davinci Scripting Plugin/Auto Connect Nodes.zip",
+        isNew: true
+    },
+    {
         id: "FusionExpressionEditor",
         type: "scripting",
         name: "Fusion Expression Editor",
