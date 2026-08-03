@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugin Details - Alok Video Editor</title>
+    <link rel="icon" type="image/jpeg" href="images/profile.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=2.2">
+    
+    <style>
+        .product-page-container {
+            padding: 6rem 2rem 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            align-self: flex-start;
+            width: fit-content;
+            position: sticky;
+            top: 2rem;
+            z-index: 50;
+            gap: 0.8rem;
+            color: var(--text-main);
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.5rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .back-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 187, 195, 0.2);
+        }
+
+        /* 2-Column Grid Layout */
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 360px;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            .product-right {
+                position: static;
+                top: auto;
+            }
+        }
+
+        /* LEFT COLUMN */
+        .product-left {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .product-type {
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: inline-block;
+            border-radius: 4px;
+        }
+
+        .product-title {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            line-height: 1.1;
+        }
+
+        /* Features List (Highlights) */
+        .features-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+        .features-list li {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            line-height: 1.5;
+        }
+        .features-list li::before {
+            content: '→';
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-top: -2px;
+        }
+
+        .product-desc {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            background: rgba(21, 30, 50, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Gallery / Previews */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .gallery-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .gallery-img {
+            width: 100%;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Controls Image */
+        .controls-image {
+            width: 100%;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Tutorial */
+        .tutorial-container {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            aspect-ratio: 16/9;
+            background: #000;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .tutorial-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* RIGHT COLUMN (Sticky Buy Box) */
+        .product-right {
+            position: sticky;
+            top: 6rem; /* Sticking from the top */
+        }
+
+        .sticky-buy-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .buy-box-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(13, 187, 195, 0.05);
+            border-radius: 20px;
+            border: 2px solid rgba(13, 187, 195, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .buy-box-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10%;
+        }
+
+        .product-price {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+        .product-price .old-price {
+            color: var(--text-muted);
+            text-decoration: line-through;
+            font-size: 1.5rem;
+            margin-right: 0.8rem;
+            font-weight: 600;
+        }
+
+        .buy-btn-big {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #000;
+            background: var(--primary);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .buy-btn-big:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(13, 187, 195, 0.3);
+            background: #fff;
+        }
+
+        .buy-checklist {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .buy-checklist li {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .buy-checklist li::before {
+            content: '✓';
+            color: var(--primary);
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        /* Downloading View */
+        #product-downloading-view {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 32px;
+            padding: 4rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        #bg-glass-blur {
+            position: fixed;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            z-index: -1;
+            background-size: cover;
+            background-position: center;
+            filter: blur(80px) opacity(0.3);
+            pointer-events: none;
+            transition: background-image 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Image with Glass Blur -->
+    <div id="bg-glass-blur"></div>
+
+    <div id="loader-wrapper">
+        <div class="loader-text" style="font-size: 2.2rem; font-weight: 800; letter-spacing: 2px;">Alok Video Editor<span class="dots"></span></div>
+    </div>
+
+    <div class="product-page-container">
+        <!-- Downloading View (Shown when downloading) -->
+        <div id="product-downloading-view">
+            <div class="download-icon-container">
+                <svg class="download-pulse-icon" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+            </div>
+            <h3 style="color: #fff; font-size: 2rem; margin-bottom: 0.5rem; font-weight: 800; letter-spacing: -0.5px;">Downloading</h3>
+            <p id="product-downloading-item-name" style="color: var(--text-muted); font-size: 1.2rem; margin-bottom: 3rem;"></p>
+            
+            <div class="progress-bar-container" style="width: 100%; max-width: 400px; margin: 0 auto;">
+                <div class="progress-bar-fill"></div>
+            </div>
+            <p style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">Please Wait...</p>
+        </div>
+
+        <!-- Main Product Grid -->
+        <div class="product-grid" id="product-details-view">
+            
+            <!-- LEFT CONTENT COLUMN -->
+            <div class="product-left">
+                <a href="javascript:history.back()" class="back-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    BACK TO HOME
+                </a>
+
+                <div>
+                    <div id="product-type" class="product-type"></div>
+                    <h1 id="product-title" class="product-title">Loading...</h1>
+                    <ul class="features-list" id="features-list">
+                        <!-- Features list injected here -->
+                    </ul>
+                </div>
+
+                <!-- Main Hero / Controls Image (Merged for layout simplicity) -->
+                <div id="product-hero-container" style="display: none;">
+                    <img id="product-hero-image" class="gallery-img" src="" alt="Preview">
+                </div>
+
+                <div>
+                    <p id="product-desc" class="product-desc"></p>
+                </div>
+
+                <!-- Gallery Section -->
+                <div id="product-gallery-section" style="display: none;">
+                    <h2 class="section-title">In Action</h2>
+                    <div class="gallery-grid" id="gallery-grid">
+                        <!-- Gallery images injected here -->
+                    </div>
+                </div>
+
+                <!-- Tutorial Section -->
+                <div id="product-tutorial-section" style="display: none;">
+                    <h2 class="section-title">How To Use</h2>
+                    <div class="tutorial-container" id="tutorial-container">
+                        <!-- iframe injected here -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT STICKY BUY BOX -->
+            <div class="product-right">
+                <div class="sticky-buy-box">
+                    <div class="buy-box-icon" id="product-icon-box">
+                        <!-- Icon injected here -->
+                    </div>
+                    
+                    <div id="product-price" class="product-price"></div>
+                    
+                    <button id="product-get-btn" class="buy-btn-big">
+                        <span id="product-get-btn-text">Buy Now</span>
+                    </button>
+                    
+                    <ul class="buy-checklist">
+                        <li>Instant Access</li>
+                        <li>DaVinci Resolve / Fusion</li>
+                        <li>Lifetime Updates</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

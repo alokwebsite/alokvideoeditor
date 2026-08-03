@@ -37,10 +37,15 @@ function init() {
     createNotificationNav();
     setupPageTransitions();
     
-    // Hash change for URL modal routing
-    window.addEventListener('hashchange', handleHashChange);
-    createInfoModal();
-    handleHashChange(); // initial check
+    // If on product page, render the product details
+    if (window.location.pathname.endsWith('product.html')) {
+        renderProductPage();
+    } else {
+        // Hash change for URL modal routing (legacy, leaving for safety if any other hash logic exists)
+        window.addEventListener('hashchange', handleHashChange);
+        createInfoModal();
+        handleHashChange(); // initial check
+    }
 }
 
 /**
@@ -50,24 +55,6 @@ function initLoader() {
     const ring = document.getElementById('particle-ring');
     const particleCount = 24;
 
-    // Create Particles
-    if (ring) {
-        for (let i = 0; i < particleCount; i++) {
-            const wrapper = document.createElement('div');
-            wrapper.classList.add('particle-wrapper');
-
-            const angle = (360 / particleCount) * i;
-            wrapper.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translate(60px)`;
-
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            // Stagger animations
-            particle.style.animationDelay = `-${(i / particleCount) * 2}s`;
-
-            wrapper.appendChild(particle);
-            ring.appendChild(wrapper);
-        }
-    }
 
     // Hide loader when page is fully loaded
     window.addEventListener('load', () => {
@@ -270,7 +257,7 @@ function renderGrid() {
 
     filteredData.forEach((item, index) => {
         const card = document.createElement('div');
-        card.className = 'card box-card'; 
+        card.className = 'card premium-card'; 
         // Stagger the slide-in animation fast
         card.style.animationDelay = `${index * 0.05}s`;
 
@@ -281,32 +268,58 @@ function renderGrid() {
         if (item.type === 'scripting') iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6'; // code
         if (item.type === 'expression') iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6M14 4l-4 16'; // specific icon for expression
 
-        let newBadgeHTML = '';
-        if (item.isNew) {
-            newBadgeHTML = `<div style="position: absolute; top: 12px; right: 12px; background: rgba(0, 242, 255, 0.1); color: var(--primary); padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.6rem; font-weight: 800; border: 1px solid rgba(0, 242, 255, 0.3); z-index: 10; letter-spacing: 1px; text-transform: uppercase;">New</div>`;
+        let badgesHTML = '';
+        if (item.price && item.salePrice) {
+            badgesHTML += `<div class="card-badge">On Sale</div>`;
+        } else if (item.isNew) {
+            badgesHTML += `<div class="card-badge">New</div>`;
         }
 
         let priceBadgeHTML = '';
         if (item.price) {
             if (item.salePrice) {
-                priceBadgeHTML = `<div style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: bold; color: var(--primary);"><span style="text-decoration: line-through; color: #888; font-size: 0.75rem; margin-right: 5px;">$${item.price}</span>$${item.salePrice}</div>`;
+                priceBadgeHTML = `<div class="card-price"><span class="old-price">$${Number(item.price).toFixed(2)}</span>$${Number(item.salePrice).toFixed(2)}</div>`;
             } else {
-                priceBadgeHTML = `<div style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: bold; color: var(--primary);">$${item.price}</div>`;
+                priceBadgeHTML = `<div class="card-price">$${Number(item.price).toFixed(2)}</div>`;
             }
+        } else {
+            priceBadgeHTML = `<div class="card-price">Free</div>`;
+        }
+
+        let iconOrImageHTML = '';
+        if (item.image) {
+            iconOrImageHTML = `<img src="${item.image}" alt="${item.name}">`;
+        } else if (item.youtube) {
+            let vId = '';
+            try {
+                const u = new URL(item.youtube.trim());
+                if (u.hostname.includes('youtube.com')) vId = u.searchParams.get('v');
+                else if (u.hostname.includes('youtu.be')) vId = u.pathname.slice(1);
+            } catch(e) {}
+            if (vId) {
+                iconOrImageHTML = `<img src="https://img.youtube.com/vi/${vId}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/${vId}/hqdefault.jpg'" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover;">`;
+            }
+        }
+        
+        if (!iconOrImageHTML) {
+            iconOrImageHTML = `
+                <div style="width: 90px; height: 90px; border-radius: 24px; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${iconPath}" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+            `;
         }
 
         card.innerHTML = `
-            ${newBadgeHTML}
-            <div class="card-icon-placeholder" style="margin-bottom: 1.5rem; width: 64px; height: 64px;">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${iconPath}" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="card-image-block">
+                ${iconOrImageHTML}
+                ${badgesHTML}
             </div>
-            <h3 class="card-title" style="text-align: center; font-size: 1.2rem;">${item.name}</h3>
-            <div class="card-type" style="margin-top: 0.5rem; font-size: 0.65rem;">${item.type}</div>
+            <h3 class="card-title">${item.name}</h3>
             ${priceBadgeHTML}
         `;
 
         card.onclick = () => {
-            window.location.hash = item.id;
+            window.location.href = 'product.html?id=' + item.id;
         };
 
         grid.appendChild(card);
@@ -326,7 +339,7 @@ function renderHomeOverview() {
 
     displayData.forEach((item, index) => {
         const card = document.createElement('div');
-        card.className = 'card box-card'; 
+        card.className = 'card premium-card'; 
 
         // Set different icons based on type for visual variety
         let iconPath = 'M13 10V3L4 14h7v7l9-11h-7z'; // default plugin
@@ -337,32 +350,65 @@ function renderHomeOverview() {
 
         let downloadCountHTML = '';
         if (item.id === 'Rectangle_V3') {
-            downloadCountHTML = `<div style="position: absolute; top: 12px; right: 12px; background: var(--primary); color: #000; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.65rem; font-weight: 800; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.4); z-index: 10; letter-spacing: 0.5px; text-transform: uppercase;">2500+ Downloads</div>`;
+            downloadCountHTML = `<div style="position: absolute; top: 10px; right: 10px; background: var(--primary); color: #000; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.65rem; font-weight: 800; z-index: 10; text-transform: uppercase;">3000+ Downloads</div>`;
         } else if (item.id === 'AutoFileOrganizer') {
-            downloadCountHTML = `<div style="position: absolute; top: 12px; right: 12px; background: var(--primary); color: #000; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.65rem; font-weight: 800; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.4); z-index: 10; letter-spacing: 0.5px; text-transform: uppercase;">500+ Downloads</div>`;
+            downloadCountHTML = `<div style="position: absolute; top: 10px; right: 10px; background: var(--primary); color: #000; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.65rem; font-weight: 800; z-index: 10; text-transform: uppercase;">500+ Downloads</div>`;
         }
 
-        // Ensure the card can contain the absolute positioned badge
-        card.style.position = 'relative';
+        let badgesHTML = '';
+        if (item.price && item.salePrice) {
+            badgesHTML += `<div class="card-badge">On Sale</div>`;
+        } else if (item.isNew) {
+            badgesHTML += `<div class="card-badge">New</div>`;
+        }
+
+        let priceBadgeHTML = '';
+        if (item.price) {
+            if (item.salePrice) {
+                priceBadgeHTML = `<div class="card-price"><span class="old-price">$${Number(item.price).toFixed(2)}</span>$${Number(item.salePrice).toFixed(2)}</div>`;
+            } else {
+                priceBadgeHTML = `<div class="card-price">$${Number(item.price).toFixed(2)}</div>`;
+            }
+        } else {
+            priceBadgeHTML = `<div class="card-price">Free</div>`;
+        }
+
+        let iconOrImageHTML = '';
+        if (item.image) {
+            iconOrImageHTML = `<img src="${item.image}" alt="${item.name}">`;
+        } else if (item.youtube) {
+            let vId = '';
+            try {
+                const u = new URL(item.youtube.trim());
+                if (u.hostname.includes('youtube.com')) vId = u.searchParams.get('v');
+                else if (u.hostname.includes('youtu.be')) vId = u.pathname.slice(1);
+            } catch(e) {}
+            if (vId) {
+                iconOrImageHTML = `<img src="https://img.youtube.com/vi/${vId}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/${vId}/hqdefault.jpg'" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover;">`;
+            }
+        }
         
-        let newBadgeHTML = '';
-        if (item.isNew) {
-            newBadgeHTML = `<div style="position: absolute; top: 12px; left: 12px; background: rgba(0, 242, 255, 0.1); color: var(--primary); padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.6rem; font-weight: 800; border: 1px solid rgba(0, 242, 255, 0.3); z-index: 10; letter-spacing: 1px; text-transform: uppercase;">New</div>`;
+        if (!iconOrImageHTML) {
+            iconOrImageHTML = `
+                <div style="width: 90px; height: 90px; border-radius: 24px; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${iconPath}" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+            `;
         }
 
         card.innerHTML = `
-            ${newBadgeHTML}
-            <div class="card-icon-placeholder" style="margin-bottom: 1.5rem; width: 64px; height: 64px;">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${iconPath}" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="card-image-block">
+                ${iconOrImageHTML}
+                ${badgesHTML}
+                ${downloadCountHTML}
             </div>
-            <h3 class="card-title" style="text-align: center; font-size: 1.2rem;">${item.name}</h3>
-            <div class="card-type" style="margin-top: 0.5rem; font-size: 0.65rem;">${item.type}</div>
-            ${downloadCountHTML}
+            <h3 class="card-title">${item.name}</h3>
+            ${priceBadgeHTML}
         `;
 
         card.onclick = () => {
-            // When clicked on home page, open the item in the info modal
-            openInfoModal(item);
+            // When clicked on home page, open the item in the dedicated product page
+            window.location.href = 'product.html?id=' + item.id;
         };
 
         homeGrid.appendChild(card);
@@ -694,49 +740,26 @@ function openInfoModal(item) {
 }
 
 window.startDownload = function (filename, itemName) {
-    // Switch views to Downloading
-    document.getElementById('info-details-view').style.display = 'none';
-    const dlView = document.getElementById('info-downloading-view');
-    dlView.style.display = 'flex';
-    
-    document.getElementById('downloading-item-name').textContent = itemName;
-    
-    // Trigger Progress Bar
-    const progressFill = document.querySelector('.progress-bar-fill');
-    if (progressFill) {
-        progressFill.style.width = '0%';
-        progressFill.style.transition = 'none'; // Reset
-        setTimeout(() => {
-            progressFill.style.transition = 'width 3.4s cubic-bezier(0.1, 0.8, 0.3, 1)';
-            progressFill.style.width = '100%';
-        }, 50);
+    // Record Download Event in Google Analytics
+    if (typeof gtag === 'function') {
+        gtag('event', 'download', {
+            'event_category': 'Software Download',
+            'event_label': itemName,
+            'file_name': filename.split('/').pop()
+        });
     }
 
-    // Simulate Processing Time (give it 3.5 seconds to watch the smooth animation)
-    setTimeout(() => {
-        // Record Download Event in Google Analytics
-        if (typeof gtag === 'function') {
-            gtag('event', 'download', {
-                'event_category': 'Software Download',
-                'event_label': itemName,
-                'file_name': filename.split('/').pop()
-            });
-        }
+    // Trigger Download immediately
+    const link = document.createElement('a');
+    link.href = filename;
+    link.download = filename.split('/').pop();
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-        // Trigger Download
-        const link = document.createElement('a');
-        link.href = filename;
-        // Use only the filename (not full path) — browsers block download attr with path separators
-        link.download = filename.split('/').pop();
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        // Hide Modal
-        closeInfoModal();
-
-    }, 3500);
+    // Hide Modal immediately
+    closeInfoModal();
 }
 
 
@@ -838,3 +861,168 @@ document.addEventListener('DOMContentLoaded', () => {
     initPageTransitions();
     initScrollToTop();
 });
+
+/**
+ * Render Product Page dynamically based on URL parameter
+ */
+function renderProductPage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+
+    if (!productId) {
+        document.getElementById('product-title').innerText = "Product Not Found";
+        document.getElementById('product-desc').innerText = "We couldn't find the requested plugin.";
+        document.querySelector('.product-right').style.display = 'none';
+        document.getElementById('product-type').style.display = 'none';
+        return;
+    }
+
+    const item = projectData.find(i => i.id === productId);
+    if (!item) {
+        document.getElementById('product-title').innerText = "Product Not Found";
+        document.getElementById('product-desc').innerText = "We couldn't find the requested plugin.";
+        document.querySelector('.product-right').style.display = 'none';
+        document.getElementById('product-type').style.display = 'none';
+        return;
+    }
+
+    // Set document title
+    document.title = item.name + ' - Reveace Clone';
+
+    // Populate Hero Details
+    document.getElementById('product-title').innerText = item.name;
+    document.getElementById('product-desc').innerText = item.description;
+
+    // Type styling
+    const typeEl = document.getElementById('product-type');
+    typeEl.innerText = item.type;
+    typeEl.style.background = 'rgba(13, 187, 195, 0.1)';
+    typeEl.style.padding = '0.4rem 1.2rem';
+
+    // Features List
+    const list = document.getElementById('features-list');
+    if (item.features && item.features.length > 0) {
+        list.innerHTML = item.features.map(f => `<li>${f}</li>`).join('');
+    } else {
+        list.style.display = 'none';
+    }
+
+    // Main Hero / Controls Image & Background Blur
+    const heroContainer = document.getElementById('product-hero-container');
+    const heroImage = document.getElementById('product-hero-image');
+    const bgBlur = document.getElementById('bg-glass-blur');
+    const imgSrc = item.heroImage || item.controlsImage || item.image;
+    
+    if (imgSrc) {
+        heroImage.src = imgSrc;
+        heroContainer.style.display = 'block';
+        if (bgBlur) {
+            bgBlur.style.backgroundImage = `url('${imgSrc}')`;
+        }
+    }
+
+    // Gallery Section
+    if (item.previewImages && item.previewImages.length > 0) {
+        document.getElementById('product-gallery-section').style.display = 'block';
+        const grid = document.getElementById('gallery-grid');
+        grid.innerHTML = item.previewImages.map(imgSrc => 
+            `<img src="${imgSrc}" class="gallery-img" alt="${item.name} Screenshot">`
+        ).join('');
+    }
+
+    // Tutorial Section (Embedded YouTube)
+    if (item.youtube) {
+        document.getElementById('product-tutorial-section').style.display = 'block';
+        
+        let videoId = '';
+        try {
+            const url = new URL(item.youtube.trim());
+            if (url.hostname.includes('youtube.com')) {
+                videoId = url.searchParams.get('v');
+            } else if (url.hostname.includes('youtu.be')) {
+                videoId = url.pathname.slice(1);
+            }
+        } catch(e) {
+            console.error("Invalid YouTube URL");
+        }
+        
+        if (videoId) {
+            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+            document.getElementById('tutorial-container').innerHTML = `
+                <a href="${item.youtube}" target="_blank" rel="noopener noreferrer" style="display: block; position: relative; width: 100%; height: 100%; text-decoration: none;">
+                    <img src="${thumbnailUrl}" style="width: 100%; height: 100%; object-fit: cover;" alt="Watch Tutorial on YouTube" onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(0,0,0,0.2)'" onmouseout="this.style.background='rgba(0,0,0,0.4)'">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="var(--primary)"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </a>
+            `;
+        }
+    }
+
+    // Buy Box Icon
+    const iconBox = document.getElementById('product-icon-box');
+    if (item.image && !item.heroImage) {
+        // Only use image in icon box if we don't have a hero image (preventing duplication)
+        iconBox.innerHTML = `<img src="${item.image}" alt="Icon">`;
+        iconBox.style.background = 'transparent';
+        iconBox.style.border = 'none';
+    } else {
+        let iconPath = 'M13 10V3L4 14h7v7l9-11h-7z';
+        if (item.type === 'macro') iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z';
+        if (item.type === 'project') iconPath = 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z';
+        if (item.type === 'scripting') iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6';
+        if (item.type === 'expression') iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6M14 4l-4 16';
+        
+        iconBox.innerHTML = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${iconPath}" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    }
+
+    // Price
+    const priceEl = document.getElementById('product-price');
+    if (item.price) {
+        if (item.salePrice) {
+            priceEl.innerHTML = `<span class="old-price">$${Number(item.price).toFixed(2)}</span>$${Number(item.salePrice).toFixed(2)}`;
+        } else {
+            priceEl.innerHTML = `$${Number(item.price).toFixed(2)}`;
+        }
+    } else {
+        priceEl.innerHTML = `Free`;
+    }
+
+    // Download / Buy Button
+    const getBtn = document.getElementById('product-get-btn');
+    const getBtnText = document.getElementById('product-get-btn-text');
+    
+    if (item.price) {
+        getBtnText.innerText = `Buy Now`;
+    } else {
+        getBtnText.innerText = `Download for Free`;
+    }
+
+    getBtn.onclick = () => {
+        if (item.price) {
+            window.open(`https://payhip.com/b/${item.payhipKey}`, '_blank');
+        } else {
+            // Free download flow - Show inline downloading state
+            const originalText = getBtnText.innerText;
+            getBtnText.innerText = "Downloading...";
+            getBtn.style.opacity = "0.7";
+            getBtn.style.pointerEvents = "none";
+            
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.href = item.file;
+                link.download = item.file.split('/').pop();
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                setTimeout(() => {
+                    getBtnText.innerText = originalText;
+                    getBtn.style.opacity = "1";
+                    getBtn.style.pointerEvents = "auto";
+                }, 1500);
+            }, 600);
+        }
+    };
+}

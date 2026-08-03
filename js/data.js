@@ -32,7 +32,17 @@ const projectData = [
         name: "Rectangle V3",
         description: "Rectangle_V3 has full directional control: left, right, top, and bottom.",
         file: "Macro/Rectangle_V3.zip",
-        youtube: "https://www.youtube.com/watch?v=6-72PyQli1Q"
+        youtube: "https://www.youtube.com/watch?v=6-72PyQli1Q",
+        features: [
+            "Full Directional Control (Left, Right, Top, Bottom)",
+            "Smooth Custom Animations",
+            "Inspector UI integration",
+            "Easy to install and use in DaVinci Resolve"
+        ],
+        // You can add images like this:
+        // heroImage: "images/rectangle_hero.png",
+        // previewImages: ["images/preview1.png", "images/preview2.png"],
+        // controlsImage: "images/inspector_controls.png"
     },
 
     {
@@ -40,7 +50,8 @@ const projectData = [
         type: "macro",
         name: "Opacity",
         description: "Quickly control transparency with an easy-to-use opacity slider. Perfect for fades, overlays, and smooth visibility adjustments.",
-        file: "Macro/Opacity.zip"
+        file: "Macro/Opacity.zip",
+        youtube: "https://www.youtube.com/watch?v=_9g2Y3iJXeY"
     },
 
     {
@@ -67,8 +78,7 @@ const projectData = [
         name: "Text Selector",
         description: "This is a text highlighter tool, not a standard text selector. Macro version for easy editing.",
         file: "Macro/Text Selector.zip",
-        youtube: "https://www.youtube.com/watch?v=A0PVe1OZxas",
-        isNew: true
+        youtube: "https://www.youtube.com/watch?v=A0PVe1OZxas"
     },
 
     //Plugins
@@ -153,6 +163,7 @@ const projectData = [
         name: "Auto Connect Nodes",
         description: "A fast and efficient DaVinci Resolve scripting plugin to automatically connect nodes in your Fusion compositions, saving you time on repetitive tasks.",
         file: "Davinci Scripting Plugin/Auto Connect Nodes.zip",
+        youtube: "https://www.youtube.com/watch?v=QmZiph-ef0s",
         isNew: true
     },
     {
@@ -161,6 +172,7 @@ const projectData = [
         name: "Fusion Expression Editor",
         description: "A powerful scripting tool designed to make writing and managing Fusion expressions inside DaVinci Resolve faster and more intuitive.",
         file: "Davinci Scripting Plugin/Fusion Expression Editor.zip",
+        youtube: "https://www.youtube.com/watch?v=VF5uD26zJmQ",
         price: 30,
         salePrice: 15,
         payhipKey: "YXOTP",
@@ -182,6 +194,6 @@ const projectData = [
         name: "Currency Number Formatter",
         description: "A Fusion expression to easily format numbers into neat currency strings with commas and decimal points.",
         file: "Fusion Expression/Currency Number Formatter.zip",
-        isNew: true
+        youtube: "https://www.youtube.com/watch?v=xg8Lbu3WKkg"
     }
 ];

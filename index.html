@@ -160,8 +160,6 @@
         <div class="loader-text" style="font-size: 2.2rem; font-weight: 800; letter-spacing: 2px;">Alok Video Editor<span class="dots"></span></div>
     </div>
 
-    <div id="canvas-container"></div>
-
     <div class="glass-overlay">
 
         <header>
@@ -222,7 +220,6 @@
                     <div class="card-type" style="margin-top: 0.8rem; font-size: 0.75rem;">BROWSE ALL TOOLS</div>
                 </div>
             </div>
-
             <!-- Overview Section -->
             <section class="overview-section" id="home-overview">
                 <h2 class="section-title">Most Popular Downloads</h2>
@@ -234,54 +231,62 @@
             <!-- Testimonials Section -->
             <section class="testimonials-section" style="margin-top: 5rem; padding-bottom: 4rem;">
                 <h2 class="section-title">Community Feedback</h2>
-                <div class="content-grid" style="align-items: stretch;">
+                <div class="content-grid" style="align-items: stretch; gap: 1rem;">
                     
-                    <div class="card box-card" style="text-align: left; padding: 2rem; position: relative; overflow: visible;">
-                        <div style="position: absolute; top: 20px; right: 20px; color: var(--text-muted); opacity: 0.25;" title="From Discord">
-                            <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" /></svg>
-                        </div>
-                        <div style="position: absolute; top: -15px; left: 20px; font-size: 3rem; color: rgba(0, 242, 255, 0.2); font-family: serif; line-height: 1;">"</div>
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(0, 242, 255, 0.1); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); font-size: 1.2rem; border: 1px solid rgba(0, 242, 255, 0.3);">V</div>
-                            <div>
-                                <h3 style="margin: 0; font-size: 1.1rem; color: #fff;">Vortex</h3>
-                                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">June 2, 2026</div>
+                    <div class="discord-message" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <div class="discord-avatar" style="background: #111; color: #8498f5; border: 1px solid #333;">V</div>
+                            <div class="discord-header" style="margin: 0; align-items: center;">
+                                <h3 class="discord-username" style="color: #ff6b6b; display: flex; align-items: center; gap: 0.4rem;">
+                                    Vortex
+                                    <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
+                                </h3>
+                                <span class="discord-date" style="display: block;">6/2/2026 11:29 PM</span>
                             </div>
                         </div>
-                        <h4 style="color: #fff; margin-bottom: 0.8rem; font-size: 1.05rem;">MOST UNDERRATED GOAT</h4>
-                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin: 0;">"Genuinely one of the most underrated DaVinci Resolve plugin creators out there. The plugins are clean, useful, and actually save time in real-world editing. Definitely deserves a lot more recognition in the Resolve community. 🔥"</p>
+                        <p class="discord-text">Genuinely one of the most underrated DaVinci Resolve plugin creators out there. The plugins are clean, useful, and actually save time in real-world editing. Definitely deserves a lot more recognition in the Resolve community. 🔥</p>
                     </div>
 
-                    <div class="card box-card" style="text-align: left; padding: 2rem; position: relative; overflow: visible;">
-                        <div style="position: absolute; top: 20px; right: 20px; color: var(--text-muted); opacity: 0.25;" title="From Discord">
-                            <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" /></svg>
-                        </div>
-                        <div style="position: absolute; top: -15px; left: 20px; font-size: 3rem; color: rgba(0, 242, 255, 0.2); font-family: serif; line-height: 1;">"</div>
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(0, 242, 255, 0.1); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); font-size: 1.2rem; border: 1px solid rgba(0, 242, 255, 0.3);">S</div>
-                            <div>
-                                <h3 style="margin: 0; font-size: 1.1rem; color: #fff;">Sr Visuals</h3>
-                                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">June 2, 2026</div>
+                    <div class="discord-message" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <div class="discord-avatar" style="background: #23a559;">S</div>
+                            <div class="discord-header" style="margin: 0; align-items: center;">
+                                <h3 class="discord-username" style="color: #f1c40f; display: flex; align-items: center; gap: 0.4rem;">
+                                    Sr Visuals
+                                    <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
+                                </h3>
+                                <span class="discord-date" style="display: block;">06/02/2026 02:15 PM</span>
                             </div>
                         </div>
-                        <h4 style="color: #fff; margin-bottom: 0.8rem; font-size: 1.05rem;">It's amazing 🤩</h4>
-                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin: 0;">"I've been using your plugins, macros, and projects, and I'm genuinely impressed. They are well-designed, easy to use, and have significantly improved my workflow. The attention to detail and creativity in your work really stand out. Thank you for creating such valuable resources and sharing them with the community. Keep up the amazing work!"</p>
+                        <p class="discord-text"><strong>It's amazing 🤩</strong><br>I've been using your plugins, macros, and projects, and I'm genuinely impressed. They are well-designed, easy to use, and have significantly improved my workflow. The attention to detail and creativity in your work really stand out. Thank you for creating such valuable resources and sharing them with the community. Keep up the amazing work!</p>
                     </div>
 
-                    <div class="card box-card" style="text-align: left; padding: 2rem; position: relative; overflow: visible;">
-                        <div style="position: absolute; top: 20px; right: 20px; color: var(--text-muted); opacity: 0.25;" title="From Discord">
-                            <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" /></svg>
-                        </div>
-                        <div style="position: absolute; top: -15px; left: 20px; font-size: 3rem; color: rgba(0, 242, 255, 0.2); font-family: serif; line-height: 1;">"</div>
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(0, 242, 255, 0.1); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); font-size: 1.2rem; border: 1px solid rgba(0, 242, 255, 0.3);">M</div>
-                            <div>
-                                <h3 style="margin: 0; font-size: 1.1rem; color: #fff;">Manoj</h3>
-                                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">June 14, 2026</div>
+                    <div class="discord-message" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <div class="discord-avatar" style="background: #e91e63;">M</div>
+                            <div class="discord-header" style="margin: 0; align-items: center;">
+                                <h3 class="discord-username" style="color: #e74c3c; display: flex; align-items: center; gap: 0.4rem;">
+                                    Manoj
+                                    <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
+                                </h3>
+                                <span class="discord-date" style="display: block;">06/14/2026 08:30 AM</span>
                             </div>
                         </div>
-                        <h4 style="color: #fff; margin-bottom: 0.8rem; font-size: 1.05rem;">AMAZING PLUGIN</h4>
-                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin: 0;">"when I uses your pluging it's save my too many times. you are very humble person and also helpful as well good problem solver."</p>
+                        <p class="discord-text"><strong>AMAZING PLUGIN</strong><br>when I uses your pluging it's save my too many times. you are very humble person and also helpful as well good problem solver.</p>
+                    </div>
+
+                    <div class="discord-message" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <div class="discord-avatar" style="background: #000000; color: #ffffff;">K</div>
+                            <div class="discord-header" style="margin: 0; align-items: center;">
+                                <h3 class="discord-username" style="color: #f2f3f5; display: flex; align-items: center; gap: 0.4rem;">
+                                    Kubo
+                                    <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
+                                </h3>
+                                <span class="discord-date" style="display: block;">7/30/2026 11:24 AM</span>
+                            </div>
+                        </div>
+                        <p class="discord-text">it's my favourite macro , thank you</p>
                     </div>
 
                 </div>
@@ -365,6 +370,4 @@
     <script src="js/main.js?v=2.2"></script>
 
 </body>
-
-
 </html>
