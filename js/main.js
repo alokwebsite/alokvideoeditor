@@ -959,6 +959,414 @@ function renderProductPage() {
         }
     }
 
+    // Live Preview Section for Fusion Expression Editor
+    const livePreviewSection = document.getElementById('product-live-preview-section');
+    if (livePreviewSection) {
+        if (item.id === 'FusionExpressionEditor') {
+            livePreviewSection.style.display = 'block';
+            
+            // Initialize interactivity
+            const codeInput = document.getElementById('fp-code-textarea');
+            const slider = document.querySelector('.fp-slider-thumb');
+            const sliderTrack = document.querySelector('.fp-slider-track');
+            const fontSizeLabel = document.querySelector('.fp-input-small');
+            
+            if (slider && sliderTrack && codeInput && fontSizeLabel) {
+                let isDragging = false;
+                
+                slider.addEventListener('mousedown', () => isDragging = true);
+                window.addEventListener('mouseup', () => isDragging = false);
+                
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    const rect = sliderTrack.getBoundingClientRect();
+                    let percentage = (e.clientX - rect.left) / rect.width;
+                    percentage = Math.max(0, Math.min(1, percentage));
+                    
+                    slider.style.left = `calc(${percentage * 100}% - 5px)`;
+                    
+                    // Map percentage to font size (e.g. 10px to 24px)
+                    const minSize = 10;
+                    const maxSize = 24;
+                    const newSize = Math.round(minSize + (maxSize - minSize) * percentage);
+                    
+                    fontSizeLabel.textContent = newSize;
+                    codeInput.style.setProperty('font-size', `${newSize}px`, 'important');
+                    const highlightEl = document.getElementById('fp-code-highlight');
+                    if (highlightEl) highlightEl.style.setProperty('font-size', `${newSize}px`, 'important');
+                });
+                
+                const resetFontBtn = document.getElementById('fp-reset-font');
+                if (resetFontBtn) {
+                    resetFontBtn.addEventListener('click', () => {
+                        const defaultSize = 14;
+                        fontSizeLabel.textContent = defaultSize;
+                        codeInput.style.setProperty('font-size', `${defaultSize}px`, 'important');
+                        const highlightEl = document.getElementById('fp-code-highlight');
+                        if (highlightEl) highlightEl.style.setProperty('font-size', `${defaultSize}px`, 'important');
+                        
+                        // Reset slider thumb position
+                        const minSize = 10;
+                        const maxSize = 24;
+                        let percentage = (defaultSize - minSize) / (maxSize - minSize);
+                        slider.style.left = `calc(${percentage * 100}% - 5px)`;
+                    });
+                }
+                
+                // Syntax Highlighting
+                const highlightEl = document.getElementById('fp-code-highlight');
+                const updateHighlight = () => {
+                    if (!highlightEl) return;
+                    let text = codeInput.value;
+                    text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    
+                    text = text.replace(/(\b[a-zA-Z_]\w*\b)|(\b\d+(?:\.\d+)?\b)|([\*\/\+\-\=])/g, function(match, p1, p2, p3) {
+                        if (p1) return '<span class="fp-hl-keyword">' + p1 + '</span>';
+                        if (p2) return '<span class="fp-hl-number">' + p2 + '</span>';
+                        if (p3) return '<span class="fp-hl-operator">' + p3 + '</span>';
+                        return match;
+                    });
+                    
+                    if (text.endsWith('\n')) {
+                        text += ' ';
+                    }
+                    highlightEl.innerHTML = text;
+                };
+                
+                codeInput.addEventListener('input', updateHighlight);
+                codeInput.addEventListener('scroll', () => {
+                    if (highlightEl) {
+                        highlightEl.scrollTop = codeInput.scrollTop;
+                        highlightEl.scrollLeft = codeInput.scrollLeft;
+                    }
+                });
+                updateHighlight();
+                
+                // Auto-close brackets and handle Enter key for smart indentation
+                codeInput.addEventListener('keydown', function(e) {
+                    const pairs = {
+                        '(': ')',
+                        '{': '}',
+                        '[': ']',
+                        '"': '"',
+                        "'": "'"
+                    };
+                    
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    const value = this.value;
+
+                    const closeBrackets = [')', '}', ']', '"', "'"];
+
+                    // If typing a closing bracket and the next character is that same bracket, just step over it
+                    if (closeBrackets.includes(e.key) && start < value.length && value.charAt(start) === e.key) {
+                        e.preventDefault();
+                        this.selectionStart = this.selectionEnd = start + 1;
+                    } else if (pairs[e.key]) {
+                        e.preventDefault();
+                        
+                        // Insert the pair
+                        this.value = value.substring(0, start) + e.key + pairs[e.key] + value.substring(end);
+                        
+                        // Move cursor outside the brackets as requested by user
+                        this.selectionStart = this.selectionEnd = start + 2;
+                        
+                        // Trigger input event to update highlights and live sync
+                        this.dispatchEvent(new Event('input'));
+                    } else if (e.key === 'Enter') {
+                        // Check if cursor is between opening and closing brackets
+                        if (start > 0 && start < value.length) {
+                            const prevChar = value.charAt(start - 1);
+                            const nextChar = value.charAt(start);
+                            
+                            if ((prevChar === '{' && nextChar === '}') ||
+                                (prevChar === '[' && nextChar === ']') ||
+                                (prevChar === '(' && nextChar === ')')) {
+                                
+                                e.preventDefault();
+                                
+                                // Find current indentation of the line
+                                let currentLineStart = start - 1;
+                                while (currentLineStart >= 0 && value.charAt(currentLineStart) !== '\n') {
+                                    currentLineStart--;
+                                }
+                                const currentLine = value.substring(currentLineStart + 1, start);
+                                const match = currentLine.match(/^\s*/);
+                                const currentIndent = match ? match[0] : '';
+                                
+                                const indent = "    "; // 4 spaces for new indentation level
+                                
+                                // Insert newline, indented line, newline, and closing indent
+                                this.value = value.substring(0, start) + '\n' + currentIndent + indent + '\n' + currentIndent + value.substring(end);
+                                
+                                // Move cursor to the new indented empty line
+                                this.selectionStart = this.selectionEnd = start + 1 + currentIndent.length + indent.length;
+                                
+                                // Trigger input event to update highlights and live sync
+                                this.dispatchEvent(new Event('input'));
+                            }
+                        }
+                    }
+                });
+
+                // Sync text area with inspector mock UI based on Live checkbox
+                const inspectorExpression = document.getElementById('fp-height-expr-text');
+                const liveCheckbox = document.getElementById('fp-live-checkbox');
+                const applyBtn = document.getElementById('fp-apply-btn');
+                
+                if (inspectorExpression) {
+                    codeInput.addEventListener('input', function() {
+                        if (liveCheckbox && liveCheckbox.checked) {
+                            inspectorExpression.textContent = this.value || "Expression";
+                        }
+                    });
+                    
+                    if (applyBtn) {
+                        applyBtn.addEventListener('click', () => {
+                            inspectorExpression.textContent = codeInput.value || "Expression";
+                        });
+                    }
+                }
+
+                // Make Inspector sliders interactive (except Height)
+                const inspectorPanel = document.querySelector('.fp-inspector-panel');
+                if (inspectorPanel) {
+                    const propRows = inspectorPanel.querySelectorAll('.fp-prop-row');
+                    
+                    propRows.forEach(row => {
+                        const labelEl = row.querySelector('.fp-prop-label');
+                        if (!labelEl) return;
+                        
+                        const labelText = labelEl.textContent.trim();
+                        // Ignore Height as per user request
+                        if (labelText === 'Height') return;
+                        
+                        const sliderTrack = row.querySelector('.fp-prop-slider-track');
+                        const sliderThumb = row.querySelector('.fp-prop-slider-thumb');
+                        const inputEl = row.querySelector('.fp-prop-input');
+                        
+                        if (sliderTrack && sliderThumb && inputEl) {
+                            let isDraggingProp = false;
+                            
+                            sliderThumb.style.cursor = 'grab';
+                            sliderTrack.style.cursor = 'pointer';
+                            
+                            const updateSlider = (e) => {
+                                const rect = sliderTrack.getBoundingClientRect();
+                                let percentage = (e.clientX - rect.left) / rect.width;
+                                percentage = Math.max(0, Math.min(1, percentage));
+                                
+                                sliderThumb.style.left = `calc(${percentage * 100}% - 4px)`;
+                                
+                                // Map to a value based on label type
+                                let val = 0;
+                                if (labelText === 'Angle') {
+                                    val = (percentage * 360).toFixed(1);
+                                } else {
+                                    val = percentage.toFixed(2);
+                                }
+                                
+                                inputEl.textContent = val;
+                            };
+                            
+                            sliderTrack.addEventListener('mousedown', (e) => {
+                                isDraggingProp = true;
+                                sliderThumb.style.cursor = 'grabbing';
+                                updateSlider(e);
+                            });
+                            
+                            window.addEventListener('mouseup', () => {
+                                isDraggingProp = false;
+                                sliderThumb.style.cursor = 'grab';
+                            });
+                            
+                            window.addEventListener('mousemove', (e) => {
+                                if (!isDraggingProp) return;
+                                updateSlider(e);
+                            });
+                        }
+                    });
+                }
+
+            }
+            
+            // Hide AlignAndPivot if we are in FusionExpressionEditor
+            const apPreviewSection = document.getElementById('align-pivot-preview-section');
+            if (apPreviewSection) apPreviewSection.style.display = 'none';
+
+        } else if (item.id === 'AlignAndPivot') {
+            livePreviewSection.style.display = 'none'; // Hide Fusion one
+            const apPreviewSection = document.getElementById('align-pivot-preview-section');
+            if (apPreviewSection) {
+                apPreviewSection.style.display = 'block';
+                const apBox = document.getElementById('ap-box');
+                const apPivotContainer = document.getElementById('ap-pivot-container');
+                const apPivotSvg = document.getElementById('ap-pivot-svg');
+                
+                // The red widget ALWAYS stays in the exact center of the white rectangle
+                if (apPivotSvg) {
+                    apPivotSvg.style.top = '50%';
+                    apPivotSvg.style.left = '50%';
+                    apPivotSvg.style.transform = 'translate(-50%, -50%)';
+                }
+
+                let currentBoxTop = '50%';
+                let currentBoxLeft = '50%';
+                let currentBoxTx = '-50%';
+                let currentBoxTy = '-50%';
+
+                let currentPivotTop = '50%';
+                let currentPivotLeft = '50%';
+
+                function updateBoxPosition(iconClass, isAlign, isCanvasOn) {
+                    const apBox = document.getElementById('ap-box');
+                    const apPivotContainer = document.getElementById('ap-pivot-container');
+                    const apPivotElements = document.getElementById('ap-pivot-elements');
+                    const apCanvas = document.querySelector('.ap-canvas');
+
+                    if (!apBox || !apPivotContainer || !apPivotElements || !apCanvas) return;
+
+                    if (iconClass) {
+                        if (isAlign) {
+                            // Reset box to center
+                            currentBoxTop = '50%'; currentBoxLeft = '50%';
+                            currentBoxTx = '-50%'; currentBoxTy = '-50%';
+
+                            if (isCanvasOn) {
+                                // Canvas ON: Center of box touches canvas edge (half off-screen)
+                                if (iconClass.includes('top'))    { currentBoxTop = '0%';   currentBoxTy = '-50%'; }
+                                if (iconClass.includes('bottom')) { currentBoxTop = '100%';  currentBoxTy = '-50%'; }
+                                if (iconClass.includes('left'))   { currentBoxLeft = '0%';  currentBoxTx = '-50%'; }
+                                if (iconClass.includes('right'))  { currentBoxLeft = '100%'; currentBoxTx = '-50%'; }
+                            } else {
+                                // Canvas OFF: Edge of box touches canvas edge (fully inside)
+                                if (iconClass.includes('top'))    { currentBoxTop = '0%';   currentBoxTy = '0'; }
+                                if (iconClass.includes('bottom')) { currentBoxTop = '100%';  currentBoxTy = '-100%'; }
+                                if (iconClass.includes('left'))   { currentBoxLeft = '0%';  currentBoxTx = '0'; }
+                                if (iconClass.includes('right'))  { currentBoxLeft = '100%'; currentBoxTx = '-100%'; }
+                            }
+
+                            // Pivot container always tracks the box
+                            apPivotContainer.style.top = currentBoxTop;
+                            apPivotContainer.style.left = currentBoxLeft;
+                            apPivotContainer.style.transform = `translate(${currentBoxTx}, ${currentBoxTy})`;
+
+                        } else {
+                            // ── PIVOT MODE ──
+                            // The pivot container is always positioned at the box center
+                            // The green X moves WITHIN the canvas coordinate space
+                            
+                            const canvasRect = apCanvas.getBoundingClientRect();
+                            const boxRect = apBox.getBoundingClientRect();
+
+                            // Default: pivot at center of box
+                            let pivotAbsX = boxRect.left + boxRect.width / 2;
+                            let pivotAbsY = boxRect.top  + boxRect.height / 2;
+
+                            if (isCanvasOn) {
+                                // Canvas ON: Pivot jumps to canvas edges
+                                const isTop    = iconClass.includes('top');
+                                const isBottom = iconClass.includes('bottom');
+                                const isLeft   = iconClass.includes('left');
+                                const isRight  = iconClass.includes('right');
+                                const isCenterV = !isTop && !isBottom;
+                                const isCenterH = !isLeft && !isRight;
+
+                                pivotAbsX = isCenterH ? (canvasRect.left + canvasRect.width / 2)
+                                           : isLeft   ? canvasRect.left
+                                                      : canvasRect.right;
+                                pivotAbsY = isCenterV ? (canvasRect.top + canvasRect.height / 2)
+                                           : isTop    ? canvasRect.top
+                                                      : canvasRect.bottom;
+                            } else {
+                                // Canvas OFF: Pivot jumps to box corners/edges
+                                const isTop    = iconClass.includes('top');
+                                const isBottom = iconClass.includes('bottom');
+                                const isLeft   = iconClass.includes('left');
+                                const isRight  = iconClass.includes('right');
+                                const isCenterV = !isTop && !isBottom;
+                                const isCenterH = !isLeft && !isRight;
+
+                                pivotAbsX = isCenterH ? (boxRect.left + boxRect.width / 2)
+                                           : isLeft   ? boxRect.left
+                                                      : boxRect.right;
+                                pivotAbsY = isCenterV ? (boxRect.top + boxRect.height / 2)
+                                           : isTop    ? boxRect.top
+                                                      : boxRect.bottom;
+                            }
+
+                            // Convert absolute screen coords → % within canvas
+                            const pivotPctX = ((pivotAbsX - canvasRect.left) / canvasRect.width)  * 100;
+                            const pivotPctY = ((pivotAbsY - canvasRect.top)  / canvasRect.height) * 100;
+
+                            currentPivotTop  = pivotPctY + '%';
+                            currentPivotLeft = pivotPctX + '%';
+                        }
+                    }
+
+                    // Apply Box position
+                    apBox.style.top       = currentBoxTop;
+                    apBox.style.left      = currentBoxLeft;
+                    apBox.style.transform = `translate(${currentBoxTx}, ${currentBoxTy})`;
+
+                    // Apply Pivot Container (tracks box)
+                    apPivotContainer.style.top       = currentBoxTop;
+                    apPivotContainer.style.left      = currentBoxLeft;
+                    apPivotContainer.style.transform = `translate(${currentBoxTx}, ${currentBoxTy})`;
+
+                    // Apply Pivot Elements — positioned ABSOLUTELY within the canvas
+                    // Remove from pivot container, place on canvas with absolute coords
+                    if (!document.getElementById('ap-pivot-elements')) return;
+
+                    // Always keep apPivotElements as direct child of canvas for consistent positioning
+                    if (apPivotElements.parentElement !== apCanvas) {
+                        apCanvas.appendChild(apPivotElements);
+                    }
+                    apPivotElements.style.top       = currentPivotTop;
+                    apPivotElements.style.left      = currentPivotLeft;
+                    apPivotElements.style.width     = '20%';
+                    apPivotElements.style.aspectRatio = '16 / 9';
+                    apPivotElements.style.height    = 'auto';
+                    apPivotElements.style.transform = 'translate(-50%, -50%)';
+                    apPivotElements.style.position  = 'absolute';
+                }
+
+                // Add basic interactivity for grid buttons
+                const alignBtns = apPreviewSection.querySelectorAll('#ap-align-grid .ap-grid-btn');
+                const alignCanvasCheck = document.getElementById('ap-align-canvas-check');
+                const pivotCanvasCheck = document.getElementById('ap-pivot-canvas-check');
+
+                alignBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        btn.classList.add('active');
+                        const icon = btn.querySelector('.ap-icon');
+                        if (icon) {
+                            updateBoxPosition(icon.className, true, alignCanvasCheck && alignCanvasCheck.checked);
+                        }
+                        setTimeout(() => { btn.classList.remove('active'); }, 150);
+                    });
+                });
+
+                const pivotBtns = apPreviewSection.querySelectorAll('#ap-pivot-grid .ap-grid-btn');
+                pivotBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        btn.classList.add('active');
+                        const icon = btn.querySelector('.ap-icon');
+                        if (icon) {
+                            updateBoxPosition(icon.className, false, pivotCanvasCheck && pivotCanvasCheck.checked);
+                        }
+                        setTimeout(() => { btn.classList.remove('active'); }, 150);
+                    });
+                });
+
+            }
+        } else {
+            livePreviewSection.style.display = 'none';
+            const apPreviewSection = document.getElementById('align-pivot-preview-section');
+            if (apPreviewSection) apPreviewSection.style.display = 'none';
+        }
+    }
+
     // Buy Box Icon
     const iconBox = document.getElementById('product-icon-box');
     if (item.image && !item.heroImage) {
@@ -1025,4 +1433,48 @@ function renderProductPage() {
             }, 600);
         }
     };
+}
+
+// Block right-click context menu
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
+
+// Block browser dev tools shortcuts
+document.addEventListener('keydown', function(e) {
+    // F12
+    if (e.key === 'F12') {
+        e.preventDefault();
+    }
+    // Ctrl+Shift+I / Cmd+Option+I
+    if ((e.ctrlKey || e.metaKey) && (e.shiftKey || e.altKey) && (e.key === 'I' || e.key === 'i')) {
+        e.preventDefault();
+    }
+    // Ctrl+Shift+C / Cmd+Option+C
+    if ((e.ctrlKey || e.metaKey) && (e.shiftKey || e.altKey) && (e.key === 'C' || e.key === 'c')) {
+        e.preventDefault();
+    }
+    // Ctrl+Shift+J / Cmd+Option+J
+    if ((e.ctrlKey || e.metaKey) && (e.shiftKey || e.altKey) && (e.key === 'J' || e.key === 'j')) {
+        e.preventDefault();
+    }
+    // Ctrl+U / Cmd+U (View Source)
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
+        e.preventDefault();
+    }
+});
+
+// Height Dropdown Menu Logic
+const heightDropdownBtn = document.getElementById('fp-height-dropdown-btn');
+const heightDropdownMenu = document.getElementById('fp-height-dropdown-menu');
+
+if (heightDropdownBtn && heightDropdownMenu) {
+    heightDropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        heightDropdownMenu.style.display = heightDropdownMenu.style.display === 'block' ? 'none' : 'block';
+    });
+    
+    document.addEventListener('click', () => {
+        heightDropdownMenu.style.display = 'none';
+    });
 }

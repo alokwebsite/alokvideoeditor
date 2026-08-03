@@ -274,6 +274,42 @@
             font-weight: 800;
         }
 
+        /* Gift Banner */
+        .gift-banner {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            background: linear-gradient(135deg, rgba(13,187,195,0.08), rgba(13,187,195,0.03));
+            border: 1px solid rgba(13,187,195,0.35);
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            animation: giftPulse 3s ease-in-out infinite;
+        }
+        .gift-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -60%;
+            width: 40%; height: 200%;
+            background: linear-gradient(90deg, transparent, rgba(13,187,195,0.12), transparent);
+            transform: skewX(-20deg);
+            animation: giftShimmer 3s ease-in-out infinite;
+        }
+        @keyframes giftShimmer {
+            0%   { left: -60%; }
+            100% { left: 130%; }
+        }
+        @keyframes giftPulse {
+            0%, 100% { border-color: rgba(13,187,195,0.35); box-shadow: none; }
+            50%       { border-color: rgba(13,187,195,0.7);  box-shadow: 0 0 14px rgba(13,187,195,0.15); }
+        }
+        .gift-icon { font-size: 1.6rem; flex-shrink: 0; filter: drop-shadow(0 0 6px rgba(13,187,195,0.5)); }
+        .gift-text { display: flex; flex-direction: column; gap: 0.15rem; }
+        .gift-title { font-size: 0.7rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); }
+        .gift-desc  { font-size: 0.88rem; font-weight: 700; color: #fff; line-height: 1.3; }
+
         /* Downloading View */
         #product-downloading-view {
             display: none;
@@ -375,6 +411,301 @@
                     </div>
                 </div>
 
+                <!-- Live Preview Section -->
+                <div id="product-live-preview-section" style="display: none; margin-top: 3rem;">
+                    <h2 class="section-title">Live Preview</h2>
+                    <div class="fusion-preview-window">
+                        <!-- Top Bar -->
+                        <div class="fp-top-bar">
+                            <div class="fp-title-left">FUSION EXPRESSION EDITOR</div>
+                            <div class="fp-title-right">ALOK VIDEO EDITOR</div>
+                        </div>
+                        
+                        <!-- Middle Section 1 -->
+                        <div class="fp-row fp-row-dark">
+                            <div class="fp-input-box" style="color: #f1c40f;">Rectangle1</div>
+                            <div style="position: relative;">
+                                <div class="fp-input-box fp-muted-text" id="fp-height-dropdown-btn" style="cursor: pointer; min-width: 80px;">Height</div>
+                                <div class="fp-dropdown-menu" id="fp-height-dropdown-menu" style="display: none;">
+                                    <div class="fp-dropdown-item fp-dropdown-active">Height</div>
+                                </div>
+                            </div>
+                            <button class="fp-btn-icon" style="margin-left: auto;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+                                Refresh
+                            </button>
+                        </div>
+
+                        <!-- Middle Section 2 -->
+                        <div class="fp-row">
+                            <span class="fp-label">Saved Expressions:</span>
+                            <div class="fp-dropdown">Select an Expression...</div>
+                            <div style="margin-left: auto; display: flex; gap: 0.8rem;">
+                                <button class="fp-btn fp-btn-teal">Insert</button>
+                                <button class="fp-btn fp-btn-red">Delete</button>
+                            </div>
+                        </div>
+
+                        <!-- Middle Section 3 -->
+                        <div class="fp-row">
+                            <span class="fp-label-bold">Expression Code:</span>
+                            <span class="fp-label" style="margin-left: 1.5rem;">Font Size:</span>
+                            <div class="fp-input-small">14</div>
+                            <div class="fp-slider-track">
+                                <div class="fp-slider-thumb"></div>
+                            </div>
+                            <button class="fp-btn-icon" id="fp-reset-font" style="margin-left: 0.5rem;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                            </button>
+                            <button class="fp-btn fp-btn-outline" style="margin-left: auto;">+ Insert Selected Node</button>
+                        </div>
+
+                        <!-- Editor Area -->
+                        <div class="fp-editor-area">
+                            <div class="fp-editor-container">
+                                <div id="fp-code-highlight" class="fp-code-highlight" aria-hidden="true"></div>
+                                <textarea id="fp-code-textarea" spellcheck="false" class="fp-code-input">Width*16/9</textarea>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Middle Section 4 & 5 -->
+                        <div class="fp-row-small">
+                            <div class="fp-dark-input">Node Suggestions (Click to Insert):</div>
+                        </div>
+                        <div class="fp-row-small">
+                            <div class="fp-dark-input">Expression Suggestions:</div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="fp-footer">
+                            <button class="fp-btn-guide">Guide</button>
+                            <button class="fp-btn fp-btn-save">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f1c40f" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                Save Expression
+                            </button>
+                            <label class="fp-checkbox">
+                                <input type="checkbox" checked>
+                                <span class="checkmark"></span>
+                                Auto-Suggest
+                            </label>
+                            <label class="fp-checkbox">
+                                <input type="checkbox" id="fp-live-checkbox" checked>
+                                <span class="checkmark"></span>
+                                Live
+                            </label>
+                            <button id="fp-apply-btn" class="fp-btn fp-btn-apply" style="margin-left: auto;">Apply Expression</button>
+                        </div>
+                    </div>
+
+                    <!-- Second Window for Inspector -->
+                    <div class="fusion-preview-window" style="margin-top: 1.5rem;">
+                        <div class="fp-top-bar">
+                            <div class="fp-title-left">INSPECTOR</div>
+                            <div class="fp-title-right">ALOK VIDEO EDITOR</div>
+                        </div>
+                        <div class="fp-inspector-panel" style="border-bottom: none; padding-top: 1.5rem; padding-bottom: 1.5rem;">
+                            <div class="fp-prop-row">
+                                <span class="fp-prop-label">Center</span>
+                                <span class="fp-prop-axis">X</span>
+                                <div class="fp-prop-input">0.5</div>
+                                <span class="fp-prop-axis" style="margin-left: 2rem;">Y</span>
+                                <div class="fp-prop-input">0.5</div>
+                                <div class="fp-prop-diamond"></div>
+                            </div>
+                            <div class="fp-prop-row">
+                                <span class="fp-prop-label">Width</span>
+                                <div class="fp-prop-slider-track"><div class="fp-prop-slider-thumb" style="left:50%"></div></div>
+                                <div class="fp-prop-input">0.5</div>
+                                <div class="fp-prop-diamond"></div>
+                            </div>
+                            <div style="position: relative; margin-bottom: 0.6rem;">
+                                <!-- The vertical yellow line connecting label to expression -->
+                                <div style="position: absolute; left: 105px; top: 12px; bottom: -8px; width: 1px; background: #e2c044;"></div>
+                                
+                                <div class="fp-prop-row" style="margin-bottom: 0;">
+                                    <span class="fp-prop-label" style="color: #61afef;">Height</span>
+                                    <div class="fp-prop-slider-track" style="position:relative;"><div class="fp-prop-slider-thumb" style="left:88%"></div><div class="fp-prop-pin"></div></div>
+                                    <div class="fp-prop-input">0.888888</div>
+                                    <div class="fp-prop-diamond"></div>
+                                </div>
+                                <div class="fp-prop-row" style="margin-top: 5px; padding-left: 115px; margin-bottom: 0;">
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <button class="fp-expr-plus-btn">+</button>
+                                        <div class="fp-expr-input-box">
+                                            <span id="fp-height-expr-text" style="color: #fff; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.8rem;">Width*16/9</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fp-prop-row">
+                                <span class="fp-prop-label">Corner Radius</span>
+                                <div class="fp-prop-slider-track"><div class="fp-prop-slider-thumb" style="left:0%"></div></div>
+                                <div class="fp-prop-input">0.0</div>
+                                <div class="fp-prop-diamond"></div>
+                            </div>
+                            <div class="fp-prop-row">
+                                <span class="fp-prop-label">Angle</span>
+                                <div class="fp-prop-slider-track fp-prop-slider-dash" style="position:relative;">
+                                    <div class="fp-prop-slider-thumb" style="left:0%"></div>
+                                </div>
+                                <div class="fp-prop-input">0.0</div>
+                                <div class="fp-prop-diamond"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Align & Pivot Live Preview Section -->
+                <div id="align-pivot-preview-section" style="display: none; margin-top: 3rem;">
+                    <h2 class="section-title">Live Preview</h2>
+                    
+                    <!-- Canvas Preview -->
+                    <div class="ap-canvas-container">
+
+                        <div class="ap-canvas">
+                            <div class="ap-canvas-inner">
+                                <!-- Fixed center pivot indicator (drawn BEHIND white box so it gets correctly clipped) -->
+                                <div class="ap-canvas-box" id="ap-fixed-pivot" style="background:transparent; border:none; pointer-events:none;">
+                                    <!-- Scaled dashed circle spilling out -->
+                                    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="position: absolute; top: 0; left: 0; overflow: visible;">
+                                        <circle cx="50" cy="50" r="49" stroke="red" stroke-width="1.5" stroke-dasharray="4 4" fill="none" opacity="0.6" />
+                                        <line x1="50" y1="50" x2="99" y2="50" stroke="red" stroke-width="1.5" opacity="0.6" />
+                                    </svg>
+                                    <!-- Fixed dot -->
+                                    <svg width="40" height="40" viewBox="0 0 40 40" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                        <rect x="18" y="18" width="4" height="4" stroke="red" stroke-width="1.5" fill="none" opacity="0.6" />
+                                    </svg>
+                                </div>
+                                
+                                <div class="ap-canvas-box" id="ap-box"></div>
+                            </div>
+                            <!-- Unclipped overlay for the moving widgets -->
+                            <div class="ap-canvas-box" id="ap-pivot-container" style="background:transparent; border:none; z-index:20;">
+                                <!-- The Red Widget (Transform Anchor) - ALWAYS at center of the box -->
+                                <div id="ap-transform-anchor" style="position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); pointer-events: none;">
+                                    <!-- Scaled dashed circle spilling out -->
+                                    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="position: absolute; top: 0; left: 0; overflow: visible;">
+                                        <circle cx="50" cy="50" r="49" stroke="red" stroke-width="1.5" stroke-dasharray="4 4" fill="none" />
+                                        <line x1="50" y1="50" x2="99" y2="50" stroke="red" stroke-width="1.5" />
+                                    </svg>
+                                    <!-- Fixed size arrows -->
+                                    <svg id="ap-pivot-svg" width="40" height="40" viewBox="0 0 40 40" fill="none" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; overflow: visible;">
+                                        <rect x="17" y="17" width="6" height="6" stroke="red" stroke-width="1.5" fill="none" />
+                                        <line x1="20" y1="17" x2="20" y2="5" stroke="red" stroke-width="1.5" />
+                                        <polygon points="20,2 16,7 24,7" fill="red" />
+                                        <polygon points="38,20 33,16 33,24" fill="red" />
+                                    </svg>
+                                </div>
+
+                                <!-- The Green Widget (Pivot Point) - Moves around relative to the box -->
+                                <div id="ap-pivot-elements" style="position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); pointer-events: none;">
+                                    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="position: absolute; top: 0; left: 0; overflow: visible;">
+                                        <circle cx="50" cy="50" r="49" stroke="#0f0" stroke-width="1.5" stroke-dasharray="4 4" fill="none" />
+                                        <!-- Optional: line for pivot rotation, matching user screenshot -->
+                                        <line x1="50" y1="50" x2="99" y2="50" stroke="#0f0" stroke-width="1.5" />
+                                    </svg>
+                                    <!-- The Green 'X' -->
+                                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); overflow: visible;">
+                                        <line x1="12" y1="12" x2="28" y2="28" stroke="#0f0" stroke-width="1.5" />
+                                        <line x1="28" y1="12" x2="12" y2="28" stroke="#0f0" stroke-width="1.5" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Node Graph Strip -->
+                    <div class="ap-node-graph-strip">
+                        <img src="images/node_graph.jpg" alt="DaVinci Resolve Node Graph: Rectangle1 → Background4 → Transform1" class="ap-node-graph-img">
+                    </div>
+
+                    <div class="ap-preview-window">
+                        <!-- Top Tabs -->
+                        <div class="ap-top-bar">
+                            <div class="ap-tab active">ALIGN & PIVOT</div>
+                            <div class="ap-tab">ALOK VIDEO EDITOR</div>
+                        </div>
+
+                        <!-- Main Split Content -->
+                        <div class="ap-main-content">
+                            <!-- Left Column -->
+                            <div class="ap-col">
+                                <div class="ap-col-header">
+                                    <span class="ap-col-title">ALIGN</span>
+                                    <label class="ap-checkbox-label">
+                                        <input type="checkbox" id="ap-align-canvas-check" checked>
+                                        <div class="ap-custom-check">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        </div>
+                                        CANVAS
+                                    </label>
+                                </div>
+                                <div class="ap-grid" id="ap-align-grid">
+                                    <button class="ap-grid-btn"><div class="ap-icon top-left"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon top-center"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon top-right"></div></button>
+                                    
+                                    <button class="ap-grid-btn"><div class="ap-icon center-left"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon center"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon center-right"></div></button>
+                                    
+                                    <button class="ap-grid-btn"><div class="ap-icon bottom-left"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon bottom-center"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon bottom-right"></div></button>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle Divider -->
+                            <div class="ap-divider"></div>
+                            
+                            <!-- Right Column -->
+                            <div class="ap-col">
+                                <div class="ap-col-header">
+                                    <span class="ap-col-title" style="color:#5e729a;">PIVOT</span>
+                                    <label class="ap-checkbox-label">
+                                        <input type="checkbox" id="ap-pivot-canvas-check" checked>
+                                        <div class="ap-custom-check">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        </div>
+                                        CANVAS
+                                    </label>
+                                </div>
+                                <div class="ap-grid" id="ap-pivot-grid">
+                                    <button class="ap-grid-btn"><div class="ap-icon top-left"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon top-center"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon top-right"></div></button>
+                                    
+                                    <button class="ap-grid-btn"><div class="ap-icon center-left"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon center"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon center-right"></div></button>
+                                    
+                                    <button class="ap-grid-btn"><div class="ap-icon bottom-left"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon bottom-center"></div></button>
+                                    <button class="ap-grid-btn"><div class="ap-icon bottom-right"></div></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Auto Keyframe Align Row -->
+                        <div class="ap-keyframe-row">
+                            <label class="ap-checkbox-label">
+                                <input type="checkbox" checked>
+                                <div class="ap-custom-check">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </div>
+                                AUTO KEYFRAME ALIGN
+                            </label>
+                        </div>
+                        
+                        <!-- Footer Text -->
+                        <div class="ap-footer-text">
+                            SELECT NODES THEN USE THE TOOLS ABOVE TO AUTO POSITION THEM.
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- RIGHT STICKY BUY BOX -->
@@ -389,7 +720,14 @@
                     <button id="product-get-btn" class="buy-btn-big">
                         <span id="product-get-btn-text">Buy Now</span>
                     </button>
-                    
+                                        <!-- Gift Banner -->
+                    <div class="gift-banner">
+                        <span class="gift-icon">🎁</span>
+                        <div class="gift-text">
+                            <span class="gift-title">Special Offer</span>
+                            <span class="gift-desc">Purchase 1 Plugin — Get 1 Free!</span>
+                        </div>
+                    </div>
 
                 </div>
             </div>
