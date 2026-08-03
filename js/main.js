@@ -1399,11 +1399,16 @@ function renderProductPage() {
     // Download / Buy Button
     const getBtn = document.getElementById('product-get-btn');
     const getBtnText = document.getElementById('product-get-btn-text');
-    
+    const giftBanner = document.querySelector('.gift-banner');
+
     if (item.price) {
         getBtnText.innerText = `Buy Now`;
     } else {
         getBtnText.innerText = `Download for Free`;
+    }
+
+    if (giftBanner) {
+        giftBanner.style.display = item.id === 'FusionExpressionEditor' ? 'none' : '';
     }
 
     getBtn.onclick = () => {
