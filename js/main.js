@@ -1408,7 +1408,8 @@ function renderProductPage() {
     }
 
     if (giftBanner) {
-        giftBanner.style.display = item.id === 'FusionExpressionEditor' ? 'none' : '';
+        const shouldShowGiftBanner = item.showGiftBanner === true || item.id === 'AlignAndPivot';
+        giftBanner.style.display = shouldShowGiftBanner ? '' : 'none';
     }
 
     getBtn.onclick = () => {
