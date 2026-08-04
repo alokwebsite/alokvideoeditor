@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const processBtn = document.getElementById('processBtn');
   const nameInput = document.getElementById('macroName');
+  const pivotCanvasInput = document.getElementById('pivotCanvas');
+  const nodeNameInput = document.getElementById('nodeName');
   const watermarkInput = document.getElementById('watermarkText');
   const nameColorInput = document.getElementById('macroNameColor');
   const watermarkColorInput = document.getElementById('watermarkColor');
@@ -159,18 +161,19 @@ document.addEventListener('DOMContentLoaded', () => {
   dcpHtml.addEventListener('input', () => updateDcpUI('hex'));
 
   document.getElementById('dcpCancel').addEventListener('click', () => { dcpModal.classList.add('hidden'); });
-  document.getElementById('dcpOk').addEventListener('click', () => {
-    dcpModal.classList.add('hidden');
-    if (dcpCurrentTrigger) {
-      dcpCurrentTrigger.style.background = dcpHtml.value;
-      dcpCurrentTrigger.setAttribute('data-color', dcpHtml.value);
-      updatePreview();
-      
-      if (dcpCurrentTrigger.classList.contains('nest-color-picker')) {
-          dcpCurrentTrigger.dispatchEvent(new Event('input', { bubbles: true }));
+    document.getElementById('dcpOk').addEventListener('click', () => {
+      dcpModal.classList.add('hidden');
+      if (dcpCurrentTrigger) {
+        dcpCurrentTrigger.style.background = dcpHtml.value;
+        dcpCurrentTrigger.setAttribute('data-color', dcpHtml.value);
+        
+        if (dcpCurrentTrigger.classList.contains('nest-color-picker')) {
+            dcpCurrentTrigger.dispatchEvent(new Event('input', { bubbles: true }));
+        } else {
+            updatePreview();
+        }
       }
-    }
-  });
+    });
 
   function openColorPicker(triggerEl) {
     dcpCurrentTrigger = triggerEl;
@@ -206,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle Nest Color Change
     if (e.target.classList.contains('nest-color-picker')) {
       const nestIndex = parseInt(e.target.getAttribute('data-index'));
-      const newColor = e.target.value;
+      const newColor = e.target.getAttribute('data-color');
       
       let code = codeInput.value;
       const nestRegex = /(=\s*Input\s*\{[^{}]*Type\s*=\s*"BeginNest"[^{}]*Name\s*=\s*")((?:[^"\\]|\\.)*)("\s*,?)/gi;
@@ -215,9 +218,19 @@ document.addEventListener('DOMContentLoaded', () => {
       code = code.replace(nestRegex, (match, before, nameValue, after) => {
           if (currentIndex === nestIndex) {
               let cleanText = nameValue.replace(/\\"/g, '"');
-              const fontMatch = cleanText.match(/<font color="[^"]+">([^<]+)<\/font>/i);
-              if (fontMatch) cleanText = fontMatch[1];
+              const fontMatch = cleanText.match(/<font color="([^"]+)">([^<]+)<\/font>/i);
+              if (fontMatch) cleanText = fontMatch[2];
               const newName = `<font color=\\"${newColor}\\">${cleanText}</font>`;
+              
+              // Update DOM visually
+              const container = e.target.closest('.resolve-nest');
+              if (container) {
+                  const titleEl = container.querySelector('.nest-title');
+                  if (titleEl) {
+                      titleEl.style.color = newColor;
+                  }
+              }
+              
               currentIndex++;
               return before + newName + after;
           }
@@ -303,49 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       
       codeInput.value = code;
-    } else if (e.target.classList.contains('nest-color-picker')) {
-        const nestIndex = parseInt(e.target.getAttribute('data-index'));
-        const newColor = e.target.getAttribute('data-color');
-        
-        let code = codeInput.value;
-        const nestRegex = /(=\s*Input\s*\{)([^{}]*Type\s*=\s*"BeginNest"[^{}]*\})/gi;
-        
-        let currentIndex = 0;
-        code = code.replace(nestRegex, (match, before, block) => {
-            if (currentIndex === nestIndex) {
-                currentIndex++;
-                const nameMatch = block.match(/Name\s*=\s*"((?:[^"\\]|\\.)*)"/i);
-                if (nameMatch) {
-                    let cleanName = nameMatch[1].replace(/\\"/g, '"');
-                    let textContent = cleanName;
-                    const fontMatch = cleanName.match(/<font color="([^"]+)">([^<]+)<\/font>/i);
-                    if (fontMatch) {
-                        textContent = fontMatch[2];
-                    }
-                    const newNameStr = `<font color="${newColor}">${textContent}</font>`;
-                    block = block.replace(/(Name\s*=\s*")((?:[^"\\]|\\.)*)(")/i, `$1${newNameStr.replace(/"/g, '\\"')}$3`);
-                }
-                return before + block;
-            }
-            currentIndex++;
-            return match;
-        });
-        
-        codeInput.value = code;
     }
-  });
-
-  previewNests.addEventListener('input', (e) => {
-      if (e.target.classList.contains('nest-color-picker')) {
-          const newColor = e.target.getAttribute('data-color');
-          const container = e.target.closest('.resolve-nest');
-          if (container) {
-              const titleEl = container.querySelector('.nest-title');
-              if (titleEl) {
-                  titleEl.style.color = newColor;
-              }
-          }
-      }
   });
 
   previewNests.addEventListener('click', (e) => {
@@ -354,9 +325,136 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   });
 
+  // --- Drag and Drop Logic ---
+  let draggedItemIndex = null;
+  
+  previewNests.addEventListener('dragstart', (e) => {
+    const item = e.target.closest('.draggable-item');
+    if (item) {
+      draggedItemIndex = parseInt(item.getAttribute('data-input-index'));
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', draggedItemIndex.toString());
+    }
+  });
+
+  previewNests.addEventListener('dragend', (e) => {
+    const item = e.target.closest('.draggable-item');
+    if (item) item.classList.remove('dragging');
+    document.querySelectorAll('.drag-over-top, .drag-over-bottom').forEach(el => {
+      el.classList.remove('drag-over-top', 'drag-over-bottom');
+    });
+    draggedItemIndex = null;
+  });
+
+  previewNests.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const item = e.target.closest('.draggable-item');
+    if (!item) return;
+    if (item.classList.contains('dragging')) return;
+
+    const bounding = item.getBoundingClientRect();
+    const offset = bounding.y + (bounding.height / 2);
+    if (e.clientY - offset > 0) {
+      item.classList.add('drag-over-bottom');
+      item.classList.remove('drag-over-top');
+    } else {
+      item.classList.add('drag-over-top');
+      item.classList.remove('drag-over-bottom');
+    }
+  });
+
+  previewNests.addEventListener('dragleave', (e) => {
+    const item = e.target.closest('.draggable-item');
+    if (item) {
+      item.classList.remove('drag-over-top', 'drag-over-bottom');
+    }
+  });
+
+  previewNests.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const item = e.target.closest('.draggable-item');
+    if (!item || draggedItemIndex === null) return;
+    
+    const targetIndex = parseInt(item.getAttribute('data-input-index'));
+    if (targetIndex === draggedItemIndex) return;
+
+    const isAfter = item.classList.contains('drag-over-bottom');
+    
+    document.querySelectorAll('.drag-over-top, .drag-over-bottom').forEach(el => {
+      el.classList.remove('drag-over-top', 'drag-over-bottom');
+    });
+
+    reorderMacroInput(draggedItemIndex, targetIndex, isAfter);
+  });
+
+  function reorderMacroInput(fromIndex, toIndex, insertAfter) {
+    let rawCode = codeInput.value;
+    
+    const inputsMatch = rawCode.match(/Inputs\s*=\s*ordered\s*\(\)\s*\{/i);
+    if (!inputsMatch) return;
+    
+    const braceStartIdx = inputsMatch.index + inputsMatch[0].length - 1;
+    
+    let braceCount = 0;
+    let inBlock = false;
+    let endIdx = -1;
+    
+    for (let i = braceStartIdx; i < rawCode.length; i++) {
+      if (rawCode[i] === '{') {
+        braceCount++;
+        inBlock = true;
+      } else if (rawCode[i] === '}') {
+        braceCount--;
+      }
+      
+      if (inBlock && braceCount === 0) {
+        endIdx = i;
+        break;
+      }
+    }
+    
+    if (endIdx === -1) return;
+    
+    const beforeInputs = rawCode.substring(0, inputsMatch.index + inputsMatch[0].length);
+    const inputsBody = rawCode.substring(inputsMatch.index + inputsMatch[0].length, endIdx);
+    const afterInputs = rawCode.substring(endIdx);
+    
+    const chunks = inputsBody.split(/(?=\b[a-zA-Z0-9_]+\s*=\s*InstanceInput\s*\{)/i);
+    let blocks = [];
+    let leadingWhitespace = "";
+    if (chunks.length > 0 && !chunks[0].match(/\b[a-zA-Z0-9_]+\s*=\s*InstanceInput\s*\{/i)) {
+       leadingWhitespace = chunks.shift();
+    }
+    blocks = chunks;
+
+    if (fromIndex < 0 || fromIndex >= blocks.length || toIndex < 0 || toIndex >= blocks.length) return;
+
+    const [movedBlock] = blocks.splice(fromIndex, 1);
+    if (fromIndex < toIndex) toIndex--;
+    if (insertAfter) toIndex++;
+    blocks.splice(toIndex, 0, movedBlock);
+
+    codeInput.value = beforeInputs + leadingWhitespace + blocks.join("") + afterInputs;
+    updatePreview();
+  }
+
   function updatePreview() {
     const rawCode = codeInput.value;
-    const macroName = nameInput.value.trim() || 'Custom Macro';
+    
+    // Extract original name from code if available
+    let originalDisplay = "";
+    let originalInternal = "";
+    if (rawCode) {
+      const macroMatch = rawCode.match(/([a-zA-Z0-9_]+)\s*=\s*MacroOperator\s*\{/i);
+      if (macroMatch) {
+        originalInternal = macroMatch[1];
+        originalDisplay = macroMatch[1];
+      }
+    }
+
+    const macroName = nameInput.value.trim();
+    const customNodeName = nodeNameInput.value.trim();
     const watermark = watermarkInput.value.trim();
     const ytUrl = urlInput.value.trim();
     const ytText = ytTextInput.value.trim() || 'Watch Tutorial';
@@ -367,13 +465,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const wmColor = watermarkColorInput.getAttribute('data-color') || '#888888';
 
     // Generate valid lua identifier for internal node name
-    let safeInternalName = macroName.replace(/[^a-zA-Z0-9_]/g, '');
-    if (!safeInternalName) safeInternalName = "CustomMacro";
-    if (/^[0-9]/.test(safeInternalName)) safeInternalName = "M_" + safeInternalName;
+    let safeInternalName = customNodeName;
+    if (!safeInternalName) {
+        if (macroName) {
+            safeInternalName = macroName.replace(/[^a-zA-Z0-9_]/g, '');
+            if (!safeInternalName) safeInternalName = "";
+            if (/^[0-9]/.test(safeInternalName)) safeInternalName = "M_" + safeInternalName;
+        } else {
+            safeInternalName = originalInternal;
+        }
+    }
+
+    const displayMacroName = macroName || originalDisplay;
 
     // Update Text
     previewNodeName.textContent = safeInternalName;
-    previewMacroName.textContent = macroName;
+    previewMacroName.textContent = displayMacroName;
     previewMacroName.style.color = titleColor;
     previewWatermark.textContent = watermark;
     previewWatermark.style.color = wmColor;
@@ -400,10 +507,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const regex = /Type\s*=\s*"(BeginNest|EndNest)"|EndNest\s*=\s*([0-9]+)|=\s*InstanceInput\s*\{/gi;
       let match;
       let nestIndex = 0;
+      let dragIndexCounter = 0;
       let currentParent = previewNests;
 
       while ((match = regex.exec(rawCode)) !== null) {
         const matchText = match[0].trim();
+        
+        if (matchText.includes('InstanceInput')) {
+            dragIndexCounter++;
+        }
+        
+        let currentDragIndex = dragIndexCounter - 1;
+        
         let isEndNest = false;
         let closeLevels = 0;
         let isBeginNest = false;
@@ -441,11 +556,47 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isInstanceInput) {
             let start = rawCode.indexOf('{', match.index);
             if (start === -1) start = match.index;
-            block = rawCode.substring(start, start + 350);
+            
+            let blockEnd = start;
+            let braceCount = 0;
+            for (let i = start; i < rawCode.length; i++) {
+                if (rawCode[i] === '{') braceCount++;
+                else if (rawCode[i] === '}') {
+                    braceCount--;
+                    if (braceCount === 0) {
+                        blockEnd = i;
+                        break;
+                    }
+                }
+            }
+            
+            if (blockEnd > start) {
+                block = rawCode.substring(start, blockEnd + 1);
+            } else {
+                block = rawCode.substring(start, start + 350);
+            }
         } else {
             let start = before.lastIndexOf('{');
             if (start === -1) start = Math.max(0, match.index - 200);
-            block = rawCode.substring(start, match.index + 350);
+            
+            let blockEnd = start;
+            let braceCount = 0;
+            for (let i = start; i < rawCode.length; i++) {
+                if (rawCode[i] === '{') braceCount++;
+                else if (rawCode[i] === '}') {
+                    braceCount--;
+                    if (braceCount === 0) {
+                        blockEnd = i;
+                        break;
+                    }
+                }
+            }
+            
+            if (blockEnd > start) {
+                block = rawCode.substring(start, blockEnd + 1);
+            } else {
+                block = rawCode.substring(start, match.index + 350);
+            }
         }
 
         if (isBeginNest) {
@@ -471,7 +622,9 @@ document.addEventListener('DOMContentLoaded', () => {
               }
 
               const container = document.createElement('div');
-              container.className = 'resolve-nest-container';
+              container.className = 'resolve-nest-container draggable-item';
+              container.setAttribute('draggable', 'true');
+              container.setAttribute('data-input-index', currentDragIndex);
 
               const nestEl = document.createElement('div');
               nestEl.className = 'resolve-nest';
@@ -480,17 +633,19 @@ document.addEventListener('DOMContentLoaded', () => {
                   <svg class="nest-caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: ${nestValue === 1 ? 'rotate(0deg)' : 'rotate(-90deg)'}; transition: transform 0.2s;"><polyline points="6 9 12 15 18 9"></polyline></svg>
                   <span class="nest-title" style="color: ${colorToUse}">${textContent}</span>
                 </div>
-                <div class="nest-controls">
-                  <div class="nest-toggle-wrapper">
-                    <span class="nest-toggle-label">Open</span>
-                    <label class="nest-toggle" title="Default Open/Close State">
-                      <input type="checkbox" class="nest-value-checkbox" data-index="${nestIndex}" ${nestValue === 1 ? 'checked' : ''} />
-                      <span class="slider"></span>
-                    </label>
+                  <div class="nest-controls">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-size:10px; color:#666;">OPEN</span>
+                      <div class="toggle-switch">
+                        <label class="switch">
+                          <input type="checkbox" class="nest-value-checkbox" data-index="${nestIndex}" ${nestValue === 1 ? 'checked' : ''}>
+                          <span class="switch-slider"></span>
+                        </label>
+                      </div>
+                      <div class="color-trigger nest-color-picker" data-index="${nestIndex}" style="width: 24px; height: 24px; border: 1px solid var(--panel-border); border-radius: 4px; cursor: pointer; background: ${colorToUse};" data-color="${colorToUse}" title="Change color for this nest"></div>
+                    </div>
                   </div>
-                  <div class="color-trigger nest-color-picker" data-index="${nestIndex}" style="width: 24px; height: 24px; border: 1px solid var(--panel-border); border-radius: 4px; cursor: pointer; background: ${colorToUse};" data-color="${colorToUse}" title="Change color for this nest"></div>
-                </div>
-              `;
+                `;
               
               const childrenBox = document.createElement('div');
               childrenBox.className = 'nest-children';
@@ -569,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     uiHtml = `<div class="fake-checkbox checked"></div><span style="font-size:11px; margin-left:4px;">${textContent}</span>`;
                 } else if (tLower.includes('flip') || sLower.includes('flip')) {
                     uiHtml = `<div class="fake-button">◀▶</div><div class="fake-button">▲▼</div><div class="fake-diamond"></div>`;
-                } else if (tLower.includes('color') || sLower.includes('color') || tLower.includes('red') || tLower.includes('blue') || tLower.includes('green') || tLower.includes('alpha')) {
+                } else if (tLower === 'color' || tLower.endsWith(' color') || sLower.includes('color') || tLower.includes('red') || tLower.includes('blue') || tLower.includes('green') || tLower.includes('alpha')) {
                     uiHtml = `<div class="fake-color-box"></div>`;
                 } else {
                     // Default: Slider
@@ -577,6 +732,11 @@ document.addEventListener('DOMContentLoaded', () => {
                               <div class="fake-input">1.0</div>
                               <div class="fake-diamond"></div>`;
                 }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'draggable-item';
+                wrapper.setAttribute('draggable', 'true');
+                wrapper.setAttribute('data-input-index', currentDragIndex);
 
                 const controlEl = document.createElement('div');
                 controlEl.className = 'control-row';
@@ -586,8 +746,8 @@ document.addEventListener('DOMContentLoaded', () => {
                   <div class="control-inputs">${uiHtml}</div>
                 `;
                 
-                // Append this control inside the current nest!
-                currentParent.appendChild(controlEl);
+                wrapper.appendChild(controlEl);
+                currentParent.appendChild(wrapper);
             }
         }
       }
@@ -596,6 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Attach event listeners for real-time preview
   nameInput.addEventListener('input', updatePreview);
+  nodeNameInput.addEventListener('input', updatePreview);
   watermarkInput.addEventListener('input', updatePreview);
   urlInput.addEventListener('input', updatePreview);
   ytTextInput.addEventListener('input', updatePreview);
@@ -607,34 +768,47 @@ document.addEventListener('DOMContentLoaded', () => {
   updatePreview();
 
   function processMacro(useObfuscation = false) {
-    let rawCode = codeInput.value;
-    const macroName = nameInput.value.trim() || 'Custom Macro';
-    const watermarkText = watermarkInput.value.trim();
-    const ytUrl = urlInput.value.trim();
-    const websiteUrl = websiteInput.value.trim();
-    const titleColor = nameColorInput.getAttribute('data-color') || '#ffffff';
-    const wmColor = watermarkColorInput.getAttribute('data-color') || '#888888';
-
-    if (!rawCode) {
-      alert('Please paste your DaVinci Resolve macro code first.');
-      return null;
-    }
-    
-    // ... [Original Minify and Header Logic is unchanged up to here, skipping re-writing those chunks]
-    
-    // We will do a separate edit for the processMacro logic below
-
-    // 0. Rename the macro internally so DaVinci Resolve recognizes the new name
-    const macroMatch = rawCode.match(/(\w+)\s*=\s*MacroOperator\s*\{/);
-    if (macroMatch) {
-      const originalMacroName = macroMatch[1];
-      let safeInternalName = macroName.replace(/[^a-zA-Z0-9_]/g, '');
-      if (!safeInternalName) safeInternalName = "CustomMacro";
-      if (/^[0-9]/.test(safeInternalName)) safeInternalName = "M_" + safeInternalName;
-
-      rawCode = rawCode.replace(new RegExp(originalMacroName + '(\\s*=\\s*MacroOperator\\s*\\{)'), safeInternalName + '$1');
-      rawCode = rawCode.replace(new RegExp(`ActiveTool\\s*=\\s*"${originalMacroName}"`), `ActiveTool = "${safeInternalName}"`);
-    }
+      let rawCode = codeInput.value;
+      
+      let originalDisplay = "";
+      if (rawCode) {
+          const m = rawCode.match(/([a-zA-Z0-9_]+)\s*=\s*MacroOperator\s*\{/i);
+          if (m) originalDisplay = m[1];
+      }
+      
+      const inputNameVal = nameInput.value.trim();
+      const customNodeName = nodeNameInput.value.trim();
+      const macroName = inputNameVal || originalDisplay || 'Custom Macro';
+      
+      const watermarkText = watermarkInput.value.trim();
+      const ytUrl = urlInput.value.trim();
+      const websiteUrl = websiteInput.value.trim();
+      const titleColor = nameColorInput.getAttribute('data-color') || '#ffffff';
+      const wmColor = watermarkColorInput.getAttribute('data-color') || '#888888';
+  
+      if (!rawCode) {
+        alert('Please paste your DaVinci Resolve macro code first.');
+        return null;
+      }
+      
+      // 0. Rename the macro internally so DaVinci Resolve recognizes the new name
+      const macroMatch = rawCode.match(/([a-zA-Z0-9_]+)\s*=\s*MacroOperator\s*\{/i);
+      if (macroMatch) {
+        const originalMacroName = macroMatch[1];
+        let safeInternalName = customNodeName;
+        if (!safeInternalName) {
+            if (inputNameVal) {
+                safeInternalName = inputNameVal.replace(/[^a-zA-Z0-9_]/g, '');
+            } else {
+                safeInternalName = originalMacroName;
+            }
+        }
+        if (!safeInternalName) safeInternalName = "CustomMacro";
+        if (/^[0-9]/.test(safeInternalName)) safeInternalName = "M_" + safeInternalName;
+  
+        rawCode = rawCode.replace(new RegExp(originalMacroName + '(\\s*=\\s*MacroOperator\\s*\\{)'), safeInternalName + '$1');
+        rawCode = rawCode.replace(new RegExp(`ActiveTool\\s*=\\s*"${originalMacroName}"`), `ActiveTool = "${safeInternalName}"`);
+      }
 
     // 1. Ensure UserControls block exists
     if (!rawCode.includes('UserControls = ordered() {')) {
@@ -817,3 +991,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+
+

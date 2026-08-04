@@ -977,3 +977,21 @@ small {
   justify-content: flex-end;
   gap: 10px;
 }
+
+/* Drag and Drop Styles */
+.draggable-item {
+  cursor: grab;
+  position: relative;
+}
+.draggable-item:active {
+  cursor: grabbing;
+}
+.draggable-item.dragging {
+  opacity: 0.5;
+}
+.drag-over-top {
+  border-top: 2px solid var(--accent) !important;
+}
+.drag-over-bottom {
+  border-bottom: 2px solid var(--accent) !important;
+}
