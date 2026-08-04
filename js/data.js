@@ -186,8 +186,7 @@ const projectData = [
         file: "Davinci Scripting Plugin/Align & Pivot.zip",
         price: 5,
         payhipKey: "dFOVz",
-        isNew: true,
-        showGiftBanner: true
+        isNew: true
     },
     {
         id: "CurrencyNumberFormatter",

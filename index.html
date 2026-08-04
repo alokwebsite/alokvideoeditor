@@ -201,7 +201,9 @@
         <main style="width: 100%; display: flex; flex-direction: column; align-items: center;">
 
             <!-- Main Central Card -->
-            <div style="display: flex; justify-content: center; margin-bottom: 4rem; width: 100%;">
+            <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 4rem; width: 100%; flex-wrap: wrap;">
+                
+                <!-- DaVinci Resolve Tools -->
                 <div class="card box-card" onclick="document.getElementById('home-category-modal').classList.add('active'); document.getElementById('home-category-modal').style.display='flex';" style="cursor: pointer; width: 100%; max-width: 320px; position: relative;">
                     <div style="position: absolute; top: 12px; right: 12px; background: rgba(0, 242, 255, 0.1); color: var(--primary); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.65rem; font-weight: 800; border: 1px solid rgba(0, 242, 255, 0.3); z-index: 10; letter-spacing: 1px; text-transform: uppercase;">ALL TOOLS</div>
                     
@@ -219,6 +221,21 @@
                     <h3 class="card-title" style="text-align: center; font-size: 1.5rem;">DaVinci Resolve</h3>
                     <div class="card-type" style="margin-top: 0.8rem; font-size: 0.75rem;">BROWSE ALL TOOLS</div>
                 </div>
+
+                <!-- AlokMacroCreator -->
+                <div class="card box-card" onclick="window.open('AlokMacroCreator/AlokMacroCreator.html', '_blank')" style="cursor: pointer; width: 100%; max-width: 320px; position: relative;">
+                    <div style="position: absolute; top: 12px; right: 12px; background: rgba(241, 196, 15, 0.1); color: #f1c40f; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.65rem; font-weight: 800; border: 1px solid rgba(241, 196, 15, 0.3); z-index: 10; letter-spacing: 1px; text-transform: uppercase;">NEW</div>
+                    
+                    <div class="card-icon-placeholder" style="margin: 2rem auto 1.5rem; width: 80px; height: 80px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <h3 class="card-title" style="text-align: center; font-size: 1.5rem;">AlokMacroCreator</h3>
+                    <div class="card-type" style="margin-top: 0.8rem; font-size: 0.75rem; color: #f1c40f;">OPEN TOOL</div>
+                </div>
+
             </div>
             <!-- Overview Section -->
             <section class="overview-section" id="home-overview">
