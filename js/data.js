@@ -184,6 +184,7 @@ const projectData = [
         name: "Align & Pivot",
         description: "A massive time-saver for DaVinci Resolve Fusion. Automate your layout and animation workflow instantly with a sleek UI for 9-point alignment, smart pivot control, and auto keyframing.",
         file: "Davinci Scripting Plugin/Align & Pivot.zip",
+        youtube: "https://www.youtube.com/watch?v=P2aT-7h7JY8",
         price: 5,
         payhipKey: "dFOVz",
         isNew: true
