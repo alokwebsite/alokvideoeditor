@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to install Workflow Integration - Alok Video Editor</title>
+    <link rel="icon" type="image/jpeg" href="images/profile.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=2.2">
+</head>
+<body>
+    <div id="loader-wrapper">
+        <div class="loader-text" style="font-size: 2.2rem; font-weight: 800; letter-spacing: 2px;">Alok Video Editor<span class="dots"></span></div>
+    </div>
+    <div class="glass-overlay">
+        <!-- Back to Home Button -->
+        <a href="index.html" class="back-home-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            Back to Home
+        </a>
+        <header>
+            <div class="logo" style="margin-top: 2rem;">
+                <h1 style="font-size: 3rem;">How to Install Workflow Integration</h1>
+                <p>Follow these simple steps for your OS</p>
+            </div>
+        </header>
+
+        <main style="width: 100%; max-width: 800px; padding: 3rem; background: var(--card-bg); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); text-align: left; line-height: 1.6;">
+
+            <div class="os-tabs" style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2.5rem; flex-wrap: wrap;">
+                <button class="os-tab" onclick="showOS('windows')" style="background: rgba(13, 187, 195, 0.1); border: 1px solid #0dbbc3; color: #fff; padding: 0.8rem 1.5rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; font-family: 'Outfit', sans-serif; font-size: 1.1rem; transition: all 0.3s ease;">
+                    <svg width="20" height="20" viewBox="0 0 448 512" fill="currentColor"><path d="M0 93.6l183.6-25.3v177.4H0V93.6zm227.2-32.1L448 29.3v216.4H227.2V61.5zm0 252.1H448v216.4l-220.8-32.2V313.6zm-227.2 0h183.6v177.4L0 465.7V313.6z"/></svg>
+                    Windows
+                </button>
+                <button class="os-tab" onclick="showOS('mac')" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.8rem 1.5rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; font-family: 'Outfit', sans-serif; font-size: 1.1rem; transition: all 0.3s ease;">
+                    <svg width="20" height="20" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                    Mac
+                </button>
+                <button class="os-tab" onclick="showOS('linux')" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.8rem 1.5rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; font-family: 'Outfit', sans-serif; font-size: 1.1rem; transition: all 0.3s ease;">
+                    <svg width="20" height="20" viewBox="0 0 448 512" fill="currentColor"><path d="M220.8 123.3c1.1 0 2.2 0 3.3 .1 27.6 .7 57.5 7.1 76.1 21.6 4.7 3.7 8.2 8.7 10.3 14.6 2.3 6.6 2.5 13.9 1 20.6-2.5 11.2-12.7 18.7-24 18.7h-5.2c-15.1 0-25.9-13.8-21.7-28.4 2-7.1 11.1-10.7 18.3-7.5 .5 .2 1 .5 1.5 .8 1.4 1 3.5 .2 3.8-1.4 .1-.9-.3-1.8-1.2-2.3-12.8-7.9-37.1-13-58.9-13.5-3.5-.1-7.1-.1-10.7 .1-22.1 1-46.6 6.8-59.5 15.3-.8 .5-1.1 1.4-1.2 2.3 .2 1.6 2.4 2.4 3.8 1.4 .5-.3 1-.6 1.5-.8 7.3-3.2 16.3 .4 18.3 7.5 4.3 14.5-6.6 28.4-21.7 28.4h-5.2c-11.3 0-21.5-7.5-24-18.7-1.4-6.7-1.2-14 1-20.6 2.1-5.9 5.6-10.9 10.3-14.6 18.8-14.6 49.3-21.1 77.3-21.6 1.1-.1 2.2-.1 3.3-.1zM286.2 38.6c17.6 17.6 28.7 40.5 32 65.4-18.7-10.3-43.2-17.2-70.1-18.6-26.9 1.4-51.4 8.3-70.1 18.6 3.2-24.9 14.4-47.8 32-65.4C226.7 21.8 249.7 21.8 266.4 38.6zM224 0C100.3 0 0 100.3 0 224s100.3 224 224 224 224-100.3 224-224S347.7 0 224 0zM128 224c0-35.3 14.3-67.3 37.5-90.5 14.5-14.5 32.2-25.2 51.5-31.5 2.3-7.8 8.1-14.3 15.6-18.2 9.5-4.9 21.1-4.9 30.7 0 7.5 3.9 13.3 10.4 15.6 18.2 19.3 6.3 37 17 51.5 31.5C353.7 156.7 368 188.7 368 224c0 79.5-64.5 144-144 144S80 303.5 80 224z"/></svg>
+                    Linux
+                </button>
+            </div>
+
+<div id="os-windows" class="os-content" style="margin-bottom: 2.5rem; display: block; opacity: 1; ">
+                <h3 style="color: #0dbbc3; font-size: 1.8rem; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                    <svg width="24" height="24" viewBox="0 0 448 512" fill="currentColor"><path d="M0 93.6l183.6-25.3v177.4H0V93.6zm227.2-32.1L448 29.3v216.4H227.2V61.5zm0 252.1H448v216.4l-220.8-32.2V313.6zm-227.2 0h183.6v177.4L0 465.7V313.6z"/></svg>
+                    Windows
+                </h3>
+                <p style="margin-bottom: 0.8rem; font-size: 1.1rem;"><strong>Step 1:</strong> Press <kbd style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 0.9rem;">Win</kbd> + <kbd style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 0.9rem;">R</kbd> to open the Run dialog.</p>
+                <p style="margin-bottom: 0.8rem; font-size: 1.1rem;"><strong>Step 2:</strong> Paste the following path:</p>
+                <div style="background: rgba(0,0,0,0.4); padding: 1.2rem; border-radius: 8px; font-family: monospace; color: #fff; margin-bottom: 1.2rem; overflow-x: auto; white-space: nowrap; border: 1px solid rgba(255,255,255,0.05);">%ProgramData%\Blackmagic Design\DaVinci Resolve\Support\Workflow Integration Plugins</div>
+                <p style="font-size: 1.1rem;"><strong>Step 3:</strong> Press Enter and paste your downloaded Workflow Integration files in this folder.</p>
+            </div>
+
+            <div id="os-mac" class="os-content" style="margin-bottom: 2.5rem; display: none; opacity: 0; ">
+                <h3 style="color: #0dbbc3; font-size: 1.8rem; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                    <svg width="24" height="24" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                    Mac
+                </h3>
+                <p style="margin-bottom: 0.8rem; font-size: 1.1rem;"><strong>Step 1:</strong> Open <strong>Finder</strong>.</p>
+                <p style="margin-bottom: 0.8rem; font-size: 1.1rem;"><strong>Step 2:</strong> Press <kbd style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 0.9rem;">Cmd</kbd> + <kbd style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 0.9rem;">Shift</kbd> + <kbd style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 0.9rem;">G</kbd>.</p>
+                <p style="margin-bottom: 0.8rem; font-size: 1.1rem;"><strong>Step 3:</strong> Paste this path:</p>
+                <div style="background: rgba(0,0,0,0.4); padding: 1.2rem; border-radius: 8px; font-family: monospace; color: #fff; margin-bottom: 1.2rem; overflow-x: auto; white-space: nowrap; border: 1px solid rgba(255,255,255,0.05);">/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins</div>
+                <p style="font-size: 1.1rem;"><strong>Step 4:</strong> Press Enter/Go and place your Workflow Integration files here.</p>
+            </div>
+
+            <div id="os-linux" class="os-content" style="margin-bottom: 2.5rem; display: none; opacity: 0; ">
+                <h3 style="color: #0dbbc3; font-size: 1.8rem; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                    <svg width="24" height="24" viewBox="0 0 448 512" fill="currentColor"><path d="M220.8 123.3c1.1 0 2.2 0 3.3 .1 27.6 .7 57.5 7.1 76.1 21.6 4.7 3.7 8.2 8.7 10.3 14.6 2.3 6.6 2.5 13.9 1 20.6-2.5 11.2-12.7 18.7-24 18.7h-5.2c-15.1 0-25.9-13.8-21.7-28.4 2-7.1 11.1-10.7 18.3-7.5 .5 .2 1 .5 1.5 .8 1.4 1 3.5 .2 3.8-1.4 .1-.9-.3-1.8-1.2-2.3-12.8-7.9-37.1-13-58.9-13.5-3.5-.1-7.1-.1-10.7 .1-22.1 1-46.6 6.8-59.5 15.3-.8 .5-1.1 1.4-1.2 2.3 .2 1.6 2.4 2.4 3.8 1.4 .5-.3 1-.6 1.5-.8 7.3-3.2 16.3 .4 18.3 7.5 4.3 14.5-6.6 28.4-21.7 28.4h-5.2c-11.3 0-21.5-7.5-24-18.7-1.4-6.7-1.2-14 1-20.6 2.1-5.9 5.6-10.9 10.3-14.6 18.8-14.6 49.3-21.1 77.3-21.6 1.1-.1 2.2-.1 3.3-.1zM286.2 38.6c17.6 17.6 28.7 40.5 32 65.4-18.7-10.3-43.2-17.2-70.1-18.6-26.9 1.4-51.4 8.3-70.1 18.6 3.2-24.9 14.4-47.8 32-65.4C226.7 21.8 249.7 21.8 266.4 38.6zM224 0C100.3 0 0 100.3 0 224s100.3 224 224 224 224-100.3 224-224S347.7 0 224 0zM128 224c0-35.3 14.3-67.3 37.5-90.5 14.5-14.5 32.2-25.2 51.5-31.5 2.3-7.8 8.1-14.3 15.6-18.2 9.5-4.9 21.1-4.9 30.7 0 7.5 3.9 13.3 10.4 15.6 18.2 19.3 6.3 37 17 51.5 31.5C353.7 156.7 368 188.7 368 224c0 79.5-64.5 144-144 144S80 303.5 80 224z"/></svg>
+                    Linux
+                </h3>
+                <p style="margin-bottom: 0.8rem; font-size: 1.1rem;"><strong>Step 1:</strong> Open your <strong>File Manager</strong>.</p>
+                <p style="margin-bottom: 0.8rem; font-size: 1.1rem;"><strong>Step 2:</strong> Press <kbd style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 0.9rem;">Ctrl</kbd> + <kbd style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 0.9rem;">L</kbd> to type a path directly.</p>
+                <p style="margin-bottom: 0.8rem; font-size: 1.1rem;"><strong>Step 3:</strong> Paste the path:</p>
+                <div style="background: rgba(0,0,0,0.4); padding: 1.2rem; border-radius: 8px; font-family: monospace; color: #fff; margin-bottom: 0.8rem; overflow-x: auto; white-space: nowrap; border: 1px solid rgba(255,255,255,0.05);">/opt/resolve/Fusion/Workflow Integration Plugins</div>
+                <p style="margin-bottom: 0.8rem; font-size: 1.1rem; color: var(--text-muted);">Or, on some distros:</p>
+                <div style="background: rgba(0,0,0,0.4); padding: 1.2rem; border-radius: 8px; font-family: monospace; color: #fff; margin-bottom: 1.2rem; overflow-x: auto; white-space: nowrap; border: 1px solid rgba(255,255,255,0.05);">/home/[your_username]/.local/share/DaVinciResolve/Workflow Integration Plugins</div>
+                <p style="font-size: 1.1rem;"><strong>Step 4:</strong> Hit Enter and place your Workflow Integration files here.</p>
+            </div>
+        </main>
+        <div id="footer-placeholder" style="width: 100%;"></div>
+    </div>
+    <script src="js/footer.js?v=1.1"></script>
+    <script src="js/main.js?v=2.2"></script>
+
+    <script>
+        let currentOSIndex = 0;
+        const osOrder = ['windows', 'mac', 'linux'];
+
+        function showOS(os) {
+            const newIndex = osOrder.indexOf(os);
+            if (newIndex === currentOSIndex) return;
+
+            const direction = newIndex > currentOSIndex ? 1 : -1;
+            currentOSIndex = newIndex;
+
+            document.querySelectorAll('.os-content').forEach(el => {
+                el.style.display = 'none';
+                el.style.opacity = '0';
+                el.style.transform = '';
+            });
+
+            document.querySelectorAll('.os-tab').forEach(el => {
+                el.style.borderColor = 'rgba(255,255,255,0.1)';
+                el.style.background = 'rgba(255,255,255,0.05)';
+            });
+            
+            const target = document.getElementById('os-' + os);
+            if (target) {
+                target.style.display = 'block';
+                target.style.opacity = '1';
+                target.style.transition = 'none';
+                target.style.transform = 'none';
+                
+                const children = Array.from(target.children);
+                children.forEach(child => {
+                    child.style.transition = 'none';
+                    child.style.transform = `translateX(${direction * 30}px)`;
+                    child.style.opacity = '0';
+                });
+                
+                // Force reflow
+                void target.offsetWidth;
+                
+                children.forEach((child, index) => {
+                    child.style.transition = `all 0.25s cubic-bezier(0.25, 1, 0.5, 1) ${index * 0.04}s`;
+                    child.style.transform = 'translateX(0)';
+                    child.style.opacity = '1';
+                });
+            }
+            
+            const activeTab = document.querySelector(`.os-tab[onclick="showOS('${os}')"]`);
+            if (activeTab) {
+                activeTab.style.borderColor = '#0dbbc3';
+                activeTab.style.background = 'rgba(13, 187, 195, 0.1)';
+            }
+        }
+    </script>
+
+
+    <script>
+        // Check URL for OS parameter on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const osParam = params.get('os');
+            if (osParam && osOrder.includes(osParam)) {
+                currentOSIndex = osOrder.indexOf(osParam);
+                document.querySelectorAll('.os-content').forEach(el => {
+                    el.style.display = 'none';
+                    el.style.opacity = '0';
+                    el.style.transform = '';
+                });
+                document.querySelectorAll('.os-tab').forEach(el => {
+                    el.style.borderColor = 'rgba(255,255,255,0.1)';
+                    el.style.background = 'rgba(255,255,255,0.05)';
+                });
+                
+                const target = document.getElementById('os-' + osParam);
+                if (target) {
+                    target.style.display = 'block';
+                    target.style.opacity = '1';
+                    Array.from(target.children).forEach(child => {
+                        child.style.transition = 'none';
+                        child.style.transform = 'none';
+                        child.style.opacity = '1';
+                    });
+                }
+                
+                const activeTab = document.querySelector(`.os-tab[onclick="showOS('${osParam}')"]`);
+                if (activeTab) {
+                    activeTab.style.borderColor = '#0dbbc3';
+                    activeTab.style.background = 'rgba(13, 187, 195, 0.1)';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

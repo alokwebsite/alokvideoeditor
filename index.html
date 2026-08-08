@@ -222,7 +222,20 @@
                     <div class="card-type" style="margin-top: 0.8rem; font-size: 0.75rem;">BROWSE ALL TOOLS</div>
                 </div>
 
-
+                <!-- How to Install -->
+                <div class="card box-card" onclick="document.getElementById('install-category-modal').classList.add('active'); document.getElementById('install-category-modal').style.display='flex';" style="cursor: pointer; width: 100%; max-width: 320px; position: relative;">
+                    <div style="position: absolute; top: 12px; right: 12px; background: rgba(255, 193, 7, 0.1); color: #ffc107; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.65rem; font-weight: 800; border: 1px solid rgba(255, 193, 7, 0.3); z-index: 10; letter-spacing: 1px; text-transform: uppercase;">GUIDE</div>
+                    
+                    <div class="card-icon-placeholder" style="margin: 2rem auto 1.5rem; width: 80px; height: 80px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </div>
+                    <h3 class="card-title" style="text-align: center; font-size: 1.5rem;">How to Install</h3>
+                    <div class="card-type" style="margin-top: 0.8rem; font-size: 0.75rem;">INSTALLATION GUIDES</div>
+                </div>
 
             </div>
             <!-- Overview Section -->
@@ -354,6 +367,58 @@
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 18l6-6-6-6M8 6L2 12l6 6M14 4l-4 16" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Expressions</h3>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Install Category Modal -->
+    <div id="install-category-modal" class="selection-modal">
+        <div class="selection-content" style="max-width: 800px; padding: 3rem;">
+            <div style="position: absolute; top: 1rem; right: 1.5rem; cursor: pointer; color: var(--text-muted); font-size: 1.5rem;" onclick="document.getElementById('install-category-modal').classList.remove('active'); setTimeout(() => document.getElementById('install-category-modal').style.display='none', 500);">&times;</div>
+            <h2 class="selection-title">Installation Guide</h2>
+            <p class="selection-desc">Choose a category to view how to install</p>
+            <div class="selection-cards" style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-top: 2rem;">
+                
+                <div class="selection-card" onclick="window.location.href='how-to-install-macro.html'" style="min-width: 220px; flex: 1;">
+                    <div class="selection-badge">GUIDE</div>
+                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Macro</h3>
+                </div>
+
+                <div class="selection-card" onclick="window.location.href='how-to-install-workflow.html'" style="min-width: 220px; flex: 1;">
+                    <div class="selection-badge">GUIDE</div>
+                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    </div>
+                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Workflow Integration</h3>
+                </div>
+
+                <div class="selection-card" onclick="window.location.href='how-to-install-fuse.html'" style="min-width: 220px; flex: 1;">
+                    <div class="selection-badge">GUIDE</div>
+                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Fuse</h3>
+                </div>
+
+                <div class="selection-card" onclick="window.location.href='how-to-install-plugin.html'" style="min-width: 220px; flex: 1;">
+                    <div class="selection-badge">GUIDE</div>
+                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Plugin</h3>
+                </div>
+
+                <div class="selection-card" onclick="window.location.href='how-to-install-scripting.html'" style="min-width: 220px; flex: 1;">
+                    <div class="selection-badge">GUIDE</div>
+                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 18l6-6-6-6M8 6L2 12l6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Scripting</h3>
                 </div>
 
             </div>
