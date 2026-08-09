@@ -27,6 +27,15 @@ const projectData = [
     //Macros
 
     {
+        id: "CamPlugin",
+        type: "macro",
+        name: "Cam Plugin",
+        description: "A professional camera plugin macro for DaVinci Resolve.",
+        file: "Macro/Cam Plugin.zip",
+        youtube: "https://www.youtube.com/watch?v=DOLq86U8F0A"
+    },
+
+    {
         id: "Rectangle_V3",
         type: "macro",
         name: "Rectangle V3",
