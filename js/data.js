@@ -61,6 +61,7 @@ const projectData = [
         type: "macro",
         name: "Opacity",
         description: "Quickly control transparency with an easy-to-use opacity slider. Perfect for fades, overlays, and smooth visibility adjustments.",
+        link: "https://payhip.com/b/8umA2",
         file: "Macro/Opacity.zip",
         youtube: "https://www.youtube.com/watch?v=_9g2Y3iJXeY"
     },
@@ -70,6 +71,7 @@ const projectData = [
         type: "macro",
         name: "Text Infinite Scroller",
         description: "Text Infinite Scroller is a simple DaVinci Resolve (Fusion) macro that creates smooth, continuous scrolling text with a seamless infinite loop. Easily control speed and direction for clean, professional animations.",
+        link: "https://payhip.com/b/0RPKN",
         file: "Macro/Text_Infinite_Scroller.zip",
         youtube: "https://www.youtube.com/watch?v=T9TPsAN91DI"
     },
@@ -89,6 +91,7 @@ const projectData = [
         type: "macro",
         name: "Text Selector",
         description: "This is a text highlighter tool, not a standard text selector. Macro version for easy editing.",
+        link: "https://payhip.com/b/jeOM7",
         file: "Macro/Text Selector.zip",
         youtube: "https://www.youtube.com/watch?v=A0PVe1OZxas"
     },
@@ -100,6 +103,7 @@ const projectData = [
         type: "plugin",
         name: "Text Selector",
         description: "This is a text highlighter tool, not a standard text selector.",
+        link: "https://payhip.com/b/jeOM7",
         file: "Plugin/Text Selector.zip",
         youtube: "https://www.youtube.com/watch?v=A0PVe1OZxas"
     },
