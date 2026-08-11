@@ -122,7 +122,8 @@ const projectData = [
         id: "CinemaBar",
         type: "plugin",
         name: "Cinema Bar",
-        description: "Professional Cinema Bar plugin for cinematic aspect ratios.",
+        description: "Cinema Bar plugin for cinematic aspect ratios.",
+        link: "https://payhip.com/b/cOsrS",
         file: "Plugin/CinemaBar.zip"
     },
     {
@@ -130,6 +131,7 @@ const projectData = [
         type: "plugin",
         name: "Safe Zone For Reels",
         description: "Reels Safe Zone (9/16) vertical format",
+        link: "https://payhip.com/b/v4PKa",
         file: "Plugin/Safe Zone for Reels.zip" // Ensure this file exists in your Macro folder
     },
     {
@@ -137,6 +139,7 @@ const projectData = [
         type: "plugin",
         name: "Safe Zone For AD",
         description: "AD Safe Zone (9/16) vertical format",
+        link: "https://payhip.com/b/fx5EW",
         file: "Plugin/Safe Zone For AD.zip" // Ensure this file exists in your Macro folder
     },
     // Projects
