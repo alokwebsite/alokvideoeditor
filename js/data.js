@@ -157,6 +157,7 @@ const projectData = [
         type: "scripting",
         name: "Auto File Organizer",
         description: "Stop wasting time dragging clips into folders manually. Auto File Organizer scans your entire DaVinci Resolve media pool and sorts every file into the right bin in seconds — Video, Audio, Images, Timelines, Compound Clips, Subtitles, Documents, and more. Works on any project size. Just run the script and your media pool is clean and organized, instantly.",
+        link: "https://payhip.com/b/ADoaL",
         file: "Davinci Scripting Plugin/Auto File Organizer.zip",
         youtube: "https://www.youtube.com/watch?v=Xr_tLO3KySo"
     },
@@ -165,6 +166,7 @@ const projectData = [
         type: "scripting",
         name: "Copy Pasta V2",
         description: "Copy Pasta V2 is a free DaVinci Resolve plugin that lets you instantly copy any frame from the Edit or Fusion page straight to your clipboard — and paste external images directly into your timeline. No Color Page. No export. Just one click.",
+        link: "https://payhip.com/b/xXmh7",
         file: "Davinci Scripting Plugin/Copy Pasta V2.zip",
         youtube: "https://www.youtube.com/watch?v=U9BA1XNA9dE"
     },
@@ -173,7 +175,8 @@ const projectData = [
         id: "EnnerTextFinder",
         type: "scripting",
         name: "Enner Text Finder",
-        description: "A powerful DaVinci Resolve script to help you quickly find and manage text elements in your projects.",
+        description: "Find Enner Text from Text Node",
+        link: "https://payhip.com/b/AWO0l",
         file: "Davinci Scripting Plugin/Enner Text finder.zip",
         youtube: "https://www.youtube.com/watch?v=OR2BBdPkz3o"
     },
@@ -182,6 +185,7 @@ const projectData = [
         type: "scripting",
         name: "Auto Connect Nodes",
         description: "A fast and efficient DaVinci Resolve scripting plugin to automatically connect nodes in your Fusion compositions, saving you time on repetitive tasks.",
+        link: "https://payhip.com/b/ubvjH",
         file: "Davinci Scripting Plugin/Auto Connect Nodes.zip",
         youtube: "https://www.youtube.com/watch?v=QmZiph-ef0s",
         isNew: true
