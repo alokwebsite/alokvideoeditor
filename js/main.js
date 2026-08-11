@@ -715,6 +715,8 @@ function openInfoModal(item) {
                 } else {
                     window.open(`https://payhip.com/b/${key}`, '_blank');
                 }
+            } else if (item.link) {
+                window.open(item.link, '_blank');
             } else {
                 startDownload(item.file, item.name);
             }
@@ -867,7 +869,12 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function renderProductPage() {
     const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
+    let productId = urlParams.get('id');
+    
+    // Backward compatibility for old links
+    if (productId === 'CamPlugin') {
+        productId = 'CamStyle';
+    }
 
     if (!productId) {
         document.getElementById('product-title').innerText = "Product Not Found";
@@ -1450,6 +1457,8 @@ function renderProductPage() {
     getBtn.onclick = () => {
         if (item.price) {
             window.open(`https://payhip.com/b/${item.payhipKey}`, '_blank');
+        } else if (item.link) {
+            window.open(item.link, '_blank');
         } else {
             // Free download flow - Show inline downloading state
             const originalText = getBtnText.innerText;

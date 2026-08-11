@@ -27,10 +27,11 @@ const projectData = [
     //Macros
 
     {
-        id: "CamPlugin",
+        id: "CamStyle",
         type: "macro",
-        name: "Cam Plugin",
-        description: "A professional camera plugin macro for DaVinci Resolve.",
+        name: "Cam Style",
+        description: "Free 4 Macro for Podcast Editor, Podcast Reels Editor, And all editor",
+        link: "https://payhip.com/b/kvUWJ",
         file: "Macro/Cam Plugin.zip",
         youtube: "https://www.youtube.com/watch?v=DOLq86U8F0A"
     },
@@ -40,6 +41,7 @@ const projectData = [
         type: "macro",
         name: "Rectangle V3",
         description: "Rectangle_V3 has full directional control: left, right, top, and bottom.",
+        link: "https://payhip.com/b/ShYuP",
         file: "Macro/Rectangle_V3.zip",
         youtube: "https://www.youtube.com/watch?v=6-72PyQli1Q",
         features: [
@@ -77,6 +79,7 @@ const projectData = [
         type: "macro",
         name: "Alok Web Text",
         description: "Alok Web Text is a free Fusion macro for DaVinci Resolve that adds a realistic blinking cursor animation to any text — just like the typing cursor you see in Google Search, code editors, or any text field.",
+        link: "https://payhip.com/b/Oz9CZ",
         file: "Macro/Alok Web Text.zip",
         youtube: "https://youtu.be/Zg_fqEhPDVc"
     },
@@ -106,6 +109,7 @@ const projectData = [
         type: "plugin",
         name: "Alok Web Text",
         description: "Alok Web Text is a free Plugin for DaVinci Resolve that adds a realistic blinking cursor animation to any text — just like the typing cursor you see in Google Search, code editors, or any text field.",
+        link: "https://payhip.com/b/Oz9CZ",
         file: "Plugin/Alok Web Text.zip",
         youtube: "https://youtu.be/Zg_fqEhPDVc"
     },
