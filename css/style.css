@@ -320,12 +320,14 @@ header {
 .card-image-block img {
     width: 100%;
     height: 100%;
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
+    object-fit: cover;
+    opacity: 0.9;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .card:hover .card-image-block img {
     opacity: 1;
+    transform: scale(1.02);
 }
 
 .card-badge {

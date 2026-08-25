@@ -153,6 +153,45 @@ const projectData = [
      },
     // Scripting Plugins
     {
+        id: "AutoFileOrganizerPro",
+        type: "scripting",
+        name: "Auto File Organizer Pro",
+        description: "Auto File Organizer Pro is the ultimate DaVinci Resolve organization suite. It automatically sorts all media into labeled bins by file type, detects camera brands, separates compound/multicam clips & timelines, applies color coding, handles SFX/music, deep scans nested sub-bins, and supports offline clips.",
+        price: 30,
+        salePrice: 19.50,
+        payhipKey: "HbZKp",
+        image: "images/auto_file_organizer_pro.png",
+        file: "Davinci Scripting Plugin/Auto File Organizer Pro.zip",
+        isNew: true,
+        features: [
+            "Auto Bin Sorting — separates Video, Audio, Images, Documents, SRT subtitles & Design files",
+            "Camera Brand Detection — auto-sorts Sony, Canon, Blackmagic, RED, GoPro, DJI, iPhone & more",
+            "Clip Type Sorting — separates Timelines, Compound Clips, Multicam & Fusion Compositions",
+            "Color Coding — applies instant color labels based on file type or camera brand",
+            "SFX & Music Folders — scans custom library paths and organizes them into dedicated bins",
+            "Deep Scan Mode — organizes deeply nested clips inside existing sub-folders",
+            "Offline Clip Support — can organize offline and missing clips seamlessly"
+        ]
+    },
+    {
+        id: "AutoCapsStyle",
+        type: "scripting",
+        name: "Auto Cap's Style",
+        description: "Generate viral, high-retention animated captions for TikTok, Reels, and Shorts directly inside DaVinci Resolve with 1-click presets. Save hours of manual keyframing with full creative control over fonts, colors, and word emphasis — running 100% offline.",
+        image: "images/auto_caps_style.png",
+        link: "https://payhip.com/b/kpJtj",
+        file: "Davinci Scripting Plugin/Auto Cap's Style.zip",
+        isNew: true,
+        features: [
+            "Save Hundreds of Hours — 1-click animated caption rendering",
+            "Instantly Increase Audience Retention with MrBeast & Hormozi style animations",
+            "No Animation Skills Required — loaded with viral presets",
+            "Seamless Timeline Workflow — lives entirely inside DaVinci Resolve",
+            "Total Creative Control over fonts, layout, colors & word emphasis",
+            "Runs 100% Offline on CPU — minimum 8 GB RAM, no GPU required"
+        ]
+    },
+    {
         id: "AutoFileOrganizer",
         type: "scripting",
         name: "Auto File Organizer",

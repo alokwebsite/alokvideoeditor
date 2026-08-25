@@ -894,7 +894,7 @@ function renderProductPage() {
     }
 
     // Set document title
-    document.title = item.name + ' - Reveace Clone';
+    document.title = item.name + ' - Alok Video Editor';
 
     // Populate Hero Details
     document.getElementById('product-title').innerText = item.name;
@@ -1429,7 +1429,7 @@ function renderProductPage() {
                 guideType = 'plugin';
             }
 
-            const isWindowsOnly = (item.id === 'FusionExpressionEditor');
+            const isWindowsOnly = (item.id === 'FusionExpressionEditor' || item.id === 'AutoFileOrganizerPro');
 
             const osBadgeHTML = `
                 <div class="os-support-badge" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.05); gap: 0.8rem; color: var(--text-muted); font-size: 0.9rem;">
@@ -1513,6 +1513,22 @@ document.addEventListener('keydown', function(e) {
     // Ctrl+U / Cmd+U (View Source)
     if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
         e.preventDefault();
+    }
+    // Escape key to dismiss active modals
+    if (e.key === 'Escape') {
+        const infoModal = document.getElementById('info-modal');
+        if (infoModal && infoModal.classList.contains('active')) {
+            closeInfoModal();
+        }
+        ['home-category-modal', 'install-category-modal', 'selection-modal', 'download-modal'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el && (el.classList.contains('active') || !el.classList.contains('hidden'))) {
+                el.classList.remove('active');
+                setTimeout(() => { el.style.display = 'none'; }, 300);
+            }
+        });
+        const heightMenu = document.getElementById('fp-height-dropdown-menu');
+        if (heightMenu) heightMenu.style.display = 'none';
     }
 });
 
