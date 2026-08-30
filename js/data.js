@@ -178,9 +178,9 @@ const projectData = [
         type: "scripting",
         name: "Auto Cap's Style",
         description: "Generate viral, high-retention animated captions for TikTok, Reels, and Shorts directly inside DaVinci Resolve with 1-click presets. Save hours of manual keyframing with full creative control over fonts, colors, and word emphasis — running 100% offline.",
-        image: "images/auto_caps_style.png",
         link: "https://payhip.com/b/kpJtj",
         file: "Davinci Scripting Plugin/Auto Cap's Style.zip",
+        youtube: "https://www.youtube.com/watch?v=yOxGSA35InI",
         isNew: true,
         features: [
             "Save Hundreds of Hours — 1-click animated caption rendering",
