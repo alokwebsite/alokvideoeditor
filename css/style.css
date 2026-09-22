@@ -2473,6 +2473,50 @@ main > div > .btn-download:nth-child(4) { opacity: 0; animation: expoBounce 0.5s
     border-radius: 4px;
 }
 
+/* In-Page Video Player Controls */
+.stop-video-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 30;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+}
+
+.stop-video-btn:hover {
+    background: #ff0000;
+    border-color: #ff0000;
+    transform: scale(1.1);
+    box-shadow: 0 4px 20px rgba(255, 0, 0, 0.5);
+}
+
+.card-external-link {
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.card-external-link:hover {
+    color: var(--primary);
+    background: rgba(13, 187, 195, 0.15);
+}
+
 /* Services Section */
 .services-section {
     width: 100%;
@@ -2978,5 +3022,167 @@ main > div > .btn-download:nth-child(4) { opacity: 0; animation: expoBounce 0.5s
     .contact-section {
         padding: 2.5rem 1.5rem;
     }
+}
+
+/* Local File / YouTube Error 153 Explanatory Banner & Warning */
+.file-protocol-notice {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    background: linear-gradient(90deg, #1c1917, #292524);
+    border-bottom: 1px solid rgba(245, 158, 11, 0.4);
+    color: #fef3c7;
+    font-size: 0.88rem;
+    padding: 0.65rem 1.2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.file-protocol-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    line-height: 1.4;
+}
+
+.file-protocol-content code {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    color: #fbbf24;
+    font-family: monospace;
+}
+
+.file-protocol-content button {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: #fef3c7;
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.file-protocol-content button:hover {
+    opacity: 1;
+}
+
+.local-file-warning-box {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #18181b 0%, #09090b 100%);
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #f4f4f5;
+    z-index: 5;
+    border-radius: inherit;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.local-file-warning-box .warning-badge {
+    display: inline-block;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    color: #fbbf24;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    margin-bottom: 0.5rem;
+}
+
+.local-file-warning-box h4 {
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    color: #ffffff;
+}
+
+.local-file-warning-box p {
+    font-size: 0.8rem;
+    color: #a1a1aa;
+    line-height: 1.4;
+    margin-bottom: 0.6rem;
+    max-width: 95%;
+}
+
+.local-file-warning-box code,
+.local-file-warning-box .highlight-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: #38bdf8;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-family: monospace;
+    font-size: 0.78rem;
+}
+
+.warning-guide {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.75rem;
+    width: 95%;
+    max-width: 320px;
+}
+
+.warning-guide p {
+    margin-bottom: 0.15rem;
+    font-size: 0.76rem;
+    color: #e4e4e7;
+}
+
+.warning-button-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.warning-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.warning-action-btn.primary {
+    background: #ff0000;
+    color: #ffffff !important;
+}
+
+.warning-action-btn.primary:hover {
+    background: #cc0000;
+}
+
+.warning-action-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e4e4e7;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.warning-action-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
 }
 
