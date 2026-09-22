@@ -424,6 +424,11 @@ function renderHomeOverview() {
 function createNotificationNav() {
     const page = window.location.pathname.split('/').pop() || 'index.html';
 
+    // Do NOT display DaVinci Resolve tools navigation bar on the personal Portfolio page
+    if (page.toLowerCase().includes('portfolio')) {
+        return;
+    }
+
     const pages = [
         {
             id: 'plugins',
