@@ -918,7 +918,7 @@ function renderProductPage() {
     const heroContainer = document.getElementById('product-hero-container');
     const heroImage = document.getElementById('product-hero-image');
     const bgBlur = document.getElementById('bg-glass-blur');
-    const imgSrc = item.heroImage || item.controlsImage || item.image;
+    const imgSrc = item.heroImage || item.controlsImage;
     
     if (imgSrc) {
         heroImage.src = imgSrc;

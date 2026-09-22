@@ -160,8 +160,8 @@ const projectData = [
         price: 30,
         salePrice: 19.50,
         payhipKey: "HbZKp",
-        image: "images/auto_file_organizer_pro.png",
         file: "Davinci Scripting Plugin/Auto File Organizer Pro.zip",
+        youtube: "https://www.youtube.com/watch?v=AzpsRdPtvtw",
         isNew: true,
         features: [
             "Auto Bin Sorting — separates Video, Audio, Images, Documents, SRT subtitles & Design files",
