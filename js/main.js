@@ -877,8 +877,8 @@ function renderProductPage() {
     let productId = urlParams.get('id');
     
     // Backward compatibility for old links
-    if (productId === 'CamPlugin') {
-        productId = 'CamStyle';
+    if (productId === 'CamPlugin' || productId === 'CamStyle') {
+        productId = 'CamAlign';
     }
 
     if (!productId) {

@@ -27,9 +27,9 @@ const projectData = [
     //Macros
 
     {
-        id: "CamStyle",
+        id: "CamAlign",
         type: "macro",
-        name: "Cam Style",
+        name: "Cam Align",
         description: "Free 4 Macro for Podcast Editor, Podcast Reels Editor, And all editor",
         link: "https://payhip.com/b/kvUWJ",
         file: "Macro/Cam Plugin.zip",
