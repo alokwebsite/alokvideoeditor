@@ -29,12 +29,81 @@ const portfolioConfig = {
     // Categories for filter tabs
     categories: [
         { id: "all", label: "All Projects" },
+        { id: "motion-graphics", label: "Motion Graphics" },
         { id: "reels", label: "Reels & Shorts (9:16)" },
         { id: "youtube", label: "YouTube & Long-Form" }
     ],
 
     // Individual Portfolio Projects
     projects: [
+        {
+            id: "motion-graphics-sera",
+            title: "Sera Graphics",
+            category: "motion-graphics",
+            categories: ["motion-graphics"],
+            client: "Sera Graphics",
+            format: "horizontal", // 16:9 widescreen
+            duration: "0:14",
+            videoFile: "Video/Portfolio/Motion Graphics 1.mp4",
+            thumbnail: "images/motion_graphics_1_thumb.jpg",
+            description: "Clean, modern 2D/3D motion graphics brand reveal with fluid typography transitions and vibrant aesthetic design.",
+            tags: ["Motion Graphics", "Logo Reveal", "Brand Identity"]
+        },
+        {
+            id: "motion-graphics-smart-sikshya",
+            title: "Smart Sikshya",
+            category: "motion-graphics",
+            categories: ["motion-graphics"],
+            client: "Smart Sikshya",
+            format: "horizontal", // 16:9 widescreen
+            duration: "0:27",
+            videoFile: "Video/Portfolio/Motion Graphics 2.mp4",
+            thumbnail: "images/motion_graphics_2_thumb.jpg",
+            description: "Dynamic brand identity and educational motion graphics animation featuring colorful iconography, kinetic layout, and audio sync.",
+            tags: ["Motion Graphics", "Typography", "Animation"]
+        },
+        {
+            id: "fusion-logo-animation-1",
+            title: "3D Fusion Logo Animation",
+            category: "motion-graphics",
+            categories: ["motion-graphics"],
+            client: "Logo Animation",
+            format: "vertical",
+            platform: "instagram",
+            instagramId: "DYhqDswyLCr",
+            instagramUrl: "https://www.instagram.com/reel/DYhqDswyLCr/",
+            thumbnail: "images/reel_fusion_logo.jpg",
+            description: "Smooth 3D logo reveal and motion animation designed natively inside DaVinci Resolve Fusion with lighting and depth.",
+            tags: ["Logo Animation", "Fusion 3D", "Motion Graphics"]
+        },
+        {
+            id: "brittanta-logo-animation",
+            title: "Brittanta Brand Logo Animation",
+            category: "motion-graphics",
+            categories: ["motion-graphics"],
+            client: "Logo Animation",
+            format: "vertical",
+            platform: "instagram",
+            instagramId: "DbqvrvdSbyX",
+            instagramUrl: "https://www.instagram.com/reel/DbqvrvdSbyX/",
+            thumbnail: "images/reel_client_project.jpg",
+            description: "Dynamic brand identity logo animation with custom typography, motion graphics, and sound design for client Brittanta.",
+            tags: ["Logo Animation", "Brand Identity", "Fusion"]
+        },
+        {
+            id: "fusion-logo-reveal-animation",
+            title: "Creative Fusion Logo Reveal",
+            category: "motion-graphics",
+            categories: ["motion-graphics"],
+            client: "Logo Animation",
+            format: "vertical",
+            platform: "instagram",
+            instagramId: "DUdfq4-EonO",
+            instagramUrl: "https://www.instagram.com/reel/DUdfq4-EonO/",
+            thumbnail: "images/reel_fusion_vfx.jpg",
+            description: "Creative logo reveal animation and compositing breakdown using advanced node tree workflows in DaVinci Resolve Fusion.",
+            tags: ["Logo Animation", "Motion Design", "DaVinci Resolve"]
+        },
         {
             id: "surkhet",
             title: "Surkhet",
@@ -86,48 +155,6 @@ const portfolioConfig = {
             thumbnail: "https://i.ytimg.com/vi/XHdyNAzRzh4/maxresdefault.jpg",
             description: "High-impact product commercial short featuring key product benefits, dynamic motion graphics, sound design, and compelling call to action.",
             tags: ["Product Video", "Commercial", "Motion Graphics"]
-        },
-        {
-            id: "fusion-logo-animation-1",
-            title: "3D Fusion Logo Animation",
-            category: "reels",
-            categories: ["reels"],
-            client: "Logo Animation",
-            format: "vertical",
-            platform: "instagram",
-            instagramId: "DYhqDswyLCr",
-            instagramUrl: "https://www.instagram.com/reel/DYhqDswyLCr/",
-            thumbnail: "images/reel_fusion_logo.jpg",
-            description: "Smooth 3D logo reveal and motion animation designed natively inside DaVinci Resolve Fusion with lighting and depth.",
-            tags: ["Logo Animation", "Fusion 3D", "Motion Graphics"]
-        },
-        {
-            id: "brittanta-logo-animation",
-            title: "Brittanta Brand Logo Animation",
-            category: "reels",
-            categories: ["reels"],
-            client: "Logo Animation",
-            format: "vertical",
-            platform: "instagram",
-            instagramId: "DbqvrvdSbyX",
-            instagramUrl: "https://www.instagram.com/reel/DbqvrvdSbyX/",
-            thumbnail: "images/reel_client_project.jpg",
-            description: "Dynamic brand identity logo animation with custom typography, motion graphics, and sound design for client Brittanta.",
-            tags: ["Logo Animation", "Brand Identity", "Fusion"]
-        },
-        {
-            id: "fusion-logo-reveal-animation",
-            title: "Creative Fusion Logo Reveal",
-            category: "reels",
-            categories: ["reels"],
-            client: "Logo Animation",
-            format: "vertical",
-            platform: "instagram",
-            instagramId: "DUdfq4-EonO",
-            instagramUrl: "https://www.instagram.com/reel/DUdfq4-EonO/",
-            thumbnail: "images/reel_fusion_vfx.jpg",
-            description: "Creative logo reveal animation and compositing breakdown using advanced node tree workflows in DaVinci Resolve Fusion.",
-            tags: ["Logo Animation", "Motion Design", "DaVinci Resolve"]
         }
     ],
 

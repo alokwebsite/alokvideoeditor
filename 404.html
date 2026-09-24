@@ -8,12 +8,33 @@
     <link rel="icon" type="image/jpeg" href="images/profile.jpg">
 
     <!-- SEO Meta Tags -->
-    <meta name="robots" content="noindex, follow">
-    <meta http-equiv="refresh" content="0;url=/">
-
     <script>
-        // Immediately redirect to home page
-        window.location.replace("/");
+        (function() {
+            // Intelligent Clean URL Fallback:
+            // If visiting an extensionless URL like /portfolio or /product, automatically resolve to .html
+            var path = window.location.pathname.replace(/\/+$/, '');
+            var segment = path.split('/').pop();
+            
+            var validPages = [
+                'portfolio',
+                'product',
+                'plugins_and_macros',
+                'projects',
+                'davinci_scripting_plugin',
+                'fusion_expression',
+                'terms-and-policies',
+                'how-to-install-macro',
+                'how-to-install-plugin',
+                'how-to-install-scripting',
+                'how-to-install-workflow',
+                'how-to-install-fuse'
+            ];
+
+            if (segment && validPages.indexOf(segment.toLowerCase()) !== -1) {
+                var target = path + '.html' + window.location.search + window.location.hash;
+                window.location.replace(target);
+            }
+        })();
     </script>
 
     <!-- Fonts -->

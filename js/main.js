@@ -1,3 +1,31 @@
+// Clean URLs: Automatically hide .html extension from browser address bar
+(function cleanUrlExtension() {
+    try {
+        if (window.location.protocol.startsWith('http')) {
+            // Strip .html from the address bar immediately
+            if (window.location.pathname.endsWith('.html')) {
+                var cleanPath = window.location.pathname.replace(/\/index\.html$/i, '/').replace(/\.html$/i, '');
+                if (!cleanPath) cleanPath = '/';
+                var newUrl = cleanPath + window.location.search + window.location.hash;
+                window.history.replaceState(null, '', newUrl);
+            }
+
+            // On web servers, rewrite in-page anchor links so hover previews and status bar show clean URLs
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('a[href]').forEach(function(a) {
+                    var href = a.getAttribute('href');
+                    if (!href) return;
+                    if (href === 'index.html' || href === './index.html') {
+                        a.setAttribute('href', '/');
+                    } else if (href.endsWith('.html') && !href.includes('://')) {
+                        a.setAttribute('href', href.replace(/\.html$/, ''));
+                    }
+                });
+            });
+        }
+    } catch (e) {}
+})();
+
 // DOM Elements
 const grid = document.getElementById('content-grid');
 const homeGrid = document.getElementById('home-content-grid');
@@ -38,7 +66,8 @@ function init() {
     setupPageTransitions();
     
     // If on product page, render the product details
-    if (window.location.pathname.endsWith('product.html')) {
+    const currentPath = window.location.pathname.toLowerCase();
+    if (currentPath.endsWith('product.html') || currentPath.endsWith('/product') || currentPath.endsWith('/product/')) {
         renderProductPage();
     } else {
         // Hash change for URL modal routing (legacy, leaving for safety if any other hash logic exists)
@@ -110,11 +139,12 @@ function setupPageTransitions() {
     const links = document.querySelectorAll('a[href]');
     
     links.forEach(link => {
-        // Only target internal HTML links
+        const href = link.getAttribute('href');
+        // Only target internal navigation links (excluding hash anchors, external links, downloads)
         if (link.hostname === window.location.hostname && 
-            link.pathname.endsWith('.html') &&
             link.target !== '_blank' &&
-            !link.hasAttribute('download')) {
+            !link.hasAttribute('download') &&
+            href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:') && !href.startsWith('javascript:')) {
             
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -319,7 +349,8 @@ function renderGrid() {
         `;
 
         card.onclick = () => {
-            window.location.href = 'product.html?id=' + item.id;
+            const productUrl = window.location.protocol === 'file:' ? 'product.html?id=' : 'product?id=';
+            window.location.href = productUrl + item.id;
         };
 
         grid.appendChild(card);
@@ -408,7 +439,8 @@ function renderHomeOverview() {
 
         card.onclick = () => {
             // When clicked on home page, open the item in the dedicated product page
-            window.location.href = 'product.html?id=' + item.id;
+            const productUrl = window.location.protocol === 'file:' ? 'product.html?id=' : 'product?id=';
+            window.location.href = productUrl + item.id;
         };
 
         homeGrid.appendChild(card);
@@ -422,40 +454,44 @@ function renderHomeOverview() {
  * Tablet/Mobile: Bottom tab bar like a native app
  */
 function createNotificationNav() {
-    const page = window.location.pathname.split('/').pop() || 'index.html';
+    const rawPage = window.location.pathname.split('/').pop() || 'index.html';
+    const page = rawPage.replace(/\.html$/i, '') || 'index';
 
     // Do NOT display DaVinci Resolve tools navigation bar on the personal Portfolio page
     if (page.toLowerCase().includes('portfolio')) {
         return;
     }
 
+    const isFile = window.location.protocol === 'file:';
+    const cleanLink = (file) => isFile ? `${file}.html` : file;
+
     const pages = [
         {
             id: 'plugins',
             label: 'Plugins & Macros',
-            href: 'Plugins_and_Macros.html',
-            match: 'Plugins_and_Macros.html',
+            href: cleanLink('Plugins_and_Macros'),
+            match: 'Plugins_and_Macros',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         },
         {
             id: 'projects',
             label: 'Project File',
-            href: 'Projects.html',
-            match: 'Projects.html',
+            href: cleanLink('Projects'),
+            match: 'Projects',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         },
         {
             id: 'scripting',
             label: 'Scripting',
-            href: 'Davinci_Scripting_Plugin.html',
-            match: 'Davinci_Scripting_Plugin.html',
+            href: cleanLink('Davinci_Scripting_Plugin'),
+            match: 'Davinci_Scripting_Plugin',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6L2 12l6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         },
         {
             id: 'expression',
             label: 'Expression',
-            href: 'Fusion_Expression.html',
-            match: 'Fusion_Expression.html',
+            href: cleanLink('Fusion_Expression'),
+            match: 'Fusion_Expression',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6L2 12l6 6M14 4l-4 16" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         }
     ];
@@ -465,11 +501,11 @@ function createNotificationNav() {
     nav.id = 'notification-nav';
     nav.setAttribute('aria-label', 'Section Navigation');
 
-    const isHomePage = (page === '' || page === 'index.html');
+    const isHomePage = (page === '' || page === 'index');
 
     if (isHomePage) {
         nav.classList.add('dropdown-style');
-        const activePage = pages.find(p => page === p.match) || pages[0];
+        const activePage = pages.find(p => page.toLowerCase() === p.match.toLowerCase()) || pages[0];
 
         const trigger = document.createElement('div');
         trigger.className = 'notif-trigger';
@@ -479,7 +515,7 @@ function createNotificationNav() {
         menu.className = 'notif-dropdown-menu';
 
         pages.forEach((p) => {
-            const isActive = page === p.match;
+            const isActive = page.toLowerCase() === p.match.toLowerCase();
             const link = document.createElement('a');
             link.href = p.href;
             link.className = 'notif-nav-link' + (isActive ? ' active' : '');
@@ -504,7 +540,7 @@ function createNotificationNav() {
     } else {
         nav.classList.add('classic-style');
         pages.forEach((p) => {
-            const isActive = page === p.match;
+            const isActive = page.toLowerCase() === p.match.toLowerCase();
             const link = document.createElement('a');
             link.href = p.href;
             link.className = 'notif-nav-link' + (isActive ? ' active' : '');
@@ -522,7 +558,7 @@ function createNotificationNav() {
     mobileNav.setAttribute('aria-label', 'Mobile Section Navigation');
 
     pages.forEach((p) => {
-        const isActive = page === p.match;
+        const isActive = page.toLowerCase() === p.match.toLowerCase();
         const link = document.createElement('a');
         link.href = p.href;
         link.className = 'mobile-tab-link' + (isActive ? ' active' : '');

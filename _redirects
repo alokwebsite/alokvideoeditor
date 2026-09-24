@@ -1,0 +1,14 @@
+# Redirect .html requests to clean URLs
+/index.html                     /                           301
+/portfolio.html                 /portfolio                  301
+/product.html                   /product                    301
+/Plugins_and_Macros.html        /Plugins_and_Macros         301
+/Projects.html                  /Projects                   301
+/Davinci_Scripting_Plugin.html  /Davinci_Scripting_Plugin   301
+/Fusion_Expression.html         /Fusion_Expression          301
+/terms-and-policies.html        /terms-and-policies         301
+/how-to-install-macro.html      /how-to-install-macro       301
+/how-to-install-plugin.html     /how-to-install-plugin      301
+/how-to-install-scripting.html  /how-to-install-scripting   301
+/how-to-install-workflow.html   /how-to-install-workflow    301
+/how-to-install-fuse.html       /how-to-install-fuse        301

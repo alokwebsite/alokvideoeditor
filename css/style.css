@@ -2975,6 +2975,17 @@ main > div > .btn-download:nth-child(4) { opacity: 0; animation: expoBounce 0.5s
     color: #fff;
 }
 
+.card-play-icon.motion-play-icon {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    color: #050510;
+}
+
+.card-format-badge.motion-badge {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    color: #050510;
+    font-weight: 800;
+}
+
 .local-play-btn.instagram {
     background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
     box-shadow: 0 10px 30px rgba(220, 39, 67, 0.55), 0 0 50px rgba(188, 24, 136, 0.3);
