@@ -46,8 +46,8 @@ const portfolioConfig = {
             duration: "0:14",
             videoFile: "Video/Portfolio/Motion Graphics 1.mp4",
             thumbnail: "images/motion_graphics_1_thumb.jpg",
-            description: "Clean, modern 2D/3D motion graphics brand reveal with fluid typography transitions and vibrant aesthetic design.",
-            tags: ["Motion Graphics", "Logo Reveal", "Brand Identity"]
+            description: "Clean, modern 2D animation and motion graphics brand reveal with fluid typography transitions and vibrant aesthetic design.",
+            tags: ["2D Animation", "Motion Graphics", "Logo Reveal"]
         },
         {
             id: "motion-graphics-smart-sikshya",
@@ -59,8 +59,8 @@ const portfolioConfig = {
             duration: "0:27",
             videoFile: "Video/Portfolio/Motion Graphics 2.mp4",
             thumbnail: "images/motion_graphics_2_thumb.jpg",
-            description: "Dynamic brand identity and educational motion graphics animation featuring colorful iconography, kinetic layout, and audio sync.",
-            tags: ["Motion Graphics", "Typography", "Animation"]
+            description: "Dynamic 2D + 3D SaaS motion graphics animation featuring modern platform UI, kinetic layout, and audio sync.",
+            tags: ["SaaS Animation", "2D + 3D Animation", "Motion Graphics"]
         },
         {
             id: "fusion-logo-animation-1",
