@@ -58,6 +58,9 @@ function init() {
     const controls = document.getElementById('toggle-controls');
     if (controls) controls.setAttribute('data-active', currentTab);
 
+    // Ensure flash sale status is up-to-date before rendering
+    if (typeof applyFlashSaleAutoReset === 'function') applyFlashSaleAutoReset();
+
     if (grid) renderGrid();
     if (homeGrid) renderHomeOverview();
 
@@ -300,9 +303,15 @@ function renderGrid() {
 
         let badgesHTML = '';
         if (item.price && item.salePrice) {
-            badgesHTML += `<div class="card-badge">On Sale</div>`;
+            const badgeText = item.discount || 'On Sale';
+            badgesHTML += `<div class="card-badge sale-badge">${badgeText}</div>`;
         } else if (item.isNew) {
             badgesHTML += `<div class="card-badge">New</div>`;
+        }
+
+        let saleEndHTML = '';
+        if (item.saleEnd) {
+            saleEndHTML = `<div class="card-badge-top-right">Ends ${item.saleEnd}</div>`;
         }
 
         let priceBadgeHTML = '';
@@ -343,6 +352,7 @@ function renderGrid() {
             <div class="card-image-block">
                 ${iconOrImageHTML}
                 ${badgesHTML}
+                ${saleEndHTML}
             </div>
             <h3 class="card-title">${item.name}</h3>
             ${priceBadgeHTML}
@@ -365,7 +375,7 @@ function renderHomeOverview() {
     homeGrid.innerHTML = '';
 
     // Display specific featured items on the home page
-    const featuredIds = ['Rectangle_V3'];
+    const featuredIds = ['Rectangle_V3', 'AutoFileOrganizerPro', 'AlignAndPivot'];
     const displayData = projectData.filter(item => featuredIds.includes(item.id));
 
     displayData.forEach((item, index) => {
@@ -382,13 +392,16 @@ function renderHomeOverview() {
         let downloadCountHTML = '';
         if (item.id === 'Rectangle_V3') {
             downloadCountHTML = `<div style="position: absolute; top: 10px; right: 10px; background: var(--primary); color: #000; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.65rem; font-weight: 800; z-index: 10; text-transform: uppercase;">3000+ Downloads</div>`;
+        } else if (item.saleEnd) {
+            downloadCountHTML = `<div class="card-badge-top-right">Ends ${item.saleEnd}</div>`;
         } else if (item.id === 'AutoFileOrganizer') {
             downloadCountHTML = `<div style="position: absolute; top: 10px; right: 10px; background: var(--primary); color: #000; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.65rem; font-weight: 800; z-index: 10; text-transform: uppercase;">500+ Downloads</div>`;
         }
 
         let badgesHTML = '';
         if (item.price && item.salePrice) {
-            badgesHTML += `<div class="card-badge">On Sale</div>`;
+            const badgeText = item.discount || 'On Sale';
+            badgesHTML += `<div class="card-badge sale-badge">${badgeText}</div>`;
         } else if (item.isNew) {
             badgesHTML += `<div class="card-badge">New</div>`;
         }
@@ -725,11 +738,11 @@ function openInfoModal(item) {
     if (item.price) {
         priceDisplay.style.display = 'block';
         if (item.salePrice) {
-            priceDisplay.innerHTML = `<span style="text-decoration: line-through; color: #888; font-size: 1rem; margin-right: 8px;">$${item.price}</span>$${item.salePrice} <span style="font-size: 0.8rem; color: #ffeb3b; margin-left: 8px; padding: 2px 6px; border: 1px solid #ffeb3b; border-radius: 4px;">SALE</span>`;
-            getBtnText.textContent = `Buy Now - $${item.salePrice}`;
+            priceDisplay.innerHTML = `<span style="text-decoration: line-through; color: #888; font-size: 1rem; margin-right: 8px;">$${Number(item.price).toFixed(2)}</span>$${Number(item.salePrice).toFixed(2)} <span style="font-size: 0.8rem; color: #ff3366; margin-left: 8px; padding: 2px 6px; border: 1px solid #ff3366; border-radius: 4px; font-weight: 700;">${item.discount || 'SALE'}</span>`;
+            getBtnText.textContent = `Buy Now - $${Number(item.salePrice).toFixed(2)}`;
         } else {
-            priceDisplay.innerHTML = `$${item.price}`;
-            getBtnText.textContent = `Buy Now - $${item.price}`;
+            priceDisplay.innerHTML = `$${Number(item.price).toFixed(2)}`;
+            getBtnText.textContent = `Buy Now - $${Number(item.price).toFixed(2)}`;
         }
     } else {
         priceDisplay.style.display = 'none';
@@ -1456,7 +1469,42 @@ function renderProductPage() {
     }
 
     if (giftBanner) {
-        giftBanner.style.display = (item.id === 'AlignAndPivot') ? '' : 'none';
+        if (item.salePrice && (item.saleEnd || item.discount)) {
+            giftBanner.style.display = 'flex';
+            giftBanner.classList.add('flash-sale-banner');
+            const origPrice = Number(item.price).toFixed(item.price % 1 === 0 ? 0 : 2);
+            const curSalePrice = Number(item.salePrice).toFixed(2);
+            let timeRemainingText = '';
+            if (item.saleEndTime) {
+                const diffMs = new Date(item.saleEndTime).getTime() - Date.now();
+                if (diffMs > 0) {
+                    const hoursLeft = Math.floor(diffMs / (1000 * 60 * 60));
+                    const minsLeft = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                    timeRemainingText = hoursLeft > 0 ? ` (${hoursLeft}h ${minsLeft}m left)` : ` (${minsLeft}m left)`;
+                }
+            }
+
+            giftBanner.innerHTML = `
+                <span class="gift-icon" style="filter: drop-shadow(0 0 8px rgba(255, 51, 102, 0.7));">🔥</span>
+                <div class="gift-text">
+                    <span class="gift-title" style="color: #ff3366; font-weight: 800; font-size: 0.75rem; letter-spacing: 1.5px;">FLASH SALE — ${item.discount || 'LIMITED TIME'}</span>
+                    <span class="gift-desc" style="color: #fff; font-size: 0.9rem; font-weight: 700;">Was $${origPrice} — Now only $${curSalePrice}! Special offer ends ${item.saleEnd || 'soon'}${timeRemainingText}.</span>
+                </div>
+            `;
+        } else if (item.id === 'AlignAndPivot') {
+            giftBanner.style.display = 'flex';
+            giftBanner.classList.remove('flash-sale-banner');
+            giftBanner.innerHTML = `
+                <span class="gift-icon">🎁</span>
+                <div class="gift-text">
+                    <span class="gift-title">Special Offer</span>
+                    <span class="gift-desc">Purchase 1 Plugin — Get 1 Free!</span>
+                </div>
+            `;
+        } else {
+            giftBanner.style.display = 'none';
+            giftBanner.classList.remove('flash-sale-banner');
+        }
         
         // Remove existing badge if present (to avoid duplicates if called multiple times)
         const existingBadge = document.querySelector('.os-support-badge');
@@ -1587,3 +1635,32 @@ if (heightDropdownBtn && heightDropdownMenu) {
         heightDropdownMenu.style.display = 'none';
     });
 }
+
+/**
+ * Real-time Flash Sale Auto-Reset Monitor
+ * Automatically checks expiry every 30 seconds and seamlessly resets pricing back to default ($30 & $5)
+ */
+function monitorFlashSaleLifecycle() {
+    if (typeof applyFlashSaleAutoReset === 'function' && typeof projectData !== 'undefined') {
+        const wasActive = projectData.some(i => i.saleEndTime);
+        applyFlashSaleAutoReset();
+        const stillActive = projectData.some(i => i.saleEndTime);
+        
+        // If the 43-hour period has just expired, refresh active views to show default prices immediately
+        if (wasActive && !stillActive) {
+            if (typeof renderGrid === 'function' && document.getElementById('content-grid')) {
+                renderGrid();
+            }
+            if (typeof renderHomeOverview === 'function' && document.getElementById('home-content-grid')) {
+                renderHomeOverview();
+            }
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentId = urlParams.get('id');
+            if (currentId && typeof renderProductPage === 'function' && document.getElementById('product-price')) {
+                renderProductPage(currentId);
+            }
+        }
+    }
+}
+setInterval(monitorFlashSaleLifecycle, 30000);
+
