@@ -158,11 +158,6 @@ const projectData = [
         name: "Auto File Organizer Pro",
         description: "Auto File Organizer Pro is the ultimate DaVinci Resolve organization suite. It automatically sorts all media into labeled bins by file type, detects camera brands, separates compound/multicam clips & timelines, applies color coding, handles SFX/music, deep scans nested sub-bins, and supports offline clips.",
         price: 30,
-        defaultPrice: 30,
-        salePrice: 10.50,
-        discount: "65% OFF",
-        saleEnd: "October 6",
-        saleEndTime: "2026-10-05T23:47:33Z",
         payhipKey: "HbZKp",
         file: "Davinci Scripting Plugin/Auto File Organizer Pro.zip",
         youtube: "https://www.youtube.com/watch?v=AzpsRdPtvtw",
@@ -253,11 +248,6 @@ const projectData = [
         file: "Davinci Scripting Plugin/Align & Pivot.zip",
         youtube: "https://www.youtube.com/watch?v=P2aT-7h7JY8",
         price: 5,
-        defaultPrice: 5,
-        salePrice: 2.50,
-        discount: "50% OFF",
-        saleEnd: "October 6",
-        saleEndTime: "2026-10-05T23:47:33Z",
         payhipKey: "dFOVz",
         isNew: true
     },
@@ -271,30 +261,6 @@ const projectData = [
     }
 ];
 
-/**
- * AUTO-RESET FLASH SALE ENGINE
- * Automatically resets sale prices back to default regular prices after the 43-hour flash sale ends
- */
 function applyFlashSaleAutoReset() {
-    const now = Date.now();
-    if (typeof projectData !== 'undefined' && Array.isArray(projectData)) {
-        projectData.forEach(item => {
-            if (item.saleEndTime) {
-                const expiry = new Date(item.saleEndTime).getTime();
-                if (now >= expiry) {
-                    // Flash sale expired: Restore default regular prices
-                    if (item.defaultPrice !== undefined) {
-                        item.price = item.defaultPrice;
-                    }
-                    delete item.salePrice;
-                    delete item.discount;
-                    delete item.saleEnd;
-                    delete item.saleEndTime;
-                }
-            }
-        });
-    }
+    // Regular default pricing active
 }
-
-// Execute immediately upon load
-applyFlashSaleAutoReset();

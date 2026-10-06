@@ -375,7 +375,7 @@ function renderHomeOverview() {
     homeGrid.innerHTML = '';
 
     // Display specific featured items on the home page
-    const featuredIds = ['Rectangle_V3', 'AutoFileOrganizerPro', 'AlignAndPivot'];
+    const featuredIds = ['Rectangle_V3'];
     const displayData = projectData.filter(item => featuredIds.includes(item.id));
 
     displayData.forEach((item, index) => {
@@ -1469,42 +1469,8 @@ function renderProductPage() {
     }
 
     if (giftBanner) {
-        if (item.salePrice && (item.saleEnd || item.discount)) {
-            giftBanner.style.display = 'flex';
-            giftBanner.classList.add('flash-sale-banner');
-            const origPrice = Number(item.price).toFixed(item.price % 1 === 0 ? 0 : 2);
-            const curSalePrice = Number(item.salePrice).toFixed(2);
-            let timeRemainingText = '';
-            if (item.saleEndTime) {
-                const diffMs = new Date(item.saleEndTime).getTime() - Date.now();
-                if (diffMs > 0) {
-                    const hoursLeft = Math.floor(diffMs / (1000 * 60 * 60));
-                    const minsLeft = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                    timeRemainingText = hoursLeft > 0 ? ` (${hoursLeft}h ${minsLeft}m left)` : ` (${minsLeft}m left)`;
-                }
-            }
-
-            giftBanner.innerHTML = `
-                <span class="gift-icon" style="filter: drop-shadow(0 0 8px rgba(255, 51, 102, 0.7));">🔥</span>
-                <div class="gift-text">
-                    <span class="gift-title" style="color: #ff3366; font-weight: 800; font-size: 0.75rem; letter-spacing: 1.5px;">FLASH SALE — ${item.discount || 'LIMITED TIME'}</span>
-                    <span class="gift-desc" style="color: #fff; font-size: 0.9rem; font-weight: 700;">Was $${origPrice} — Now only $${curSalePrice}! Special offer ends ${item.saleEnd || 'soon'}${timeRemainingText}.</span>
-                </div>
-            `;
-        } else if (item.id === 'AlignAndPivot') {
-            giftBanner.style.display = 'flex';
-            giftBanner.classList.remove('flash-sale-banner');
-            giftBanner.innerHTML = `
-                <span class="gift-icon">🎁</span>
-                <div class="gift-text">
-                    <span class="gift-title">Special Offer</span>
-                    <span class="gift-desc">Purchase 1 Plugin — Get 1 Free!</span>
-                </div>
-            `;
-        } else {
-            giftBanner.style.display = 'none';
-            giftBanner.classList.remove('flash-sale-banner');
-        }
+        giftBanner.style.display = 'none';
+        giftBanner.classList.remove('flash-sale-banner');
         
         // Remove existing badge if present (to avoid duplicates if called multiple times)
         const existingBadge = document.querySelector('.os-support-badge');
@@ -1635,32 +1601,4 @@ if (heightDropdownBtn && heightDropdownMenu) {
         heightDropdownMenu.style.display = 'none';
     });
 }
-
-/**
- * Real-time Flash Sale Auto-Reset Monitor
- * Automatically checks expiry every 30 seconds and seamlessly resets pricing back to default ($30 & $5)
- */
-function monitorFlashSaleLifecycle() {
-    if (typeof applyFlashSaleAutoReset === 'function' && typeof projectData !== 'undefined') {
-        const wasActive = projectData.some(i => i.saleEndTime);
-        applyFlashSaleAutoReset();
-        const stillActive = projectData.some(i => i.saleEndTime);
-        
-        // If the 43-hour period has just expired, refresh active views to show default prices immediately
-        if (wasActive && !stillActive) {
-            if (typeof renderGrid === 'function' && document.getElementById('content-grid')) {
-                renderGrid();
-            }
-            if (typeof renderHomeOverview === 'function' && document.getElementById('home-content-grid')) {
-                renderHomeOverview();
-            }
-            const urlParams = new URLSearchParams(window.location.search);
-            const currentId = urlParams.get('id');
-            if (currentId && typeof renderProductPage === 'function' && document.getElementById('product-price')) {
-                renderProductPage(currentId);
-            }
-        }
-    }
-}
-setInterval(monitorFlashSaleLifecycle, 30000);
 
