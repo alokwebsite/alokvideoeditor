@@ -13,15 +13,23 @@
             // Intelligent Clean URL Fallback:
             // If visiting an extensionless URL like /portfolio or /product, automatically resolve to .html
             var path = window.location.pathname.replace(/\/+$/, '');
-            var segment = path.split('/').pop();
+            var segment = (path.split('/').pop() || '').toLowerCase().replace(/\.html$/, '');
+
+            var legacyMap = {
+                'plugins_and_macros': '/?category=plugin#marketplace',
+                'davinci_scripting_plugin': '/?category=scripting#marketplace',
+                'fusion_expression': '/?category=expression#marketplace',
+                'projects': '/?category=project#marketplace'
+            };
+
+            if (legacyMap[segment]) {
+                window.location.replace(legacyMap[segment]);
+                return;
+            }
             
             var validPages = [
                 'portfolio',
                 'product',
-                'plugins_and_macros',
-                'projects',
-                'davinci_scripting_plugin',
-                'fusion_expression',
                 'terms-and-policies',
                 'how-to-install-macro',
                 'how-to-install-plugin',
@@ -30,8 +38,8 @@
                 'how-to-install-fuse'
             ];
 
-            if (segment && validPages.indexOf(segment.toLowerCase()) !== -1) {
-                var target = path + '.html' + window.location.search + window.location.hash;
+            if (segment && validPages.indexOf(segment) !== -1) {
+                var target = '/' + segment + '.html' + window.location.search + window.location.hash;
                 window.location.replace(target);
             }
         })();
@@ -57,8 +65,8 @@
 
     <div class="glass-overlay" style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
 
-        <div class="error-container" style="background: rgba(13, 17, 23, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(0, 242, 255, 0.1); padding: 4rem; border-radius: 24px; text-align: center; max-width: 600px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center;">
-            <h1 class="error-code" style="font-size: 8rem; font-weight: 800; color: var(--primary); text-shadow: 0 0 40px rgba(0, 242, 255, 0.4); margin: 0; line-height: 1;">404</h1>
+        <div class="error-container" style="background: rgba(13, 17, 23, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(52, 87, 170, 0.25); padding: 4rem; border-radius: 24px; text-align: center; max-width: 600px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center;">
+            <h1 class="error-code" style="font-size: 8rem; font-weight: 800; color: var(--primary); text-shadow: 0 0 40px rgba(52, 87, 170, 0.4); margin: 0; line-height: 1;">404</h1>
             <p class="error-message" style="font-size: 2rem; font-weight: 600; color: #fff; margin-top: 1rem; margin-bottom: 1rem;">Oops! Page Not Found</p>
             <p class="error-detail" style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2.5rem; line-height: 1.6;">The page you are looking for might have been removed or is temporarily unavailable.</p>
 

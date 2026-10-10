@@ -5,8 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How to install Macro - Alok Video Editor</title>
     <link rel="icon" type="image/jpeg" href="images/profile.jpg">
+
+    <!-- Initial Animation Controller: First Visit / Hard Reload vs Normal Reload -->
+    <script>
+        (function() {
+            try {
+                var isHardReload = sessionStorage.getItem('ave_hard_reload') === 'true';
+                var hasShown = sessionStorage.getItem('ave_anim_shown') === 'true' || localStorage.getItem('ave_anim_shown') === 'true';
+
+                var navEntry = (window.performance && performance.getEntriesByType) ? performance.getEntriesByType('navigation')[0] : null;
+                var isNormalReload = navEntry ? (navEntry.type === 'reload') : false;
+
+                if (isHardReload || (!hasShown && !isNormalReload)) {
+                    sessionStorage.removeItem('ave_hard_reload');
+                    sessionStorage.setItem('ave_anim_shown', 'true');
+                    localStorage.setItem('ave_anim_shown', 'true');
+                    document.documentElement.classList.add('ave-show-anim');
+                } else {
+                    document.documentElement.classList.add('ave-no-anim');
+                }
+
+                var onKey = function(e) {
+                    var isCtrl = e.ctrlKey || e.metaKey;
+                    var isShift = e.shiftKey;
+                    var isR = e.key === 'r' || e.key === 'R' || e.keyCode === 82;
+                    var isF5 = e.key === 'F5' || e.keyCode === 116;
+
+                    if ((isCtrl && isShift && isR) || (isCtrl && isF5) || (isShift && isF5)) {
+                        try {
+                            sessionStorage.setItem('ave_hard_reload', 'true');
+                            sessionStorage.removeItem('ave_anim_shown');
+                            localStorage.removeItem('ave_anim_shown');
+                        } catch (err) {}
+                    }
+                };
+                window.addEventListener('keydown', onKey, true);
+                document.addEventListener('keydown', onKey, true);
+            } catch (e) {}
+        })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=2.2">
+    <link rel="stylesheet" href="css/style.css?v=2.6">
 
     <!-- Google Analytics -->
     <!-- Google tag (gtag.js) -->
@@ -22,95 +61,234 @@
 
     <!-- Guide Navigation Sidebar -->
     <style>
+        /* =======================================================
+           CURVED GUIDE NAVIGATION DOCK (Profection Style)
+           ======================================================= */
         .guide-sidebar {
             position: fixed;
-            left: 2rem;
+            left: 0;
             top: 50%;
             transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            gap: 0.45rem;
+            padding: 1.4rem 1.15rem 1.4rem 0.85rem;
+            width: 220px;
+            background: rgba(11, 17, 32, 0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: none;
+            border-radius: 0 32px 32px 0;
+            box-shadow: 4px 12px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 119, 125, 0.15);
             z-index: 100;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .guide-sidebar a {
-            width: 50px;
-            height: 50px;
+
+        .guide-sidebar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 2px;
+            border-radius: 0 32px 32px 0;
+            background: linear-gradient(180deg, 
+                rgba(0, 119, 125, 0) 0%, 
+                rgba(0, 180, 189, 0.6) 35%, 
+                rgba(52, 87, 170, 0.5) 65%, 
+                rgba(0, 119, 125, 0) 100%);
+            pointer-events: none;
+        }
+
+        .guide-sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0 0.5rem 0.55rem 0.5rem;
+            margin-bottom: 0.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .guide-sidebar-dot {
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: #00777D;
+            box-shadow: 0 0 8px #00B4BD, 0 0 14px rgba(0, 180, 189, 0.4);
+            animation: guidePulseDot 2s infinite ease-in-out;
+        }
+
+        @keyframes guidePulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.35; transform: scale(0.85); }
+        }
+
+        .guide-sidebar-label {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .guide-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.6rem 0.8rem;
+            border-radius: 12px;
+            background: transparent;
+            border: 1px solid transparent;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .guide-nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            transform: translateX(4px);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .guide-nav-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: rgba(255,255,255,0.6);
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            text-decoration: none;
-            position: relative;
+            flex-shrink: 0;
+            color: rgba(255, 255, 255, 0.65);
+            transition: all 0.25s ease;
         }
-        .guide-sidebar a:hover {
-            background: rgba(13, 187, 195, 0.1);
-            border-color: rgba(13, 187, 195, 0.4);
-            color: #0dbbc3;
+
+        .guide-nav-link:hover .guide-nav-icon {
+            background: rgba(0, 119, 125, 0.15);
+            border-color: rgba(0, 119, 125, 0.4);
+            color: #00B4BD;
             transform: scale(1.05);
         }
-        .guide-sidebar a.active {
-            background: rgba(13, 187, 195, 0.15);
-            border-color: #0dbbc3;
-            color: #0dbbc3;
-            box-shadow: 0 0 20px rgba(13, 187, 195, 0.2);
-            transform: scale(1.1);
-        }
-        .guide-sidebar .tooltip {
-            position: absolute;
-            left: calc(100% + 15px);
-            top: 50%;
-            transform: translateY(-50%) translateX(10px);
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(8px);
-            padding: 0.6rem 1rem;
-            border-radius: 8px;
-            font-size: 0.85rem;
+
+        .guide-nav-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.92rem;
             font-weight: 600;
+            letter-spacing: 0.2px;
             white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        .guide-sidebar a:hover .tooltip {
-            opacity: 1;
-            transform: translateY(-50%) translateX(0px);
+
+        .guide-nav-link.active {
+            background: linear-gradient(135deg, rgba(0, 119, 125, 0.22) 0%, rgba(52, 87, 170, 0.16) 100%);
+            border: 1px solid rgba(0, 119, 125, 0.45);
+            color: #ffffff;
+            box-shadow: 0 4px 18px rgba(0, 119, 125, 0.2);
         }
-        
-        @media (max-width: 1200px) {
+
+        .guide-nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 22px;
+            border-radius: 0 4px 4px 0;
+            background: #00B4BD;
+            box-shadow: 0 0 10px #00B4BD;
+        }
+
+        .guide-nav-link.active .guide-nav-icon {
+            background: linear-gradient(135deg, #00777D 0%, #3457AA 100%);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 119, 125, 0.45);
+            transform: scale(1.05);
+        }
+
+        .guide-nav-link.active .guide-nav-name {
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (min-width: 1101px) and (max-width: 1360px) {
+            .glass-overlay {
+                padding-left: 120px;
+            }
+        }
+
+        @media (max-width: 1100px) {
             .guide-sidebar {
+                position: static;
+                transform: none;
+                width: 100%;
+                max-width: 800px;
+                margin: 1.5rem auto 2rem;
+                border-radius: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 0.75rem;
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 0.5rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                -webkit-overflow-scrolling: touch;
+            }
+            .guide-sidebar::after {
+                display: none;
+            }
+            .guide-sidebar-header {
+                display: none;
+            }
+            .guide-nav-link {
+                padding: 0.55rem 0.85rem;
+                flex-shrink: 0;
+            }
+            .guide-nav-link.active::before {
                 display: none;
             }
         }
     </style>
-    <div class="guide-sidebar">
-        <a href="how-to-install-macro.html" class="active">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
-            <span class="tooltip">Macro Guide</span>
+    <nav class="guide-sidebar" aria-label="Installation Guides">
+        <div class="guide-sidebar-header">
+            <span class="guide-sidebar-dot"></span>
+            <span class="guide-sidebar-label">Guides</span>
+        </div>
+        <a href="how-to-install-macro.html" class="guide-nav-link active">
+            <span class="guide-nav-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            </span>
+            <span class="guide-nav-name">Macro Guide</span>
         </a>
-        <a href="how-to-install-plugin.html" class="">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            <span class="tooltip">Plugin Guide</span>
+        <a href="how-to-install-plugin.html" class="guide-nav-link">
+            <span class="guide-nav-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </span>
+            <span class="guide-nav-name">Plugin Guide</span>
         </a>
-        <a href="how-to-install-scripting.html" class="">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6L2 12l6 6"></path></svg>
-            <span class="tooltip">Scripting Guide</span>
+        <a href="how-to-install-scripting.html" class="guide-nav-link">
+            <span class="guide-nav-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            </span>
+            <span class="guide-nav-name">Scripting Guide</span>
         </a>
-        <a href="how-to-install-workflow.html" class="">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-            <span class="tooltip">Workflow Guide</span>
+        <a href="how-to-install-workflow.html" class="guide-nav-link">
+            <span class="guide-nav-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            </span>
+            <span class="guide-nav-name">Workflow Guide</span>
         </a>
-        <a href="how-to-install-fuse.html" class="">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6L2 12l6 6M14 4l-4 16"></path></svg>
-            <span class="tooltip">Fuse Guide</span>
+        <a href="how-to-install-fuse.html" class="guide-nav-link">
+            <span class="guide-nav-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline><line x1="14" y1="4" x2="10" y2="20"></line></svg>
+            </span>
+            <span class="guide-nav-name">Fuse Guide</span>
         </a>
-    </div>
+    </nav>
 
     <div id="loader-wrapper">
         <div class="loader-text" style="font-size: 2.2rem; font-weight: 800; letter-spacing: 2px;">Alok Video Editor<span class="dots"></span></div>
@@ -134,7 +312,7 @@
         <main style="width: 100%; max-width: 800px; padding: 3rem; background: var(--card-bg); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); text-align: left; line-height: 1.6;">
 
             <div class="os-tabs" style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2.5rem; flex-wrap: wrap;">
-                <button class="os-tab" onclick="showOS('windows')" style="background: rgba(13, 187, 195, 0.1); border: 1px solid #0dbbc3; color: #fff; padding: 0.8rem 1.5rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; font-family: 'Outfit', sans-serif; font-size: 1.1rem; transition: all 0.3s ease;">
+                <button class="os-tab" onclick="showOS('windows')" style="background: rgba(0, 119, 125, 0.1); border: 1px solid #00777D; color: #fff; padding: 0.8rem 1.5rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; font-family: 'Outfit', sans-serif; font-size: 1.1rem; transition: all 0.3s ease;">
                     <svg width="20" height="20" viewBox="0 0 448 512" fill="currentColor"><path d="M0 93.6l183.6-25.3v177.4H0V93.6zm227.2-32.1L448 29.3v216.4H227.2V61.5zm0 252.1H448v216.4l-220.8-32.2V313.6zm-227.2 0h183.6v177.4L0 465.7V313.6z"/></svg>
                     Windows
                 </button>
@@ -149,7 +327,7 @@
             </div>
 
 <div id="os-windows" class="os-content" style="width: 100%; margin-bottom: 2.5rem; display: block; opacity: 1; ">
-                <h3 style="color: #0dbbc3; font-size: 1.8rem; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                <h3 style="color: #00777D; font-size: 1.8rem; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.8rem;">
                     <svg width="24" height="24" viewBox="0 0 448 512" fill="currentColor"><path d="M0 93.6l183.6-25.3v177.4H0V93.6zm227.2-32.1L448 29.3v216.4H227.2V61.5zm0 252.1H448v216.4l-220.8-32.2V313.6zm-227.2 0h183.6v177.4L0 465.7V313.6z"/></svg>
                     Windows
                 </h3>
@@ -166,7 +344,7 @@
             </div>
 
             <div id="os-mac" class="os-content" style="width: 100%; margin-bottom: 2.5rem; display: none; opacity: 0; ">
-                <h3 style="color: #0dbbc3; font-size: 1.8rem; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                <h3 style="color: #00777D; font-size: 1.8rem; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.8rem;">
                     <svg width="24" height="24" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
                     Mac
                 </h3>
@@ -185,7 +363,7 @@
             </div>
 
             <div id="os-linux" class="os-content" style="width: 100%; margin-bottom: 2.5rem; display: none; opacity: 0; ">
-                <h3 style="color: #0dbbc3; font-size: 1.8rem; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                <h3 style="color: #00777D; font-size: 1.8rem; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.8rem;">
                     <svg width="24" height="24" viewBox="0 0 448 512" fill="currentColor"><path d="M220.8 123.3c1.1 0 2.2 0 3.3 .1 27.6 .7 57.5 7.1 76.1 21.6 4.7 3.7 8.2 8.7 10.3 14.6 2.3 6.6 2.5 13.9 1 20.6-2.5 11.2-12.7 18.7-24 18.7h-5.2c-15.1 0-25.9-13.8-21.7-28.4 2-7.1 11.1-10.7 18.3-7.5 .5 .2 1 .5 1.5 .8 1.4 1 3.5 .2 3.8-1.4 .1-.9-.3-1.8-1.2-2.3-12.8-7.9-37.1-13-58.9-13.5-3.5-.1-7.1-.1-10.7 .1-22.1 1-46.6 6.8-59.5 15.3-.8 .5-1.1 1.4-1.2 2.3 .2 1.6 2.4 2.4 3.8 1.4 .5-.3 1-.6 1.5-.8 7.3-3.2 16.3 .4 18.3 7.5 4.3 14.5-6.6 28.4-21.7 28.4h-5.2c-11.3 0-21.5-7.5-24-18.7-1.4-6.7-1.2-14 1-20.6 2.1-5.9 5.6-10.9 10.3-14.6 18.8-14.6 49.3-21.1 77.3-21.6 1.1-.1 2.2-.1 3.3-.1zM286.2 38.6c17.6 17.6 28.7 40.5 32 65.4-18.7-10.3-43.2-17.2-70.1-18.6-26.9 1.4-51.4 8.3-70.1 18.6 3.2-24.9 14.4-47.8 32-65.4C226.7 21.8 249.7 21.8 266.4 38.6zM224 0C100.3 0 0 100.3 0 224s100.3 224 224 224 224-100.3 224-224S347.7 0 224 0zM128 224c0-35.3 14.3-67.3 37.5-90.5 14.5-14.5 32.2-25.2 51.5-31.5 2.3-7.8 8.1-14.3 15.6-18.2 9.5-4.9 21.1-4.9 30.7 0 7.5 3.9 13.3 10.4 15.6 18.2 19.3 6.3 37 17 51.5 31.5C353.7 156.7 368 188.7 368 224c0 79.5-64.5 144-144 144S80 303.5 80 224z"/></svg>
                     Linux
                 </h3>
@@ -263,8 +441,8 @@
             
             const activeTab = document.querySelector(`.os-tab[onclick="showOS('${os}')"]`);
             if (activeTab) {
-                activeTab.style.borderColor = '#0dbbc3';
-                activeTab.style.background = 'rgba(13, 187, 195, 0.1)';
+                activeTab.style.borderColor = '#00777D';
+                activeTab.style.background = 'rgba(0, 119, 125, 0.1)';
             }
         }
     </script>
@@ -300,8 +478,8 @@
                 
                 const activeTab = document.querySelector(`.os-tab[onclick="showOS('${osParam}')"]`);
                 if (activeTab) {
-                    activeTab.style.borderColor = '#0dbbc3';
-                    activeTab.style.background = 'rgba(13, 187, 195, 0.1)';
+                    activeTab.style.borderColor = '#00777D';
+                    activeTab.style.background = 'rgba(0, 119, 125, 0.1)';
                 }
             }
         });

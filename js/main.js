@@ -37,6 +37,741 @@ const btnMacros = document.getElementById('btn-macros');
 // State
 let currentTab = window.defaultTab || 'plugin'; // dynamically set based on page
 
+// ==========================================
+// Theme Management (Light / Dark)
+// ==========================================
+function initTheme() {
+    const savedTheme = localStorage.getItem('alok_theme') || 'dark';
+    applyTheme(savedTheme);
+
+    const toggleBtns = document.querySelectorAll('.theme-toggle-btn, #theme-toggle-btn');
+    toggleBtns.forEach(btn => {
+        btn.addEventListener('click', toggleTheme);
+    });
+}
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('alok_theme', theme);
+    
+    // Update theme toggle button icons
+    const toggleBtns = document.querySelectorAll('.theme-toggle-btn, #theme-toggle-btn');
+    const isDark = theme === 'dark';
+    const iconHtml = isDark 
+        ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`
+        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+    
+    toggleBtns.forEach(btn => {
+        btn.innerHTML = iconHtml;
+        btn.setAttribute('aria-label', isDark ? 'Switch to Light theme' : 'Switch to Dark theme');
+        btn.setAttribute('title', isDark ? 'Switch to Light theme' : 'Switch to Dark theme');
+    });
+}
+
+window.toggleTheme = function() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(newTheme);
+};
+
+// ==========================================
+// Mobile Menu Navigation
+// ==========================================
+function initMobileMenu() {
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const drawer = document.getElementById('mobile-drawer');
+    if (!mobileBtn || !drawer) return;
+
+    mobileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = drawer.classList.contains('active');
+        if (isOpen) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (drawer.classList.contains('active') && !drawer.contains(e.target) && e.target !== mobileBtn) {
+            closeMobileMenu();
+        }
+    });
+
+    drawer.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            closeMobileMenu();
+        });
+    });
+}
+
+window.openMobileMenu = function() {
+    const drawer = document.getElementById('mobile-drawer');
+    const btn = document.getElementById('mobile-menu-btn');
+    if (drawer) drawer.classList.add('active');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+};
+
+window.closeMobileMenu = function() {
+    const drawer = document.getElementById('mobile-drawer');
+    const btn = document.getElementById('mobile-menu-btn');
+    if (drawer) drawer.classList.remove('active');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+};
+
+// ==========================================
+// Marketplace Engine (Search, Filter, Sort)
+// ==========================================
+let marketplaceState = {
+    search: '',
+    category: 'all',
+    price: 'all',
+    sort: 'newest'
+};
+
+function initMarketplace() {
+    const gridEl = document.getElementById('products-grid');
+    if (!gridEl) {
+        const navSearch = document.getElementById('nav-search-input');
+        if (navSearch) {
+            navSearch.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.target.value.trim()) {
+                    const isFile = window.location.protocol === 'file:';
+                    const targetPage = (isFile ? 'index.html' : '/') + '?search=' + encodeURIComponent(e.target.value.trim()) + '#marketplace';
+                    window.location.href = targetPage;
+                }
+            });
+        }
+        return;
+    }
+
+    // Read URL params
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('category')) marketplaceState.category = params.get('category').toLowerCase();
+    if (params.has('price')) marketplaceState.price = params.get('price').toLowerCase();
+    if (params.has('search')) marketplaceState.search = params.get('search');
+    if (params.has('sort')) marketplaceState.sort = params.get('sort');
+
+    // Marketplace search input
+    const searchInput = document.getElementById('marketplace-search');
+    if (searchInput) {
+        if (marketplaceState.search) searchInput.value = marketplaceState.search;
+        searchInput.addEventListener('input', (e) => {
+            marketplaceState.search = e.target.value;
+            const navSearch = document.getElementById('nav-search-input');
+            if (navSearch && navSearch.value !== e.target.value) navSearch.value = e.target.value;
+            renderMarketplace();
+        });
+    }
+
+    // Nav search input
+    const navSearchInput = document.getElementById('nav-search-input');
+    if (navSearchInput) {
+        if (marketplaceState.search) navSearchInput.value = marketplaceState.search;
+        navSearchInput.addEventListener('input', (e) => {
+            marketplaceState.search = e.target.value;
+            if (searchInput && searchInput.value !== e.target.value) searchInput.value = e.target.value;
+            renderMarketplace();
+            const mSec = document.getElementById('marketplace');
+            if (mSec && e.target.value.trim().length === 1) {
+                mSec.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+        navSearchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const mSec = document.getElementById('marketplace');
+                if (mSec) mSec.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+
+    // Category filter chips
+    const categoryChips = document.querySelectorAll('.filter-chip[data-category]');
+    categoryChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            marketplaceState.category = chip.getAttribute('data-category');
+            updateChipUI();
+            renderMarketplace();
+        });
+    });
+
+    // Price filter chips
+    const priceChips = document.querySelectorAll('.filter-chip[data-price]');
+    priceChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            marketplaceState.price = chip.getAttribute('data-price');
+            updateChipUI();
+            renderMarketplace();
+        });
+    });
+
+    // Sort select
+    const sortSelect = document.getElementById('marketplace-sort');
+    if (sortSelect) {
+        if (marketplaceState.sort) sortSelect.value = marketplaceState.sort;
+        sortSelect.addEventListener('change', (e) => {
+            marketplaceState.sort = e.target.value;
+            renderMarketplace();
+        });
+    }
+
+    // Clear filters button
+    const clearBtn = document.getElementById('clear-filters-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearMarketplaceFilters);
+    }
+
+    updateChipUI();
+    renderMarketplace();
+
+    // Auto-scroll to marketplace if URL contains filter params or #marketplace
+    if (params.has('category') || params.has('price') || params.has('search') || window.location.hash === '#marketplace') {
+        setTimeout(() => {
+            const mSec = document.getElementById('marketplace');
+            if (mSec) mSec.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+    }
+
+    // Listen for hash and popstate changes
+    window.addEventListener('hashchange', () => {
+        const p = new URLSearchParams(window.location.search);
+        if (p.has('category')) marketplaceState.category = p.get('category').toLowerCase();
+        if (p.has('price')) marketplaceState.price = p.get('price').toLowerCase();
+        updateChipUI();
+        renderMarketplace();
+    });
+}
+
+function updateChipUI() {
+    document.querySelectorAll('.filter-chip[data-category]').forEach(chip => {
+        if (chip.getAttribute('data-category') === marketplaceState.category) {
+            chip.classList.add('active');
+        } else {
+            chip.classList.remove('active');
+        }
+    });
+
+    document.querySelectorAll('.filter-chip[data-price]').forEach(chip => {
+        if (chip.getAttribute('data-price') === marketplaceState.price) {
+            chip.classList.add('active');
+        } else {
+            chip.classList.remove('active');
+        }
+    });
+}
+
+window.setCategoryFilter = function(category) {
+    marketplaceState.category = category;
+    updateChipUI();
+    renderMarketplace();
+    const mSec = document.getElementById('marketplace');
+    if (mSec) mSec.scrollIntoView({ behavior: 'smooth' });
+};
+
+window.setPriceFilter = function(price) {
+    marketplaceState.price = price;
+    updateChipUI();
+    renderMarketplace();
+    const mSec = document.getElementById('marketplace');
+    if (mSec) mSec.scrollIntoView({ behavior: 'smooth' });
+};
+
+window.filterMarketplace = window.setPriceFilter;
+
+window.clearMarketplaceFilters = function() {
+    marketplaceState.search = '';
+    marketplaceState.category = 'all';
+    marketplaceState.price = 'all';
+    marketplaceState.sort = 'newest';
+
+    const searchInput = document.getElementById('marketplace-search');
+    if (searchInput) searchInput.value = '';
+    const navSearch = document.getElementById('nav-search-input');
+    if (navSearch) navSearch.value = '';
+    const sortSelect = document.getElementById('marketplace-sort');
+    if (sortSelect) sortSelect.value = 'newest';
+
+    updateChipUI();
+    renderMarketplace();
+};
+
+function renderMarketplace() {
+    const gridEl = document.getElementById('products-grid');
+    if (!gridEl) return;
+
+    const countEl = document.getElementById('results-count');
+    const activeTagsEl = document.getElementById('active-tags-list');
+    const clearBtn = document.getElementById('clear-filters-btn');
+
+    let filtered = [...projectData];
+
+    // Search query
+    const query = (marketplaceState.search || '').trim().toLowerCase();
+    if (query) {
+        filtered = filtered.filter(item => {
+            const nameMatch = (item.name || '').toLowerCase().includes(query);
+            const descMatch = (item.description || '').toLowerCase().includes(query);
+            const typeMatch = (item.type || '').toLowerCase().includes(query);
+            const tagsMatch = Array.isArray(item.tags) && item.tags.some(t => t.toLowerCase().includes(query));
+            const featuresMatch = Array.isArray(item.features) && item.features.some(f => f.toLowerCase().includes(query));
+            return nameMatch || descMatch || typeMatch || tagsMatch || featuresMatch;
+        });
+    }
+
+    // Category
+    if (marketplaceState.category !== 'all') {
+        const cat = marketplaceState.category;
+        filtered = filtered.filter(item => {
+            const itemType = (item.type || '').toLowerCase();
+            if (cat === 'plugin') return itemType === 'plugin';
+            if (cat === 'macro') return itemType === 'macro';
+            if (cat === 'project') return itemType === 'project';
+            if (cat === 'scripting') return itemType === 'scripting';
+            if (cat === 'expression') return itemType === 'expression';
+            return true;
+        });
+    }
+
+    // Price
+    if (marketplaceState.price !== 'all') {
+        if (marketplaceState.price === 'free') {
+            filtered = filtered.filter(item => !item.price || item.price === 0);
+        } else if (marketplaceState.price === 'paid') {
+            filtered = filtered.filter(item => item.price && item.price > 0);
+        }
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+        const priceA = a.salePrice ? Number(a.salePrice) : (a.price ? Number(a.price) : 0);
+        const priceB = b.salePrice ? Number(b.salePrice) : (b.price ? Number(b.price) : 0);
+        const downloadsA = a.downloads || 0;
+        const downloadsB = b.downloads || 0;
+
+        switch (marketplaceState.sort) {
+            case 'popular':
+                if (downloadsA !== downloadsB) return downloadsB - downloadsA;
+                return (b.price ? 1 : 0) - (a.price ? 1 : 0);
+            case 'price-low':
+                return priceA - priceB;
+            case 'price-high':
+                return priceB - priceA;
+            case 'name':
+                return a.name.localeCompare(b.name);
+            case 'newest':
+            default:
+                const isNewA = a.isNew ? 1 : 0;
+                const isNewB = b.isNew ? 1 : 0;
+                if (isNewA !== isNewB) return isNewB - isNewA;
+                const paidA = a.price ? 1 : 0;
+                const paidB = b.price ? 1 : 0;
+                if (paidA !== paidB) return paidB - paidA;
+                return 0;
+        }
+    });
+
+    if (countEl) {
+        countEl.textContent = `Showing ${filtered.length} tool${filtered.length === 1 ? '' : 's'}`;
+    }
+
+    const hasActiveFilters = query || marketplaceState.category !== 'all' || marketplaceState.price !== 'all';
+    if (clearBtn) {
+        clearBtn.style.display = hasActiveFilters ? 'inline-flex' : 'none';
+    }
+
+    if (activeTagsEl) {
+        let tagsHtml = '';
+        if (query) {
+            tagsHtml += `<span class="filter-chip active" style="font-size: 0.75rem;">Query: "${query}"</span>`;
+        }
+        if (marketplaceState.category !== 'all') {
+            tagsHtml += `<span class="filter-chip active" style="font-size: 0.75rem;">Category: ${marketplaceState.category}</span>`;
+        }
+        if (marketplaceState.price !== 'all') {
+            tagsHtml += `<span class="filter-chip active" style="font-size: 0.75rem;">Price: ${marketplaceState.price}</span>`;
+        }
+        activeTagsEl.innerHTML = tagsHtml;
+    }
+
+    gridEl.innerHTML = '';
+    if (filtered.length === 0) {
+        gridEl.innerHTML = `
+            <div class="marketplace-empty-state">
+                <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <h3 style="color: var(--text-main); font-size: 1.3rem; margin: 0;">No tools match your filters</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 440px; margin: 0;">Try adjusting your search terms, changing the category, or clearing filters to see all available DaVinci Resolve resources.</p>
+                <button class="btn-primary" onclick="clearMarketplaceFilters()" style="margin-top: 0.5rem;">Reset All Filters</button>
+            </div>
+        `;
+        return;
+    }
+
+    filtered.forEach((item) => {
+        gridEl.appendChild(createProductCard(item));
+    });
+    initScrollReveals();
+}
+
+function createProductCard(item) {
+    const card = document.createElement('div');
+    card.className = 'product-item-card scroll-reveal';
+
+    // Component-specific motion highlights
+    if (item.price && item.salePrice) {
+        card.classList.add('product-card-sale');
+    } else if (!item.price || item.price === 0) {
+        card.classList.add('product-card-free');
+    } else {
+        card.classList.add('product-card-standard');
+    }
+
+    let mediaContent = '';
+    if (item.image) {
+        mediaContent = `<img src="${item.image}" alt="${item.name}" loading="lazy">`;
+    } else if (item.youtube) {
+        let vId = '';
+        try {
+            const u = new URL(item.youtube.trim());
+            if (u.hostname.includes('youtube.com')) vId = u.searchParams.get('v');
+            else if (u.hostname.includes('youtu.be')) vId = u.pathname.slice(1);
+        } catch(e) {}
+        if (vId) {
+            mediaContent = `<img src="https://img.youtube.com/vi/${vId}/hqdefault.jpg" alt="${item.name}" loading="lazy">`;
+        }
+    }
+    if (!mediaContent) {
+        let iconPath = 'M13 10V3L4 14h7v7l9-11h-7z';
+        if (item.type === 'macro') iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z';
+        if (item.type === 'project') iconPath = 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z';
+        if (item.type === 'scripting') iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6';
+        if (item.type === 'expression') iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6M14 4l-4 16';
+        mediaContent = `<div style="width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; color: var(--primary);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${iconPath}"/></svg></div>`;
+    }
+
+    let leftBadge = '';
+    if (item.price && item.salePrice) {
+        leftBadge = `<span class="product-card-badge-left badge-sale">${item.discount || 'Sale'}</span>`;
+    } else if (item.isNew) {
+        leftBadge = `<span class="product-card-badge-left badge-new">New</span>`;
+    }
+
+    let rightBadge = '';
+    if (item.downloads) {
+        rightBadge = `<span class="product-card-badge-right">${item.downloads}+ Downloads</span>`;
+    } else if (item.type) {
+        rightBadge = `<span class="product-card-badge-right">${item.type.toUpperCase()}</span>`;
+    }
+
+    let priceHtml = '';
+    if (item.price) {
+        if (item.salePrice) {
+            priceHtml = `<span class="old-price">$${Number(item.price).toFixed(2)}</span>$${Number(item.salePrice).toFixed(2)}`;
+        } else {
+            priceHtml = `$${Number(item.price).toFixed(2)}`;
+        }
+    } else {
+        priceHtml = `<span class="free-badge">Free</span>`;
+    }
+
+    const isFile = window.location.protocol === 'file:';
+    const detailUrl = (isFile ? 'product.html' : 'product') + '?id=' + encodeURIComponent(item.id);
+
+    let actionBtnHtml = '';
+    if (item.price) {
+        const payKey = item.payhipKey || 'dFOVz';
+        actionBtnHtml = `<a href="https://payhip.com/b/${payKey}" target="_blank" rel="noopener" class="btn-card-get" onclick="event.stopPropagation();">Buy Now</a>`;
+    } else if (item.link) {
+        actionBtnHtml = `<a href="${item.link}" target="_blank" rel="noopener" class="btn-card-get" onclick="event.stopPropagation();">Get Free</a>`;
+    } else if (item.file) {
+        actionBtnHtml = `<a href="${item.file}" download class="btn-card-get" onclick="event.stopPropagation();">Download</a>`;
+    } else {
+        actionBtnHtml = `<a href="${detailUrl}" class="btn-card-get">Get Tool</a>`;
+    }
+
+    card.innerHTML = `
+        <div class="product-card-media">
+            ${mediaContent}
+            ${leftBadge}
+            ${rightBadge}
+        </div>
+        <div class="product-card-content">
+            <div class="product-card-meta">
+                <span class="product-card-type">${item.type || 'Plugin'}</span>
+                <div class="product-card-price">${priceHtml}</div>
+            </div>
+            <h3 class="product-card-title">${item.name}</h3>
+            <p class="product-card-desc">${item.description || ''}</p>
+            <div class="product-card-actions">
+                <a href="${detailUrl}" class="btn-card-details">View Details</a>
+                ${actionBtnHtml}
+            </div>
+        </div>
+    `;
+
+    card.addEventListener('click', (e) => {
+        if (e.target.closest('a') || e.target.closest('button')) return;
+        window.location.href = detailUrl;
+    });
+
+    return card;
+}
+
+function renderPopularDownloads() {
+    const popGrid = document.getElementById('popular-downloads-grid');
+    if (!popGrid) return;
+    popGrid.innerHTML = '';
+
+    const popularIds = ['Rectangle_V3', 'AutoFileOrganizer', 'AutoFileOrganizerPro', 'CamAlign'];
+    const popularItems = projectData.filter(i => popularIds.includes(i.id));
+
+    popularItems.forEach((item) => {
+        popGrid.appendChild(createProductCard(item));
+    });
+    initScrollReveals();
+}
+
+function renderRelatedProducts(currentItem) {
+    const relatedGrid = document.getElementById('related-products-grid');
+    if (!relatedGrid || !currentItem) return;
+    relatedGrid.innerHTML = '';
+
+    let related = projectData.filter(i => i.id !== currentItem.id && i.type === currentItem.type);
+    if (related.length < 3) {
+        const others = projectData.filter(i => i.id !== currentItem.id && !related.some(r => r.id === i.id));
+        related = related.concat(others);
+    }
+    related = related.slice(0, 3);
+
+    related.forEach(item => {
+        relatedGrid.appendChild(createProductCard(item));
+    });
+    initScrollReveals();
+}
+
+/**
+ * Sticky Navbar Scroll State
+ * Adds .navbar-scrolled on scroll to enhance backdrop blur and shadow
+ */
+function initNavbarScroll() {
+    const navbar = document.querySelector('.marketplace-navbar');
+    if (!navbar) return;
+
+    let ticking = false;
+    const onScroll = () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                if (window.scrollY > 20) {
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                }
+                ticking = false;
+            });
+            ticking = true;
+        }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+}
+
+/**
+ * Scroll Reveal Animation Engine
+ * Smooth Blur-to-Original Focus System:
+ * - Triggers smoothly as elements enter viewport so the blur-to-sharp transition is clearly visible
+ * - Micro-stagger capped at max 120ms so there is NEVER a 2-second delay
+ * - Respects prefers-reduced-motion
+ */
+let scrollRevealObserver = null;
+
+// Reveal elements currently inside the visible viewport (used on page load and anchor jumps)
+function revealCurrentViewportElements() {
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const elements = document.querySelectorAll('.scroll-reveal:not(.is-revealed)');
+    if (!elements.length) return;
+
+    for (let i = 0; i < elements.length; i++) {
+        const el = elements[i];
+        const rect = el.getBoundingClientRect();
+        // If element is inside the current viewport
+        if (rect.top < vh && rect.bottom > 0) {
+            el.style.transitionDelay = '0ms';
+            el.classList.add('is-revealed');
+            if (scrollRevealObserver) {
+                scrollRevealObserver.unobserve(el);
+            }
+        }
+    }
+}
+
+// Reveal target sections immediately when clicking anchor links (e.g., #about or #marketplace)
+window.addEventListener('hashchange', () => {
+    setTimeout(revealCurrentViewportElements, 10);
+    setTimeout(revealCurrentViewportElements, 100);
+});
+document.addEventListener('click', (e) => {
+    const anchor = e.target.closest('a[href^="#"]');
+    if (anchor) {
+        setTimeout(revealCurrentViewportElements, 20);
+        setTimeout(revealCurrentViewportElements, 150);
+    }
+});
+
+// Global hard reload detector: Ctrl+Shift+R, Cmd+Shift+R, Ctrl+F5, Shift+F5
+(function setupHardReloadDetection() {
+    function onKeyDown(e) {
+        const isCtrlOrMeta = e.ctrlKey || e.metaKey;
+        const isShift = e.shiftKey;
+        const isR = e.key === 'r' || e.key === 'R' || e.keyCode === 82;
+        const isF5 = e.key === 'F5' || e.keyCode === 116;
+
+        if ((isCtrlOrMeta && isShift && isR) || (isCtrlOrMeta && isF5) || (isShift && isF5)) {
+            try {
+                sessionStorage.setItem('ave_hard_reload', 'true');
+                sessionStorage.removeItem('ave_anim_shown');
+                localStorage.removeItem('ave_anim_shown');
+            } catch (err) {}
+        }
+    }
+
+    window.addEventListener('keydown', onKeyDown, true);
+    document.addEventListener('keydown', onKeyDown, true);
+})();
+
+function initScrollReveals() {
+    const isNoAnim = document.documentElement.classList.contains('ave-no-anim');
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealElements = document.querySelectorAll('.scroll-reveal:not(.is-revealed)');
+    if (!revealElements.length) return;
+
+    if (isNoAnim || prefersReducedMotion || !('IntersectionObserver' in window)) {
+        revealElements.forEach(el => {
+            el.style.transitionDelay = '0ms';
+            el.classList.add('is-revealed');
+        });
+        return;
+    }
+
+    // Reveal whatever is currently on-screen on initial page load
+    revealCurrentViewportElements();
+
+    if (!scrollRevealObserver) {
+        scrollRevealObserver = new IntersectionObserver((entries, obs) => {
+            const intersecting = entries.filter(e => e.isIntersecting && !e.target.classList.contains('is-revealed'));
+            if (!intersecting.length) return;
+
+            intersecting.forEach((entry, idx) => {
+                const el = entry.target;
+                
+                // Micro-stagger between sibling cards in the same batch (max 120ms total)
+                const delay = (idx % 3) * 60;
+
+                el.style.transitionDelay = `${delay}ms`;
+                el.classList.add('is-revealed');
+                obs.unobserve(el);
+
+                setTimeout(() => {
+                    el.style.transitionDelay = '';
+                }, delay + 500);
+            });
+        }, {
+            root: null,
+            // Trigger right as the element enters the viewport so user visibly sees the blur-to-sharp animation!
+            rootMargin: '0px 0px -15px 0px',
+            threshold: 0.05
+        });
+    }
+
+    revealElements.forEach(el => {
+        if (!el.classList.contains('is-revealed')) {
+            scrollRevealObserver.observe(el);
+        }
+    });
+}
+
+/**
+ * Smooth Animated Counter for Hero & Overview Statistics
+ * Smoothly animates numbers from 0 to the target value with ease-out cubic/expo easing
+ */
+function initStatCounters() {
+    const statElements = document.querySelectorAll('.hero-stat-number[data-target], [data-counter-target]');
+    if (!statElements.length) return;
+
+    const isNoAnim = document.documentElement.classList.contains('ave-no-anim');
+    if (isNoAnim) {
+        statElements.forEach(el => {
+            const target = parseFloat(el.getAttribute('data-target') || el.getAttribute('data-counter-target'));
+            const suffix = el.getAttribute('data-suffix') || '';
+            const prefix = el.getAttribute('data-prefix') || '';
+            if (!isNaN(target)) {
+                el.textContent = `${prefix}${target.toLocaleString('en-US')}${suffix}`;
+            }
+        });
+        return;
+    }
+
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const animate = (el) => {
+        if (el._hasAnimated) return;
+        el._hasAnimated = true;
+
+        const target = parseFloat(el.getAttribute('data-target') || el.getAttribute('data-counter-target'));
+        const suffix = el.getAttribute('data-suffix') || '';
+        const prefix = el.getAttribute('data-prefix') || '';
+        const duration = 1800; // 1.8 seconds for smooth ease
+        const startTime = performance.now();
+
+        if (prefersReducedMotion || isNaN(target)) {
+            el.textContent = `${prefix}${target.toLocaleString('en-US')}${suffix}`;
+            return;
+        }
+
+        // Start display from 0
+        el.textContent = `${prefix}0${suffix}`;
+
+        function step(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // easeOutExpo: smooth rapid acceleration then gentle deceleration into target
+            const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+            const currentVal = Math.floor(ease * target);
+
+            el.textContent = `${prefix}${currentVal.toLocaleString('en-US')}${suffix}`;
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                el.textContent = `${prefix}${target.toLocaleString('en-US')}${suffix}`;
+            }
+        }
+
+        requestAnimationFrame(step);
+    };
+
+    // Run slightly after loader dismisses so the user sees the numbers smoothly counting up from 0
+    setTimeout(() => {
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animate(entry.target);
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            statElements.forEach(el => observer.observe(el));
+        } else {
+            statElements.forEach(el => animate(el));
+        }
+    }, 200);
+}
+
 /**
  * Initialize the App
  */
@@ -61,6 +796,14 @@ function init() {
     // Ensure flash sale status is up-to-date before rendering
     if (typeof applyFlashSaleAutoReset === 'function') applyFlashSaleAutoReset();
 
+    initTheme();
+    initMobileMenu();
+    initNavbarScroll();
+    initMarketplace();
+    renderPopularDownloads();
+    initScrollReveals();
+    initStatCounters();
+
     if (grid) renderGrid();
     if (homeGrid) renderHomeOverview();
 
@@ -84,6 +827,14 @@ function init() {
  * Initialize Loading Screen
  */
 function initLoader() {
+    const isNoAnim = document.documentElement.classList.contains('ave-no-anim');
+    const loader = document.getElementById('loader-wrapper');
+    if (isNoAnim && loader) {
+        loader.style.display = 'none';
+        window.isInitialLoad = false;
+        return;
+    }
+
     const ring = document.getElementById('particle-ring');
     const particleCount = 24;
 
@@ -467,144 +1218,9 @@ function renderHomeOverview() {
  * Tablet/Mobile: Bottom tab bar like a native app
  */
 function createNotificationNav() {
-    const rawPage = window.location.pathname.split('/').pop() || 'index.html';
-    const page = rawPage.replace(/\.html$/i, '') || 'index';
-
-    // Do NOT display DaVinci Resolve tools navigation bar on the personal Portfolio page
-    if (page.toLowerCase().includes('portfolio')) {
-        return;
-    }
-
-    const isFile = window.location.protocol === 'file:';
-    const cleanLink = (file) => isFile ? `${file}.html` : file;
-
-    const pages = [
-        {
-            id: 'plugins',
-            label: 'Plugins & Macros',
-            href: cleanLink('Plugins_and_Macros'),
-            match: 'Plugins_and_Macros',
-            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-        },
-        {
-            id: 'projects',
-            label: 'Project File',
-            href: cleanLink('Projects'),
-            match: 'Projects',
-            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-        },
-        {
-            id: 'scripting',
-            label: 'Scripting',
-            href: cleanLink('Davinci_Scripting_Plugin'),
-            match: 'Davinci_Scripting_Plugin',
-            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6L2 12l6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-        },
-        {
-            id: 'expression',
-            label: 'Expression',
-            href: cleanLink('Fusion_Expression'),
-            match: 'Fusion_Expression',
-            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6L2 12l6 6M14 4l-4 16" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-        }
-    ];
-
-    // ── DESKTOP: Pill nav at top ──
-    const nav = document.createElement('nav');
-    nav.id = 'notification-nav';
-    nav.setAttribute('aria-label', 'Section Navigation');
-
-    const isHomePage = (page === '' || page === 'index');
-
-    if (isHomePage) {
-        nav.classList.add('dropdown-style');
-        const activePage = pages.find(p => page.toLowerCase() === p.match.toLowerCase()) || pages[0];
-
-        const trigger = document.createElement('div');
-        trigger.className = 'notif-trigger';
-        trigger.innerHTML = activePage.icon + '<span>Davinci Resolve All Tools</span> <svg class="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px; margin-left: 4px;"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-        
-        const menu = document.createElement('div');
-        menu.className = 'notif-dropdown-menu';
-
-        pages.forEach((p) => {
-            const isActive = page.toLowerCase() === p.match.toLowerCase();
-            const link = document.createElement('a');
-            link.href = p.href;
-            link.className = 'notif-nav-link' + (isActive ? ' active' : '');
-            link.setAttribute('aria-current', isActive ? 'page' : 'false');
-            link.innerHTML = p.icon + '<span>' + p.label + '</span>';
-            menu.appendChild(link);
-        });
-
-        nav.appendChild(trigger);
-        nav.appendChild(menu);
-
-        trigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            nav.classList.toggle('open');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!nav.contains(e.target)) {
-                nav.classList.remove('open');
-            }
-        });
-    } else {
-        nav.classList.add('classic-style');
-        pages.forEach((p) => {
-            const isActive = page.toLowerCase() === p.match.toLowerCase();
-            const link = document.createElement('a');
-            link.href = p.href;
-            link.className = 'notif-nav-link' + (isActive ? ' active' : '');
-            link.setAttribute('aria-current', isActive ? 'page' : 'false');
-            link.innerHTML = p.icon + '<span>' + p.label + '</span>';
-            nav.appendChild(link);
-        });
-    }
-
-    document.body.appendChild(nav);
-
-    // ── MOBILE/TABLET: Bottom tab bar ──
-    const mobileNav = document.createElement('nav');
-    mobileNav.id = 'mobile-bottom-nav';
-    mobileNav.setAttribute('aria-label', 'Mobile Section Navigation');
-
-    pages.forEach((p) => {
-        const isActive = page.toLowerCase() === p.match.toLowerCase();
-        const link = document.createElement('a');
-        link.href = p.href;
-        link.className = 'mobile-tab-link' + (isActive ? ' active' : '');
-        link.setAttribute('aria-current', isActive ? 'page' : 'false');
-        link.innerHTML = p.icon + '<span>' + p.label + '</span>';
-        mobileNav.appendChild(link);
-    });
-
-    document.body.appendChild(mobileNav);
-
-    // Trigger both navs after loader
-    const triggerNav = () => {
-        setTimeout(() => {
-            nav.classList.add('visible');
-            mobileNav.classList.add('visible');
-        }, 50); // Make this almost instant!
-    };
-
-    const loader = document.getElementById('loader-wrapper');
-    if (loader) {
-        const observer = new MutationObserver(() => {
-            if (loader.style.display === 'none' || loader.classList.contains('fade-out')) {
-                triggerNav();
-                document.body.classList.add('page-loaded');
-                observer.disconnect();
-            }
-        });
-        observer.observe(loader, { attributes: true, attributeFilter: ['style', 'class'] });
-
-    } else {
-        triggerNav();
-        document.body.classList.add('page-loaded');
-    }
+    // Legacy floating DaVinci Resolve pill nav removed per user request.
+    // The modern marketplace navbar handles all navigation.
+    return;
 }
 
 // Audio logic removed
@@ -635,7 +1251,7 @@ function createInfoModal() {
                 <button class="info-close" onclick="closeInfoModal()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
-                <div class="card-icon-placeholder" style="margin: 0 auto 1.5rem auto; width: 80px; height: 80px; background: rgba(0, 242, 255, 0.1); border-radius: 24px; border: 1px solid rgba(0,242,255,0.3);">
+                <div class="card-icon-placeholder" style="margin: 0 auto 1.5rem auto; width: 80px; height: 80px; background: rgba(52, 87, 170, 0.15); border-radius: 24px; border: 1px solid rgba(52, 87, 170, 0.35);">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path id="info-icon-path" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 </div>
                 <h2 id="info-title" class="info-title"></h2>
@@ -957,7 +1573,8 @@ function renderProductPage() {
     // Type styling
     const typeEl = document.getElementById('product-type');
     typeEl.innerText = item.type;
-    typeEl.style.background = 'rgba(13, 187, 195, 0.1)';
+    typeEl.style.background = 'rgba(0, 119, 125, 0.15)';
+    typeEl.style.color = '#00777D';
     typeEl.style.padding = '0.4rem 1.2rem';
 
     // Features List
@@ -972,7 +1589,7 @@ function renderProductPage() {
     const heroContainer = document.getElementById('product-hero-container');
     const heroImage = document.getElementById('product-hero-image');
     const bgBlur = document.getElementById('bg-glass-blur');
-    const imgSrc = item.heroImage || item.controlsImage;
+    const imgSrc = item.heroImage || item.controlsImage || item.image;
     
     if (imgSrc) {
         heroImage.src = imgSrc;
@@ -1428,21 +2045,24 @@ function renderProductPage() {
         }
     }
 
-    // Buy Box Icon
+    // Buy Box Icon - Always render clean vector category icon (Image 2)
     const iconBox = document.getElementById('product-icon-box');
-    if (item.image && !item.heroImage) {
-        // Only use image in icon box if we don't have a hero image (preventing duplication)
-        iconBox.innerHTML = `<img src="${item.image}" alt="Icon">`;
-        iconBox.style.background = 'transparent';
-        iconBox.style.border = 'none';
-    } else {
-        let iconPath = 'M13 10V3L4 14h7v7l9-11h-7z';
-        if (item.type === 'macro') iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z';
-        if (item.type === 'project') iconPath = 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z';
-        if (item.type === 'scripting') iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6';
-        if (item.type === 'expression') iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6M14 4l-4 16';
+    if (iconBox) {
+        iconBox.style.background = '';
+        iconBox.style.border = '';
         
-        iconBox.innerHTML = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${iconPath}" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        let iconPath = 'M13 10V3L4 14h7v7l9-11h-7z'; // default (plugin - lightning)
+        if (item.type === 'macro') {
+            iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6';
+        } else if (item.type === 'project') {
+            iconPath = 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z';
+        } else if (item.type === 'scripting') {
+            iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6'; // clean <> code icon
+        } else if (item.type === 'expression') {
+            iconPath = 'M16 18l6-6-6-6M8 6L2 12l6 6M14 4l-4 16';
+        }
+        
+        iconBox.innerHTML = `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${iconPath}"/></svg>`;
     }
 
     // Price
@@ -1495,7 +2115,7 @@ function renderProductPage() {
                             <span>Win</span>
                         </a>
                         ${isWindowsOnly ? '' : `
-                        <a href="how-to-install-${guideType}.html?os=mac" style="display: flex; align-items: center; gap: 0.4rem; opacity: 0.9; color: #fff; text-decoration: none; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.color='#0dbbc3'; this.style.opacity='1'" onmouseout="this.style.color='#fff'; this.style.opacity='0.9'">
+                        <a href="how-to-install-${guideType}.html?os=mac" style="display: flex; align-items: center; gap: 0.4rem; opacity: 0.9; color: #fff; text-decoration: none; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.color='#00777D'; this.style.opacity='1'" onmouseout="this.style.color='#fff'; this.style.opacity='0.9'">
                             <svg width="16" height="16" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
                             <span>Mac</span>
                         </a>
@@ -1540,36 +2160,12 @@ function renderProductPage() {
             }, 600);
         }
     };
+
+    renderRelatedProducts(item);
 }
 
-// Block right-click context menu
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-});
-
-// Block browser dev tools shortcuts
+// Escape key to dismiss active modals
 document.addEventListener('keydown', function(e) {
-    // F12
-    if (e.key === 'F12') {
-        e.preventDefault();
-    }
-    // Ctrl+Shift+I / Cmd+Option+I
-    if ((e.ctrlKey || e.metaKey) && (e.shiftKey || e.altKey) && (e.key === 'I' || e.key === 'i')) {
-        e.preventDefault();
-    }
-    // Ctrl+Shift+C / Cmd+Option+C
-    if ((e.ctrlKey || e.metaKey) && (e.shiftKey || e.altKey) && (e.key === 'C' || e.key === 'c')) {
-        e.preventDefault();
-    }
-    // Ctrl+Shift+J / Cmd+Option+J
-    if ((e.ctrlKey || e.metaKey) && (e.shiftKey || e.altKey) && (e.key === 'J' || e.key === 'j')) {
-        e.preventDefault();
-    }
-    // Ctrl+U / Cmd+U (View Source)
-    if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
-        e.preventDefault();
-    }
-    // Escape key to dismiss active modals
     if (e.key === 'Escape') {
         const infoModal = document.getElementById('info-modal');
         if (infoModal && infoModal.classList.contains('active')) {

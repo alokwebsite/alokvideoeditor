@@ -5,6 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms and Policies - Alok Video Editor</title>
     <link rel="icon" type="image/jpeg" href="images/profile.jpg">
+
+    <!-- Initial Animation Controller: First Visit / Hard Reload vs Normal Reload -->
+    <script>
+        (function() {
+            try {
+                var isHardReload = sessionStorage.getItem('ave_hard_reload') === 'true';
+                var hasShown = sessionStorage.getItem('ave_anim_shown') === 'true' || localStorage.getItem('ave_anim_shown') === 'true';
+
+                var navEntry = (window.performance && performance.getEntriesByType) ? performance.getEntriesByType('navigation')[0] : null;
+                var isNormalReload = navEntry ? (navEntry.type === 'reload') : false;
+
+                if (isHardReload || (!hasShown && !isNormalReload)) {
+                    sessionStorage.removeItem('ave_hard_reload');
+                    sessionStorage.setItem('ave_anim_shown', 'true');
+                    localStorage.setItem('ave_anim_shown', 'true');
+                    document.documentElement.classList.add('ave-show-anim');
+                } else {
+                    document.documentElement.classList.add('ave-no-anim');
+                }
+
+                var onKey = function(e) {
+                    var isCtrl = e.ctrlKey || e.metaKey;
+                    var isShift = e.shiftKey;
+                    var isR = e.key === 'r' || e.key === 'R' || e.keyCode === 82;
+                    var isF5 = e.key === 'F5' || e.keyCode === 116;
+
+                    if ((isCtrl && isShift && isR) || (isCtrl && isF5) || (isShift && isF5)) {
+                        try {
+                            sessionStorage.setItem('ave_hard_reload', 'true');
+                            sessionStorage.removeItem('ave_anim_shown');
+                            localStorage.removeItem('ave_anim_shown');
+                        } catch (err) {}
+                    }
+                };
+                window.addEventListener('keydown', onKey, true);
+                document.addEventListener('keydown', onKey, true);
+            } catch (e) {}
+        })();
+    </script>
     <meta name="description" content="Terms of service, privacy policy, and refund policy for Alok Video Editor's DaVinci Resolve resources.">
     
     <!-- Fonts -->
@@ -13,7 +52,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css?v=2.2">
+    <link rel="stylesheet" href="css/style.css?v=2.6">
 
     <!-- Google Analytics -->
     <!-- Google tag (gtag.js) -->
@@ -41,7 +80,7 @@
             </div>
             
             <div class="social-links">
-                <a href="index.html" style="color: #fff; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid rgba(0, 242, 255, 0.3); border-radius: 8px; background: rgba(0, 242, 255, 0.1);">Back to Home</a>
+                <a href="index.html" style="color: #fff; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid rgba(52, 87, 170, 0.4); border-radius: 8px; background: rgba(52, 87, 170, 0.15); transition: all 0.3s ease;">Back to Home</a>
             </div>
         </header>
 
@@ -69,12 +108,6 @@
         <div id="footer-placeholder" style="width: 100%;"></div>
     </div>
 
-    <script>
-        document.addEventListener('contextmenu', event => {
-            if (event.target.closest('.profile-link')) return;
-            event.preventDefault();
-        });
-    </script>
     <script src="js/footer.js"></script>
     <script src="js/main.js?v=2.2"></script>
 </body>

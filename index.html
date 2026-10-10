@@ -7,6 +7,46 @@
     <title>Alok Video Editor - Premium DaVinci Resolve Tools</title>
     <link rel="icon" type="image/jpeg" href="images/profile.jpg">
 
+    <!-- Initial Animation Controller: First Visit / Hard Reload vs Normal Reload -->
+    <script>
+        (function() {
+            try {
+                var isHardReload = sessionStorage.getItem('ave_hard_reload') === 'true';
+                var hasShown = sessionStorage.getItem('ave_anim_shown') === 'true' || localStorage.getItem('ave_anim_shown') === 'true';
+
+                var navEntry = (window.performance && performance.getEntriesByType) ? performance.getEntriesByType('navigation')[0] : null;
+                var isNormalReload = navEntry ? (navEntry.type === 'reload') : false;
+
+                if (isHardReload || (!hasShown && !isNormalReload)) {
+                    sessionStorage.removeItem('ave_hard_reload');
+                    sessionStorage.setItem('ave_anim_shown', 'true');
+                    localStorage.setItem('ave_anim_shown', 'true');
+                    document.documentElement.classList.add('ave-show-anim');
+                } else {
+                    document.documentElement.classList.add('ave-no-anim');
+                }
+
+                // Global capture for Ctrl+Shift+R, Cmd+Shift+R, Ctrl+F5, Shift+F5
+                var onKey = function(e) {
+                    var isCtrl = e.ctrlKey || e.metaKey;
+                    var isShift = e.shiftKey;
+                    var isR = e.key === 'r' || e.key === 'R' || e.keyCode === 82;
+                    var isF5 = e.key === 'F5' || e.keyCode === 116;
+
+                    if ((isCtrl && isShift && isR) || (isCtrl && isF5) || (isShift && isF5)) {
+                        try {
+                            sessionStorage.setItem('ave_hard_reload', 'true');
+                            sessionStorage.removeItem('ave_anim_shown');
+                            localStorage.removeItem('ave_anim_shown');
+                        } catch (err) {}
+                    }
+                };
+                window.addEventListener('keydown', onKey, true);
+                document.addEventListener('keydown', onKey, true);
+            } catch (e) {}
+        })();
+    </script>
+
     <!-- Advanced SEO Meta Tags -->
     <meta name="description" content="Download the best DaVinci Resolve Auto File Organizer. Alok Video Editor (Alok Mahato) provides premium DaVinci Resolve Plugins, Scripting Plugins, Macros, and Editing Tools. Organize your media pool instantly, download Text Infinite Scroller, Copy Pasta V2, and Rectangle V3.">
     <meta name="keywords" content="Auto File Organizer for davinci Resolve, Davinci Resolve Auto File Organizer, DaVinci Resolve media pool organizer, DaVinci scripting plugin, auto sort davinci resolve, Alok Video Editor, Alok Mahato, DaVinci Resolve Plugins, DaVinci Resolve Macros, Free DaVinci Resolve Templates, Video Editor Nepal, Video Editing Services, Text Infinite Scroller, Copy Pasta V2, Rectangle V3, Cinema Bar Plugin, Opacity Macro DaVinci, Alok Web Text, DaVinci Resolve Studio plugins, free davinci plugins, best davinci macros, color grading nepal, davinci resolve scripts, scripting in davinci resolve, media management davinci, organize media pool, automatic folder sorting davinci, timeline organization, workflow optimization davinci resolve, video editing workflow, post production tools, davinci resolve 18 plugins, davinci resolve 19 plugins, edit page plugins, fusion page macros, davinci resolve templates free download, free video editing assets, davinci resolve presets, video editing nepal, bardibas video editor, kathmandu video editor, davinci resolve transitions, davinci resolve titles, davinci resolve text effects, davinci resolve fusion macros, fusion templates, fusion plugins, color page plugins, fairlight plugins, davinci resolve color grading, davinci resolve luts, free video editing resources, davinci resolve tutorials, davinci resolve tricks, fast video editing, automated video editing, davinci resolve copy pasta, vertical video davinci resolve, shorts templates davinci, tiktok templates davinci, reels templates davinci, 4 smooth animation davinci, text animation davinci resolve, kinetic typography davinci, custom modifiers davinci resolve, davinci resolve scripting api, python scripting davinci resolve, lua scripting davinci resolve, content creation tools, youtuber assets, video editor portfolio, freelance video editor nepal, nepali video editor, best davinci resolve plugins, must have davinci plugins, free tools for video editors, davinci resolve hacks, timeline management, bin organization, smart bins davinci resolve, metadata management davinci resolve, copy paste attributes davinci resolve, clip management, project management davinci resolve, davinci resolve database, post production nepal, filmmaking nepal, cinematic video editing, music video editing, corporate video editing, documentary video editing, davinci resolve fusion node tree, fusion composition, fusion effects, free fusion titles, free fusion generators, free fusion effects, davinci resolve openfx, ofx plugins, free ofx plugins, video editing software plugins, blackmagic design davinci resolve, bmd davinci resolve, resolve 19, resolve 18, resolve 17, video editor hire nepal, professional video editing services, youtube video editor, social media video editor, short form content editor, davinci resolve shorts workflow, davinci resolve instagram workflow, auto sort clips, auto sort audio, auto sort images, auto sort timelines, auto file organizer script, davinci python script, davinci lua script, davinci macro install, how to install davinci macros, drfx files, setting files davinci resolve, davinci resolve template generator, text scroller macro, typing text effect davinci resolve, blinking cursor effect davinci resolve, highlight text davinci resolve, cinema bars overlay, letterbox overlay davinci resolve, safe guides davinci resolve, action safe title safe, vertical safe zones, 9:16 safe zones, smooth text animation, drag and drop plugins davinci resolve, easy to use davinci macros, premium video editing tools, free video editing packs, davinci resolve preset pack, video transition pack, text effects pack, alokvideoeditornp, alok mahato plugins, Alok Video Editor, Alok Video Editor DaVinci Resolve, Alok Video Editor Nepal, Alok Video Editor plugins, Alok Video Editor macros, download Alok Video Editor tools">
@@ -179,7 +219,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css?v=2.5">
+    <link rel="stylesheet" href="css/style.css?v=3.5">
     <!-- Using style.css to match Plugin Website UI -->
 
     <!-- Three.js removed for static background -->
@@ -203,284 +243,389 @@
         <div class="loader-text" style="font-size: 2.2rem; font-weight: 800; letter-spacing: 2px;">Alok Video Editor<span class="dots"></span></div>
     </div>
 
-    <div class="glass-overlay">
+    <!-- Header & Navigation -->
+    <header class="marketplace-navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="nav-brand">
+                <span class="nav-brand-badge">AVE</span>
+                <span class="nav-brand-text">ALOK VIDEO EDITOR</span>
+            </a>
 
-        <header>
-            <div class="logo">
-                <h1>Alok Video Editor</h1>
-                <p>DAVINCI RESOLVE PLUGINS AND MACROS</p>
-            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="#marketplace" class="nav-link" onclick="setCategoryFilter('all')">Plugins</a></li>
+                <li><a href="#guides" class="nav-link">Guides</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+            </ul>
 
-            <div class="social-links">
-                    <a href="https://youtube.com/@alokvideoeditornp" target="_blank" class="social-icon"
-                    data-name="YouTube">
-                    <svg viewBox="0 0 24 24" width="24" height="24">
-                        <path fill="currentColor"
-                            d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                    </svg>
-                </a>
-                <a href="https://www.instagram.com/alokvideoeditornp" target="_blank" class="social-icon"
-                    data-name="Instagram">
-                    <svg viewBox="0 0 24 24" width="24" height="24">
-                        <path fill="currentColor"
-                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                    </svg>
-                </a>
-                <a href="https://www.facebook.com/alokvideoeditornp" target="_blank" class="social-icon"
-                    data-name="Facebook">
-                    <svg viewBox="0 0 24 24" width="24" height="24">
-                        <path fill="currentColor"
-                            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                    </svg>
-                </a>
-                <a href="https://discord.gg/32pW6BtjFy" target="_blank" class="social-icon" data-name="Discord">
-                    <svg viewBox="0 0 24 24" width="24" height="24">
-                        <path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
-                    </svg>
-                </a>
-            </div>
-        </header>
-
-        <main style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-
-            <!-- Main Central Card -->
-            <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 4rem; width: 100%; flex-wrap: wrap;">
-                
-                <!-- DaVinci Resolve Tools -->
-                <div class="card box-card" onclick="document.getElementById('home-category-modal').classList.add('active'); document.getElementById('home-category-modal').style.display='flex';" style="cursor: pointer; width: 100%; max-width: 320px; position: relative;">
-                    <div style="position: absolute; top: 12px; right: 12px; background: rgba(0, 242, 255, 0.1); color: var(--primary); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.65rem; font-weight: 800; border: 1px solid rgba(0, 242, 255, 0.3); z-index: 10; letter-spacing: 1px; text-transform: uppercase;">ALL TOOLS</div>
-                    
-                    <div class="card-icon-placeholder" style="margin: 2rem auto 1.5rem; width: 80px; height: 80px;">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="14.31" y1="8" x2="20.05" y2="17.94"></line>
-                            <line x1="9.69" y1="8" x2="21.17" y2="8"></line>
-                            <line x1="7.38" y1="12" x2="13.12" y2="2.06"></line>
-                            <line x1="9.69" y1="16" x2="3.95" y2="6.06"></line>
-                            <line x1="14.31" y1="16" x2="2.83" y2="16"></line>
-                            <line x1="16.62" y1="12" x2="10.88" y2="21.94"></line>
-                        </svg>
-                    </div>
-                    <h3 class="card-title" style="text-align: center; font-size: 1.5rem;">DaVinci Resolve</h3>
-                    <div class="card-type" style="margin-top: 0.8rem; font-size: 0.75rem;">BROWSE ALL TOOLS</div>
-                </div>
-
-                <!-- How to Install -->
-                <div class="card box-card" onclick="document.getElementById('install-category-modal').classList.add('active'); document.getElementById('install-category-modal').style.display='flex';" style="cursor: pointer; width: 100%; max-width: 320px; position: relative;">
-                    <div style="position: absolute; top: 12px; right: 12px; background: rgba(255, 193, 7, 0.1); color: #ffc107; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.65rem; font-weight: 800; border: 1px solid rgba(255, 193, 7, 0.3); z-index: 10; letter-spacing: 1px; text-transform: uppercase;">GUIDE</div>
-                    
-                    <div class="card-icon-placeholder" style="margin: 2rem auto 1.5rem; width: 80px; height: 80px;">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                        </svg>
-                    </div>
-                    <h3 class="card-title" style="text-align: center; font-size: 1.5rem;">How to Install</h3>
-                    <div class="card-type" style="margin-top: 0.8rem; font-size: 0.75rem;">INSTALLATION GUIDES</div>
-                </div>
-
-            </div>
-            <!-- Overview Section -->
-            <section class="overview-section" id="home-overview">
-                <h2 class="section-title">Most Popular Downloads</h2>
-                <div id="home-content-grid" class="content-grid">
-                    <!-- Dynamic Overview Content Will Be Loaded Here -->
-                </div>
-            </section>
-
-            <!-- Testimonials Section -->
-            <section class="testimonials-section" style="margin-top: 5rem; padding-bottom: 4rem;">
-                <h2 class="section-title">Community Feedback</h2>
-                <div class="content-grid" style="align-items: stretch; gap: 1rem;">
-                    
-                    <div class="discord-message" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
-                        <div style="display: flex; gap: 1rem; align-items: center;">
-                            <div class="discord-avatar" style="background: #111; color: #8498f5; border: 1px solid #333;">V</div>
-                            <div class="discord-header" style="margin: 0; align-items: center;">
-                                <h3 class="discord-username" style="color: #ff6b6b; display: flex; align-items: center; gap: 0.4rem;">
-                                    Vortex
-                                    <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
-                                </h3>
-                                <span class="discord-date" style="display: block;">6/2/2026 11:29 PM</span>
-                            </div>
-                        </div>
-                        <p class="discord-text">Genuinely one of the most underrated DaVinci Resolve plugin creators out there. The plugins are clean, useful, and actually save time in real-world editing. Definitely deserves a lot more recognition in the Resolve community. 🔥</p>
-                    </div>
-
-                    <div class="discord-message" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
-                        <div style="display: flex; gap: 1rem; align-items: center;">
-                            <div class="discord-avatar" style="background: #23a559;">S</div>
-                            <div class="discord-header" style="margin: 0; align-items: center;">
-                                <h3 class="discord-username" style="color: #f1c40f; display: flex; align-items: center; gap: 0.4rem;">
-                                    Sr Visuals
-                                    <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
-                                </h3>
-                                <span class="discord-date" style="display: block;">06/02/2026 02:15 PM</span>
-                            </div>
-                        </div>
-                        <p class="discord-text"><strong>It's amazing 🤩</strong><br>I've been using your plugins, macros, and projects, and I'm genuinely impressed. They are well-designed, easy to use, and have significantly improved my workflow. The attention to detail and creativity in your work really stand out. Thank you for creating such valuable resources and sharing them with the community. Keep up the amazing work!</p>
-                    </div>
-
-                    <div class="discord-message" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
-                        <div style="display: flex; gap: 1rem; align-items: center;">
-                            <div class="discord-avatar" style="background: #e91e63;">M</div>
-                            <div class="discord-header" style="margin: 0; align-items: center;">
-                                <h3 class="discord-username" style="color: #e74c3c; display: flex; align-items: center; gap: 0.4rem;">
-                                    Manoj
-                                    <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
-                                </h3>
-                                <span class="discord-date" style="display: block;">06/14/2026 08:30 AM</span>
-                            </div>
-                        </div>
-                        <p class="discord-text"><strong>AMAZING PLUGIN</strong><br>when I uses your pluging it's save my too many times. you are very humble person and also helpful as well good problem solver.</p>
-                    </div>
-
-                    <div class="discord-message" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
-                        <div style="display: flex; gap: 1rem; align-items: center;">
-                            <div class="discord-avatar" style="background: #000000; color: #ffffff;">K</div>
-                            <div class="discord-header" style="margin: 0; align-items: center;">
-                                <h3 class="discord-username" style="color: #f2f3f5; display: flex; align-items: center; gap: 0.4rem;">
-                                    Kubo
-                                    <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
-                                </h3>
-                                <span class="discord-date" style="display: block;">7/30/2026 11:24 AM</span>
-                            </div>
-                        </div>
-                        <p class="discord-text">it's my favourite macro , thank you</p>
-                    </div>
-
-                </div>
-            </section>
-
-            <!-- About Me Section -->
-            <section class="about-section">
-                <!-- User Photo -->
-                <a href="index.html" class="profile-link" onclick="event.preventDefault();">
-                    <img src="images/profile.jpg" alt="Alok Mahato" class="about-img" oncontextmenu="return true;">
-                </a>
-                <div class="about-text">
-                    <h2>About Me</h2>
-                    <p>
-                        Hi, I'm Alok Mahato, I am a Video Editor. I create high-quality Plugins and Macros to speed up
-                        your editing workflow.
-                        My goal is to provide creative plugins and macros to creators to help them work faster and deliver high-quality content.
-                    </p>
-                </div>
-            </section>
-
-        </main>
-        <div id="footer-placeholder" style="width: 100%;"></div>
-
-    <!-- Category Selection Modal -->
-    <div id="home-category-modal" class="selection-modal">
-        <div class="selection-content" style="max-width: 800px; padding: 3rem;">
-            <div style="position: absolute; top: 1rem; right: 1.5rem; cursor: pointer; color: var(--text-muted); font-size: 1.5rem;" onclick="document.getElementById('home-category-modal').classList.remove('active'); setTimeout(() => document.getElementById('home-category-modal').style.display='none', 500);">&times;</div>
-            <h2 class="selection-title">What are you looking for?</h2>
-            <p class="selection-desc">Choose a category to browse our collection</p>
-            <div class="selection-cards" style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-top: 2rem;">
-                
-                <div class="selection-card" onclick="window.location.href='Plugins_and_Macros.html'" style="min-width: 220px; flex: 1;">
-                    <div class="selection-badge">DRFX / .Setting</div>
-                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Plugins & Macros</h3>
-                </div>
-
-                <div class="selection-card" onclick="window.location.href='Projects.html'" style="min-width: 220px; flex: 1;">
-                    <div class="selection-badge">.DRP</div>
-                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Project Files</h3>
-                </div>
-
-                <div class="selection-card" onclick="window.location.href='Davinci_Scripting_Plugin.html'" style="min-width: 220px; flex: 1;">
-                    <div class="selection-badge">.PY / .LUA</div>
-                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 18l6-6-6-6M8 6L2 12l6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Scripting</h3>
-                </div>
-
-                <div class="selection-card" onclick="window.location.href='Fusion_Expression.html'" style="min-width: 220px; flex: 1;">
-                    <div class="selection-badge">EXP</div>
-                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 18l6-6-6-6M8 6L2 12l6 6M14 4l-4 16" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Expressions</h3>
-                </div>
-
+            <div class="nav-actions">
+                <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle Dark/Light theme" title="Toggle Theme"></button>
+                <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open mobile navigation menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
             </div>
         </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer">
+        <a href="index.html" class="nav-link active">Home</a>
+        <a href="#marketplace" class="nav-link" onclick="setCategoryFilter('all')">Plugins &amp; Macros</a>
+        <a href="#guides" class="nav-link">Installation Guides</a>
+        <a href="#about" class="nav-link">About</a>
     </div>
 
-    <!-- Install Category Modal -->
-    <div id="install-category-modal" class="selection-modal">
-        <div class="selection-content" style="max-width: 800px; padding: 3rem;">
-            <div style="position: absolute; top: 1rem; right: 1.5rem; cursor: pointer; color: var(--text-muted); font-size: 1.5rem;" onclick="document.getElementById('install-category-modal').classList.remove('active'); setTimeout(() => document.getElementById('install-category-modal').style.display='none', 500);">&times;</div>
-            <h2 class="selection-title">Installation Guide</h2>
-            <p class="selection-desc">Choose a category to view how to install</p>
-            <div class="selection-cards" style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-top: 2rem;">
+    <main style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+
+        <!-- Hero Section -->
+        <section class="marketplace-hero" id="hero">
+            <div class="hero-ambient-glow" aria-hidden="true"></div>
+            <div class="hero-layout">
+                <div class="hero-content">
+                    <div class="hero-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <span>DaVinci Resolve Workflow Suite</span>
+                    </div>
+                    <h1 class="hero-title">Powerful Tools for <span>DaVinci Resolve</span>.</h1>
+                    <p class="hero-subtitle">Discover plugins, macros, and creative tools designed to make your editing workflow faster.</p>
+                    
+                    <div class="hero-cta-group">
+                        <a href="#marketplace" class="btn-primary" onclick="setCategoryFilter('all')">
+                            <span>Explore Plugins</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </a>
+                        <a href="#marketplace" class="btn-secondary" onclick="setPriceFilter('free')">
+                            <span>Browse Free Tools</span>
+                        </a>
+                    </div>
+
+                    <div class="hero-stats-row">
+                        <div class="hero-stat-item">
+                            <span class="hero-stat-number" data-target="10000" data-suffix="+">10,000+</span>
+                            <span class="hero-stat-label">Total Downloads</span>
+                        </div>
+                        <div class="hero-stat-item">
+                            <span class="hero-stat-number" data-target="20" data-suffix="+">20+</span>
+                            <span class="hero-stat-label">Resolve Tools</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-preview-box">
+                    <img src="images/auto_file_organizer_pro.png" alt="Auto File Organizer Pro preview" loading="eager">
+                    <span class="hero-preview-badge">Featured Suite</span>
+                    <div class="hero-preview-caption">
+                        <div>
+                            <div class="hero-preview-name">Auto File Organizer Pro</div>
+                            <div class="hero-preview-tag">Smart Media Pool Automation &bull; Windows</div>
+                        </div>
+                        <a href="product.html?id=AutoFileOrganizerPro" class="btn-primary" style="padding: 0.55rem 1.1rem; font-size: 0.85rem;">View Suite</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Browse by Category -->
+        <section class="categories-section" id="categories">
+            <div class="section-header scroll-reveal">
+                <div class="section-title-wrap">
+                    <h2>Browse by Category</h2>
+                    <p>Find specialized tools built specifically for every stage of your Resolve workflow</p>
+                </div>
+            </div>
+            <div class="category-grid">
+                <div class="category-card scroll-reveal" onclick="setCategoryFilter('plugin')">
+                    <div class="category-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <h3 class="category-card-title">Plugins &amp; Macros</h3>
+                    <p class="category-card-desc">Inspector controls, animated titles, overlays, and DRFX packages.</p>
+                </div>
+
+                <div class="category-card scroll-reveal" onclick="setCategoryFilter('project')">
+                    <div class="category-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>
+                    </div>
+                    <h3 class="category-card-title">Project Files</h3>
+                    <p class="category-card-desc">Ready-to-use .DRP project archives, presets, and grading timelines.</p>
+                </div>
+
+                <div class="category-card scroll-reveal" onclick="setCategoryFilter('scripting')">
+                    <div class="category-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6L2 12l6 6"/></svg>
+                    </div>
+                    <h3 class="category-card-title">Scripting</h3>
+                    <p class="category-card-desc">Python and Lua scripts to automate bins, media pool sorting, and exports.</p>
+                </div>
+
+                <div class="category-card scroll-reveal" onclick="setCategoryFilter('expression')">
+                    <div class="category-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6L2 12l6 6M14 4l-4 16"/></svg>
+                    </div>
+                    <h3 class="category-card-title">Expressions</h3>
+                    <p class="category-card-desc">Mathematical animation modifiers and dynamic node graph controllers.</p>
+                </div>
+
+                <div class="category-card scroll-reveal" onclick="setPriceFilter('free')">
+                    <div class="category-icon" style="color: var(--brand-teal);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4M4 6v12a2 2 0 0 0 2 2h14v-4"/><polyline points="10 16 14 12 10 8"/></svg>
+                    </div>
+                    <h3 class="category-card-title">Free Tools</h3>
+                    <p class="category-card-desc">Community-favorite free tools with instant download access.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Marketplace -->
+        <section class="marketplace-section" id="marketplace">
+            <div class="section-header scroll-reveal">
+                <div class="section-title-wrap">
+                    <h2>Explore Plugins &amp; Tools</h2>
+                    <p>Search, filter, and discover tools with verified compatibility and instant downloads</p>
+                </div>
+            </div>
+
+            <!-- Marketplace Toolbar -->
+            <div class="marketplace-toolbar scroll-reveal">
+                <div class="toolbar-top-row">
+                    <div class="marketplace-search-box">
+                        <svg class="marketplace-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="marketplace-search" class="marketplace-search-input" placeholder="Search by name, tags, or features (e.g., auto sort, rectangle, align)..." aria-label="Search marketplace">
+                    </div>
+                </div>
+
+                <div class="toolbar-filter-row">
+                    <div class="filter-chips-group">
+                        <span class="filter-group-label">Category:</span>
+                        <button class="filter-chip active" data-category="all">All</button>
+                        <button class="filter-chip" data-category="plugin">Plugins</button>
+                        <button class="filter-chip" data-category="macro">Macros</button>
+                        <button class="filter-chip" data-category="project">Projects</button>
+                        <button class="filter-chip" data-category="scripting">Scripting</button>
+                        <button class="filter-chip" data-category="expression">Expressions</button>
+                    </div>
+
+                    <div class="filter-chips-group">
+                        <span class="filter-group-label">License:</span>
+                        <button class="filter-chip active" data-price="all">All</button>
+                        <button class="filter-chip" data-price="free">Free Only</button>
+                        <button class="filter-chip" data-price="paid">Paid Only</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Filters Summary -->
+            <div class="active-filters-bar">
+                <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                    <span id="results-count" style="font-weight: 700; color: var(--text-main);">Showing tools</span>
+                    <div id="active-tags-list" style="display: flex; gap: 0.4rem; flex-wrap: wrap;"></div>
+                </div>
+                <button class="clear-filters-btn" id="clear-filters-btn" style="display: none;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    Clear All Filters
+                </button>
+            </div>
+
+            <!-- Dynamic Product Grid -->
+            <div class="products-marketplace-grid" id="products-grid">
+                <!-- Injected dynamically by main.js -->
+            </div>
+        </section>
+
+        <!-- Popular Downloads -->
+        <section class="popular-downloads-section" id="popular">
+            <div class="section-header scroll-reveal">
+                <div class="section-title-wrap">
+                    <h2>Popular Downloads</h2>
+                    <p>Community staples backed by verified download numbers and daily use</p>
+                </div>
+            </div>
+            <div class="products-marketplace-grid" id="popular-downloads-grid">
+                <!-- Injected dynamically by main.js with verified stats only -->
+            </div>
+        </section>
+
+        <!-- Why Choose Alok Video Editor -->
+        <section class="benefits-section" id="why-choose">
+            <div class="section-header scroll-reveal">
+                <div class="section-title-wrap">
+                    <h2>Why Choose Alok Video Editor?</h2>
+                    <p>Tools designed from real editing pain points, not theoretical exercises</p>
+                </div>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-card scroll-reveal">
+                    <div class="benefit-icon-wrap">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <h3 class="benefit-title">Practical Workflow Speed</h3>
+                    <p class="benefit-desc">Every tool solves a real bottleneck: automatically sort 500+ clips in seconds, position graphics with 1 click, or copy frames instantly.</p>
+                </div>
+
+                <div class="benefit-card scroll-reveal">
+                    <div class="benefit-icon-wrap">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    </div>
+                    <h3 class="benefit-title">Clear Installation Guides</h3>
+                    <p class="benefit-desc">No guesswork. Complete step-by-step guides for DRFX bundles, setting files, fuses, Python scripts, and template folders for Windows, Mac, and Linux.</p>
+                </div>
+
+                <div class="benefit-card scroll-reveal">
+                    <div class="benefit-icon-wrap">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                    </div>
+                    <h3 class="benefit-title">Production-Ready Reliability</h3>
+                    <p class="benefit-desc">Developed and tested on real commercial client projects and YouTube production timelines inside DaVinci Resolve 18 and 19 Studio &amp; Free.</p>
+                </div>
+
+                <div class="benefit-card scroll-reveal">
+                    <div class="benefit-icon-wrap">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <h3 class="benefit-title">Transparent &amp; Direct</h3>
+                    <p class="benefit-desc">Zero hidden charges. Transparent Free vs. Paid status, verified compatibility tables, and secure instant delivery through Payhip and direct download links.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Feedback -->
+        <section class="testimonials-section" id="reviews" style="width: 100%; max-width: 1280px; margin: 0 auto; padding: 3rem 1.5rem;">
+            <div class="section-header scroll-reveal">
+                <div class="section-title-wrap">
+                    <h2>Community Feedback</h2>
+                    <p>Genuine feedback from video editors and creators using these tools daily</p>
+                </div>
+            </div>
+            <div class="content-grid" style="align-items: stretch; gap: 1.5rem; width: 100%; max-width: 1280px; padding: 0;">
                 
-                <div class="selection-card" onclick="window.location.href='how-to-install-macro.html'" style="min-width: 220px; flex: 1;">
-                    <div class="selection-badge">GUIDE</div>
-                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="discord-message scroll-reveal" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div class="discord-avatar" style="background: #111; color: #8498f5; border: 1px solid #333;">V</div>
+                        <div class="discord-header" style="margin: 0; align-items: center;">
+                            <h3 class="discord-username" style="color: var(--brand-red); display: flex; align-items: center; gap: 0.4rem;">
+                                Vortex
+                                <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
+                            </h3>
+                            <span class="discord-date" style="display: block;">6/2/2026 11:29 PM</span>
+                        </div>
                     </div>
-                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Macro</h3>
+                    <p class="discord-text">Genuinely one of the most underrated DaVinci Resolve plugin creators out there. The plugins are clean, useful, and actually save time in real-world editing. Definitely deserves a lot more recognition in the Resolve community. 🔥</p>
                 </div>
 
-                <div class="selection-card" onclick="window.location.href='how-to-install-workflow.html'" style="min-width: 220px; flex: 1;">
-                    <div class="selection-badge">GUIDE</div>
-                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                <div class="discord-message scroll-reveal" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div class="discord-avatar" style="background: #23a559;">S</div>
+                        <div class="discord-header" style="margin: 0; align-items: center;">
+                            <h3 class="discord-username" style="color: #f1c40f; display: flex; align-items: center; gap: 0.4rem;">
+                                Sr Visuals
+                                <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
+                            </h3>
+                            <span class="discord-date" style="display: block;">06/02/2026 02:15 PM</span>
+                        </div>
                     </div>
-                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Workflow Integration</h3>
+                    <p class="discord-text"><strong>It's amazing 🤩</strong><br>I've been using your plugins, macros, and projects, and I'm genuinely impressed. They are well-designed, easy to use, and have significantly improved my workflow. The attention to detail and creativity in your work really stand out. Thank you for creating such valuable resources and sharing them with the community. Keep up the amazing work!</p>
                 </div>
 
-                <div class="selection-card" onclick="window.location.href='how-to-install-fuse.html'" style="min-width: 220px; flex: 1;">
-                    <div class="selection-badge">GUIDE</div>
-                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="discord-message scroll-reveal" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div class="discord-avatar" style="background: #e91e63;">M</div>
+                        <div class="discord-header" style="margin: 0; align-items: center;">
+                            <h3 class="discord-username" style="color: var(--brand-red); display: flex; align-items: center; gap: 0.4rem;">
+                                Manoj
+                                <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
+                            </h3>
+                            <span class="discord-date" style="display: block;">06/14/2026 08:30 AM</span>
+                        </div>
                     </div>
-                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Fuse</h3>
+                    <p class="discord-text"><strong>AMAZING PLUGIN</strong><br>when I uses your pluging it's save my too many times. you are very humble person and also helpful as well good problem solver.</p>
                 </div>
 
-                <div class="selection-card" onclick="window.location.href='how-to-install-plugin.html'" style="min-width: 220px; flex: 1;">
-                    <div class="selection-badge">GUIDE</div>
-                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="discord-message scroll-reveal" style="flex: 1 1 260px; max-width: 380px; width: 100%; flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div class="discord-avatar" style="background: #000000; color: #ffffff;">K</div>
+                        <div class="discord-header" style="margin: 0; align-items: center;">
+                            <h3 class="discord-username" style="color: #f2f3f5; display: flex; align-items: center; gap: 0.4rem;">
+                                Kubo
+                                <span style="background: #3e4468; color: #9a9bde; font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700;">OP</span>
+                            </h3>
+                            <span class="discord-date" style="display: block;">7/30/2026 11:24 AM</span>
+                        </div>
                     </div>
-                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Plugin</h3>
-                </div>
-
-                <div class="selection-card" onclick="window.location.href='how-to-install-scripting.html'" style="min-width: 220px; flex: 1;">
-                    <div class="selection-badge">GUIDE</div>
-                    <div class="card-icon-placeholder" style="width: 60px; height: 60px; margin: 0 auto 1.5rem;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 18l6-6-6-6M8 6L2 12l6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Scripting</h3>
+                    <p class="discord-text">it's my favourite macro , thank you</p>
                 </div>
 
             </div>
-        </div>
-    </div>
+        </section>
+
+        <!-- Installation Guides -->
+        <section class="guides-section" id="guides">
+            <div class="section-header scroll-reveal">
+                <div class="section-title-wrap">
+                    <h2>Installation Guides</h2>
+                    <p>Clear, verified installation instructions organized by file type</p>
+                </div>
+            </div>
+            <div class="guides-grid">
+                <a href="how-to-install-plugin.html" class="guide-overview-card scroll-reveal">
+                    <span class="guide-overview-badge">.DRFX / Templates</span>
+                    <h3>Plugins &amp; Titles</h3>
+                    <p>How to install .drfx bundles and Edit Page titles into DaVinci Resolve folders.</p>
+                </a>
+
+                <a href="how-to-install-macro.html" class="guide-overview-card scroll-reveal">
+                    <span class="guide-overview-badge">.Setting</span>
+                    <h3>Fusion Macros</h3>
+                    <p>Where to place .setting files for Edit page effects and Fusion node trees.</p>
+                </a>
+
+                <a href="how-to-install-scripting.html" class="guide-overview-card scroll-reveal">
+                    <span class="guide-overview-badge">.Py / .Lua</span>
+                    <h3>Scripting Plugins</h3>
+                    <p>Setting up Python and Lua automation scripts in DaVinci Utility menu.</p>
+                </a>
+
+                <a href="how-to-install-workflow.html" class="guide-overview-card scroll-reveal">
+                    <span class="guide-overview-badge">Integration</span>
+                    <h3>Workflow Integrations</h3>
+                    <p>Configuring DaVinci Resolve workflow integrations and custom actions.</p>
+                </a>
+
+                <a href="how-to-install-fuse.html" class="guide-overview-card scroll-reveal">
+                    <span class="guide-overview-badge">.Fuse</span>
+                    <h3>Fusion Fuses</h3>
+                    <p>Adding custom OpenCL / Lua Fuses into Fusion templates directory.</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- About Me Section -->
+        <section class="about-section scroll-reveal" id="about">
+            <div class="profile-link">
+                <img src="images/profile.jpg" alt="Alok Mahato" class="about-img">
+            </div>
+            <div class="about-text">
+                <h2>About Alok Mahato</h2>
+                <p>
+                    Hi, I'm Alok Mahato — a professional video editor and DaVinci Resolve tool developer based in Nepal. I build high-efficiency plugins, automation scripts, and macros designed to remove repetitive friction from real post-production workflows.
+                </p>
+                <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="https://youtube.com/@alokvideoeditornp" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.65rem 1.3rem; font-size: 0.9rem;">
+                        <span>YouTube Tutorials</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder" style="width: 100%;"></div>
+
     <!-- Scripts -->
-    <script>
-        // Block Right Click Globally
-        document.addEventListener('contextmenu', event => {
-            // Allow context menu only on the profile link
-            if (event.target.closest('.profile-link')) {
-                return; // Let default happen (Open Link in New Tab)
-            }
-            event.preventDefault();
-        });
-    </script>
     <script src="js/footer.js?v=2.3"></script>
     <script src="js/data.js?v=2.7"></script>
-    <script src="js/main.js?v=2.7"></script>
+    <script src="js/main.js?v=3.5"></script>
 
 </body>
 </html>

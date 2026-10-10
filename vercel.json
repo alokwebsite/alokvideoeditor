@@ -1,4 +1,10 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/Plugins_and_Macros(.*)", "destination": "/?category=plugin#marketplace", "permanent": true },
+    { "source": "/Davinci_Scripting_Plugin(.*)", "destination": "/?category=scripting#marketplace", "permanent": true },
+    { "source": "/Fusion_Expression(.*)", "destination": "/?category=expression#marketplace", "permanent": true },
+    { "source": "/Projects(.*)", "destination": "/?category=project#marketplace", "permanent": true }
+  ]
 }
