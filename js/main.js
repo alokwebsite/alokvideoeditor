@@ -2198,3 +2198,139 @@ if (heightDropdownBtn && heightDropdownMenu) {
     });
 }
 
+// ========================================================
+// Inspector & Developer Tools Blocker
+// ========================================================
+(function initInspectorBlocker() {
+    // Emergency bypass for site owner: append ?allow_inspect=1 to URL or set sessionStorage ave_allow_inspect = '1'
+    try {
+        if (window.location.search.includes('allow_inspect=1') || sessionStorage.getItem('ave_allow_inspect') === '1') {
+            return;
+        }
+    } catch (e) {}
+
+    let toastEl = null;
+    let toastTimer = null;
+    let lastToastTime = 0;
+
+    function showBlockToast(message) {
+        const now = Date.now();
+        if (now - lastToastTime < 1800) return; // Prevent spamming
+        lastToastTime = now;
+
+        if (!toastEl) {
+            toastEl = document.createElement('div');
+            toastEl.className = 'ave-inspect-toast';
+            toastEl.id = 'ave-inspect-toast';
+            toastEl.setAttribute('role', 'alert');
+            toastEl.innerHTML = `
+                <span class="ave-inspect-toast-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </span>
+                <span class="ave-inspect-toast-text">${message || 'Developer inspection is disabled'}</span>
+            `;
+            document.body.appendChild(toastEl);
+        } else {
+            const textEl = toastEl.querySelector('.ave-inspect-toast-text');
+            if (textEl) textEl.textContent = message || 'Developer inspection is disabled';
+        }
+
+        // Force reflow
+        void toastEl.offsetWidth;
+        toastEl.classList.add('show');
+
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            if (toastEl) toastEl.classList.remove('show');
+        }, 2200);
+    }
+
+    function blockEvent(e, message) {
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+        showBlockToast(message);
+        return false;
+    }
+
+    // 1. Block Context Menu (Right Click) across the page
+    document.addEventListener('contextmenu', function(e) {
+        blockEvent(e, 'Right-click and inspection are disabled');
+    }, true);
+
+    // 2. Block Keyboard Shortcuts in Capture Phase
+    function handleKeyDown(e) {
+        const isCtrlOrMeta = e.ctrlKey || e.metaKey;
+        const isShift = e.shiftKey;
+        const isAlt = e.altKey;
+        const key = (e.key || '').toLowerCase();
+        const code = e.keyCode;
+
+        // F12 (DevTools)
+        if (key === 'f12' || code === 123) {
+            return blockEvent(e, 'Developer tools are disabled');
+        }
+
+        // Shift + F10 (Context Menu shortcut)
+        if (isShift && (key === 'f10' || code === 121)) {
+            return blockEvent(e, 'Action disabled');
+        }
+
+        // Ctrl+Shift+I / Cmd+Alt+I (Inspect)
+        // Ctrl+Shift+J / Cmd+Alt+J (Console)
+        // Ctrl+Shift+C / Cmd+Alt+C (Element Picker)
+        // Ctrl+Shift+K (Firefox Web Console)
+        const isInspectShortcut = 
+            (isCtrlOrMeta && isShift && (key === 'i' || key === 'j' || key === 'c' || key === 'k' || code === 73 || code === 74 || code === 67 || code === 75)) ||
+            (e.metaKey && isAlt && (key === 'i' || key === 'j' || key === 'c' || code === 73 || code === 74 || code === 67));
+
+        if (isInspectShortcut) {
+            return blockEvent(e, 'Developer tools are disabled');
+        }
+
+        // Ctrl+U / Cmd+Alt+U (View Page Source)
+        const isViewSourceShortcut = 
+            (isCtrlOrMeta && !isShift && !isAlt && (key === 'u' || code === 85)) ||
+            (e.metaKey && isAlt && (key === 'u' || code === 85));
+
+        if (isViewSourceShortcut) {
+            return blockEvent(e, 'Viewing page source is disabled');
+        }
+
+        // Ctrl+S / Cmd+S (Save Page)
+        const isSaveShortcut = isCtrlOrMeta && !isShift && !isAlt && (key === 's' || code === 83);
+        if (isSaveShortcut) {
+            return blockEvent(e, 'Saving page is disabled');
+        }
+    }
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    document.addEventListener('keydown', handleKeyDown, true);
+
+    // 3. Anti-Debugging Probe
+    // If DevTools is opened via browser menus, debugger statement halts execution.
+    // When DevTools is closed, this is a non-blocking no-op with zero performance impact.
+    let debugInterval = null;
+    function antiDebugCheck() {
+        try {
+            (function() {
+                return false;
+            }['constructor']('debugger')['call']());
+        } catch (err) {}
+    }
+
+    try {
+        debugInterval = setInterval(antiDebugCheck, 500);
+    } catch (e) {}
+
+    // Clean up if page is unloaded
+    window.addEventListener('beforeunload', function() {
+        if (debugInterval) clearInterval(debugInterval);
+    });
+})();
+
+

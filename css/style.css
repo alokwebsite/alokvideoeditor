@@ -5400,4 +5400,49 @@ html.ave-no-anim .portfolio-card {
     animation: none !important;
 }
 
+/* ========================================================
+   11. Inspector Blocker Toast Notification
+   ======================================================== */
+.ave-inspect-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translate(-50%, 20px) scale(0.95);
+    background: rgba(14, 20, 34, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(178, 0, 62, 0.45);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(178, 0, 62, 0.22);
+    color: #ffffff;
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999999;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.ave-inspect-toast.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0) scale(1);
+}
+
+.ave-inspect-toast-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #B2003E;
+    flex-shrink: 0;
+}
+
+
 
