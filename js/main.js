@@ -1535,6 +1535,115 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
+ * Dynamically inject high-power SEO metadata and Schema.org for Google Search
+ */
+function updateProductSEO(item) {
+    if (!item) return;
+
+    const fullTitle = `${item.name} for DaVinci Resolve | Alok Video Editor`;
+    const fullDesc = `Download ${item.name} for DaVinci Resolve by Alok Video Editor. ${item.description}`;
+    const productUrl = `https://mahatoalok.com.np/product.html?id=${item.id}`;
+    const productKeywords = [
+        item.name,
+        `Alok ${item.name}`,
+        `${item.name} for DaVinci Resolve`,
+        `${item.name} DaVinci Resolve`,
+        `${item.name} DaVinci`,
+        `${item.name} Resolve`,
+        `${item.name} download`,
+        `${item.name} free`,
+        `${item.name} ${item.type || 'tool'}`,
+        'Alok Video Editor',
+        'Alok Mahato',
+        ...(item.tags || [])
+    ].join(', ');
+
+    // 1. Title
+    document.title = fullTitle;
+
+    // 2. Helper to set or create meta tag
+    function setMeta(selector, attr, val) {
+        let el = document.querySelector(selector);
+        if (!el) {
+            el = document.createElement('meta');
+            const clean = selector.replace(/[\[\]']/g, '');
+            const parts = clean.split('=');
+            if (parts.length === 2) {
+                el.setAttribute(parts[0], parts[1]);
+            }
+            document.head.appendChild(el);
+        }
+        el.setAttribute(attr, val);
+    }
+
+    setMeta('meta[name="description"]', 'content', fullDesc);
+    setMeta('meta[name="keywords"]', 'content', productKeywords);
+    setMeta('meta[property="og:title"]', 'content', fullTitle);
+    setMeta('meta[property="og:description"]', 'content', fullDesc);
+    setMeta('meta[property="og:url"]', 'content', productUrl);
+    setMeta('meta[property="twitter:title"]', 'content', fullTitle);
+    setMeta('meta[property="twitter:description"]', 'content', fullDesc);
+
+    const imgSrc = item.heroImage || item.controlsImage || item.image;
+    if (imgSrc) {
+        const fullImg = imgSrc.startsWith('http') ? imgSrc : `https://mahatoalok.com.np/${imgSrc.replace(/^\//, '')}`;
+        setMeta('meta[property="og:image"]', 'content', fullImg);
+        setMeta('meta[property="twitter:image"]', 'content', fullImg);
+    }
+
+    // 3. Canonical Link
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+        canonical = document.createElement('link');
+        canonical.setAttribute('rel', 'canonical');
+        document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', productUrl);
+
+    // 4. Structured Data (JSON-LD) for Google Search Rich Results
+    let schemaScript = document.getElementById('product-jsonld');
+    if (!schemaScript) {
+        schemaScript = document.createElement('script');
+        schemaScript.id = 'product-jsonld';
+        schemaScript.type = 'application/ld+json';
+        document.head.appendChild(schemaScript);
+    }
+
+    const schemaData = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": `${item.name} for DaVinci Resolve`,
+        "alternateName": [
+            `Alok ${item.name}`,
+            item.name,
+            `${item.name} DaVinci Resolve`,
+            `${item.name} Macro`,
+            `${item.name} Plugin`,
+            `Alok Video Editor ${item.name}`
+        ],
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Windows, macOS, Linux",
+        "url": productUrl,
+        "description": fullDesc,
+        "creator": {
+            "@type": "Person",
+            "name": "Alok Video Editor",
+            "alternateName": "Alok Mahato",
+            "url": "https://mahatoalok.com.np/",
+            "sameAs": "https://youtube.com/@alokvideoeditornp"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": item.price ? item.price.toFixed(2) : "0.00",
+            "priceCurrency": "USD",
+            "url": productUrl,
+            "availability": "https://schema.org/InStock"
+        }
+    };
+    schemaScript.textContent = JSON.stringify(schemaData, null, 2);
+}
+
+/**
  * Render Product Page dynamically based on URL parameter
  */
 function renderProductPage() {
@@ -1563,8 +1672,8 @@ function renderProductPage() {
         return;
     }
 
-    // Set document title
-    document.title = item.name + ' - Alok Video Editor';
+    // Dynamic Full SEO Optimization for Google Search
+    updateProductSEO(item);
 
     // Populate Hero Details
     document.getElementById('product-title').innerText = item.name;
