@@ -216,7 +216,7 @@ const portfolioConfig = {
 
     // Contact info
     contact: {
-        email: "alokmahatowork@gmail.com",
+        email: "alokvideoeditornp@gmail.com",
         discord: "https://discord.gg/32pW6BtjFy",
         instagram: "https://www.instagram.com/alokvideoeditornp",
         youtube: "https://youtube.com/@alokvideoeditornp",

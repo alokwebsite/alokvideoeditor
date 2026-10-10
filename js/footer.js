@@ -46,7 +46,7 @@ const footerHTML = `
             <div class="footer-col">
                 <h4 class="footer-col-title">Support &amp; Policies</h4>
                 <ul class="footer-links">
-                    <li><a href="mailto:alokmahatowork@gmail.com">Email Support</a></li>
+                    <li><a href="mailto:alokvideoeditornp@gmail.com">Email Support</a></li>
                     <li><a href="terms-and-policies${ext}">Terms of Service</a></li>
                     <li><a href="terms-and-policies${ext}#privacy">Privacy Policy</a></li>
                     <li><a href="https://discord.gg/32pW6BtjFy" target="_blank" rel="noopener">Discord Community</a></li>
