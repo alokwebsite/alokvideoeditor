@@ -1526,12 +1526,34 @@ function initScrollToTop() {
     });
 }
 
+/**
+ * Mutual exclusion for FAQ Accordion:
+ * When any question is opened, automatically closes all other opened questions.
+ */
+function initFAQAccordion() {
+    const faqItems = document.querySelectorAll('.faq-item');
+    if (!faqItems.length) return;
+
+    faqItems.forEach(item => {
+        item.addEventListener('toggle', () => {
+            if (item.open) {
+                faqItems.forEach(other => {
+                    if (other !== item && other.open) {
+                        other.open = false;
+                    }
+                });
+            }
+        });
+    });
+}
+
 // Start
 document.addEventListener('DOMContentLoaded', () => {
     init();
     initAmbientOrbs();
     initPageTransitions();
     initScrollToTop();
+    initFAQAccordion();
 });
 
 /**
@@ -1629,6 +1651,7 @@ function updateProductSEO(item) {
             "@type": "Person",
             "name": "Alok Video Editor",
             "alternateName": "Alok Mahato",
+            "email": "alokvideoeditornp@gmail.com",
             "url": "https://mahatoalok.com.np/",
             "sameAs": "https://youtube.com/@alokvideoeditornp"
         },
