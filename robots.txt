@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /portfolio.html
+Disallow: /portfolio
+
+Sitemap: https://mahatoalok.com.np/sitemap.xml
