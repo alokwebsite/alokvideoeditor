@@ -1653,7 +1653,11 @@ function updateProductSEO(item) {
             "alternateName": "Alok Mahato",
             "email": "alokvideoeditornp@gmail.com",
             "url": "https://mahatoalok.com.np/",
-            "sameAs": "https://youtube.com/@alokvideoeditornp"
+            "sameAs": [
+                "https://www.youtube.com/@alokvideoeditornp",
+                "https://www.tiktok.com/@alokvideoeditornp",
+                "https://www.instagram.com/alokvideoeditornp"
+            ]
         },
         "offers": {
             "@type": "Offer",

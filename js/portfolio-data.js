@@ -218,6 +218,7 @@ const portfolioConfig = {
     contact: {
         email: "alokvideoeditornp@gmail.com",
         discord: "https://discord.gg/32pW6BtjFy",
+        tiktok: "https://www.tiktok.com/@alokvideoeditornp",
         instagram: "https://www.instagram.com/alokvideoeditornp",
         youtube: "https://youtube.com/@alokvideoeditornp",
         location: "Bardibas & Kathmandu, Nepal (Available Worldwide Remote)"
