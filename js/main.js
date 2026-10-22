@@ -452,6 +452,9 @@ function createProductCard(item) {
     }
 
     let leftBadge = '';
+    if (item.comingSoon) {
+        leftBadge = `<span class="product-card-badge-left" style="background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); color: #fff; font-weight: 700; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);">Coming Soon</span>`;
+    } else
     if (item.price && item.salePrice) {
         leftBadge = `<span class="product-card-badge-left badge-sale">${item.discount || 'Sale'}</span>`;
     } else if (item.isNew) {
@@ -466,6 +469,9 @@ function createProductCard(item) {
     }
 
     let priceHtml = '';
+    if (item.comingSoon) {
+        priceHtml = `<span style="color: #c4b5fd; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.5px; text-transform: uppercase;">Coming Soon</span>`;
+    } else
     if (item.price) {
         if (item.salePrice) {
             priceHtml = `<span class="old-price">$${Number(item.price).toFixed(2)}</span>$${Number(item.salePrice).toFixed(2)}`;
@@ -480,6 +486,9 @@ function createProductCard(item) {
     const detailUrl = (isFile ? 'product.html' : 'product') + '?id=' + encodeURIComponent(item.id);
 
     let actionBtnHtml = '';
+    if (item.comingSoon) {
+        actionBtnHtml = `<a href="${detailUrl}" class="btn-card-get" style="background: rgba(124, 58, 237, 0.15); border: 1px solid rgba(124, 58, 237, 0.4); color: #c4b5fd;" onclick="event.stopPropagation();">Coming Soon</a>`;
+    } else
     if (item.price) {
         const payKey = item.payhipKey || 'dFOVz';
         actionBtnHtml = `<a href="https://payhip.com/b/${payKey}" target="_blank" rel="noopener" class="btn-card-get" onclick="event.stopPropagation();">Buy Now</a>`;
@@ -1369,6 +1378,8 @@ function openInfoModal(item) {
     
     if (item.comingSoon) {
         getBtnText.textContent = 'Coming Soon';
+        priceDisplay.style.display = 'block';
+        priceDisplay.innerHTML = '<span style="color: #a855f7; font-weight: 700; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em;">Coming Soon</span>';
         btn.onclick = () => {
             alert('This item is coming soon!');
         };
@@ -2203,6 +2214,9 @@ function renderProductPage() {
 
     // Price
     const priceEl = document.getElementById('product-price');
+    if (item.comingSoon) {
+        priceEl.innerHTML = `<span style="color: #c4b5fd; font-weight: 800; font-size: 1.15rem; letter-spacing: 0.5px; text-transform: uppercase;">Coming Soon</span>`;
+    } else
     if (item.price) {
         if (item.salePrice) {
             priceEl.innerHTML = `<span class="old-price">$${Number(item.price).toFixed(2)}</span>$${Number(item.salePrice).toFixed(2)}`;
@@ -2217,6 +2231,13 @@ function renderProductPage() {
     const getBtn = document.getElementById('product-get-btn');
     const getBtnText = document.getElementById('product-get-btn-text');
     const giftBanner = document.querySelector('.gift-banner');
+
+    if (item.comingSoon) {
+        getBtnText.innerText = `Coming Soon`;
+        getBtn.style.opacity = '0.85';
+        getBtn.style.cursor = 'not-allowed';
+        getBtn.style.background = 'linear-gradient(135deg, #7c3aed 0%, #ec4899 100%)';
+    } else
 
     if (item.price) {
         getBtnText.innerText = `Buy Now`;
@@ -2240,7 +2261,7 @@ function renderProductPage() {
                 guideType = 'plugin';
             }
 
-            const isWindowsOnly = (item.id === 'FusionExpressionEditor' || item.id === 'AutoFileOrganizerPro');
+            const isWindowsOnly = (item.id === 'AutoFileOrganizerPro');
 
             const osBadgeHTML = `
                 <div class="os-support-badge" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.05); gap: 0.8rem; color: var(--text-muted); font-size: 0.9rem;">
@@ -2268,6 +2289,10 @@ function renderProductPage() {
     }
 
     getBtn.onclick = () => {
+        if (item.comingSoon) {
+            alert("This plugin is currently in final development and coming soon! Stay tuned to @alokvideoeditornp on YouTube or TikTok for the release announcement.");
+            return;
+        }
         if (item.price) {
             window.open(`https://payhip.com/b/${item.payhipKey}`, '_blank');
         } else if (item.link) {

@@ -117,6 +117,23 @@ const projectData = [
 
     // Plugins
     {
+        id: "CineMotionFX",
+        type: "plugin",
+        name: "CineMotion FX Suite",
+        description: "The ultimate DaVinci Resolve post-production suite packed with seamless video transitions, cinematic effects, camera moves, and drag-and-drop motion presets. Coming soon!",
+        comingSoon: true,
+        isNew: true,
+        tags: ["plugin", "transitions", "effects", "motion graphics", "cinematic", "zoom transition", "whip", "glitch", "camera shake", "vfx", "edit page", "coming soon"],
+        features: [
+            "All-in-one Video Transitions & Effects library for DaVinci Resolve",
+            "Seamless dynamic transitions: Zoom, Whip, Pan, Spin, Glitch & Roll",
+            "Cinematic video effects: Lens Blur, Chromatic Glow, Camera Shakes & Film Overlays",
+            "Instant 1-click drag-and-drop workflow on the Edit Page",
+            "Fully optimized GPU acceleration for smooth real-time playback",
+            "Compatible across Windows, macOS, and Linux (Free & Studio)"
+        ]
+    },
+    {
         id: "TextSelector",
         type: "plugin",
         name: "Text Selector (Plugin)",
@@ -327,15 +344,16 @@ const projectData = [
         id: "FusionExpressionEditor",
         type: "scripting",
         name: "Fusion Expression Editor",
-        description: "A powerful scripting tool designed to make writing and managing Fusion expressions inside DaVinci Resolve faster and more intuitive with live auto-suggest.",
+        description: "A powerful scripting tool designed to make writing and managing Fusion expressions inside DaVinci Resolve faster and more intuitive with live auto-suggest. Works seamlessly on Windows, macOS, and Linux.",
         file: "Davinci Scripting Plugin/Fusion Expression Editor.zip",
         youtube: "https://www.youtube.com/watch?v=VF5uD26zJmQ",
         price: 30,
         salePrice: 15,
         payhipKey: "YXOTP",
         isNew: true,
-        tags: ["scripting", "expression editor", "fusion", "math", "code", "auto suggest", "sale"],
+        tags: ["scripting", "expression editor", "fusion", "math", "code", "auto suggest", "sale", "windows", "mac", "linux", "cross-platform"],
         features: [
+            "Works on all operating systems: Windows, macOS, and Linux",
             "Dedicated code editor window for Fusion expressions",
             "Live node and property auto-suggestions",
             "Built-in library of saved common mathematical expressions",
