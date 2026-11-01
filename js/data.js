@@ -212,7 +212,7 @@ const projectData = [
             "Master Control Node for real-time adjustments (Eye Look Strength, Eye Open/Closed, Circle Size)",
             "Full drop shadow controls (Shadow Strength, Distance, and Blur)",
             "100% procedural Fusion expression network — zero keyframes needed",
-            "Includes complete DaVinci Resolve Project Archive (.dra / .drp)"
+            "Includes complete DaVinci Resolve Project Archive (.dra)"
         ]
     },
 
