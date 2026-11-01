@@ -439,7 +439,7 @@ function createProductCard(item) {
             else if (u.hostname.includes('youtu.be')) vId = u.pathname.slice(1);
         } catch(e) {}
         if (vId) {
-            mediaContent = `<img src="https://img.youtube.com/vi/${vId}/hqdefault.jpg" alt="${item.name}" loading="lazy">`;
+            mediaContent = `<img src="https://img.youtube.com/vi/${vId}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/${vId}/hqdefault.jpg'" alt="${item.name}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">`;
         }
     }
     if (!mediaContent) {
@@ -2253,7 +2253,7 @@ function renderProductPage() {
         const existingBadge = document.querySelector('.os-support-badge');
         if (existingBadge) existingBadge.remove();
 
-        if (item.id !== 'CurrencyNumberFormatter' && item.id !== '4SmoothAnimation') {
+        if (item.id !== 'CurrencyNumberFormatter' && item.type !== 'project') {
             // Determine the guide type from item.type
             let guideType = (item.type || 'plugin').split(/[\s-]/)[0].toLowerCase();
             const validGuides = ['macro', 'workflow', 'fuse', 'plugin', 'scripting'];

@@ -117,23 +117,6 @@ const projectData = [
 
     // Plugins
     {
-        id: "CineMotionFX",
-        type: "plugin",
-        name: "CineMotion FX Suite",
-        description: "The ultimate DaVinci Resolve post-production suite packed with seamless video transitions, cinematic effects, camera moves, and drag-and-drop motion presets. Coming soon!",
-        comingSoon: true,
-        isNew: true,
-        tags: ["plugin", "transitions", "effects", "motion graphics", "cinematic", "zoom transition", "whip", "glitch", "camera shake", "vfx", "edit page", "coming soon"],
-        features: [
-            "All-in-one Video Transitions & Effects library for DaVinci Resolve",
-            "Seamless dynamic transitions: Zoom, Whip, Pan, Spin, Glitch & Roll",
-            "Cinematic video effects: Lens Blur, Chromatic Glow, Camera Shakes & Film Overlays",
-            "Instant 1-click drag-and-drop workflow on the Edit Page",
-            "Fully optimized GPU acceleration for smooth real-time playback",
-            "Compatible across Windows, macOS, and Linux (Free & Studio)"
-        ]
-    },
-    {
         id: "TextSelector",
         type: "plugin",
         name: "Text Selector (Plugin)",
@@ -215,6 +198,25 @@ const projectData = [
 
     // Projects
     {
+        id: "AlokProximity",
+        type: "project",
+        name: "Alok Proximity",
+        description: "Interactive proximity animation project for DaVinci Resolve Fusion. Features cursor-reactive faces and dynamic eye-tracking built procedurally with master inspector controls.",
+        link: "https://payhip.com/b/w8hpf",
+        file: "Project's/Alok Proximity.zip",
+        image: "images/alok_proximity.png",
+        isNew: true,
+        tags: ["project", "proximity", "animation", "fusion", "cursor", "interactive", "reaction", "tracking", "motion graphics", "free"],
+        features: [
+            "Interactive proximity animation with cursor-reactive faces and eye tracking",
+            "Master Control Node for real-time adjustments (Eye Look Strength, Eye Open/Closed, Circle Size)",
+            "Full drop shadow controls (Shadow Strength, Distance, and Blur)",
+            "100% procedural Fusion expression network — zero keyframes needed",
+            "Includes complete DaVinci Resolve Project Archive (.dra / .drp)"
+        ]
+    },
+
+    {
         id: "4SmoothAnimation",
         type: "project",
         name: "4 Smooth Animation",
@@ -240,7 +242,6 @@ const projectData = [
         payhipKey: "HbZKp",
         file: "Davinci Scripting Plugin/Auto File Organizer Pro.zip",
         youtube: "https://www.youtube.com/watch?v=AzpsRdPtvtw",
-        image: "images/auto_file_organizer_pro.png",
         isNew: true,
         tags: ["scripting", "python", "organizer", "bins", "media pool", "sony", "canon", "blackmagic", "automation", "workflow", "pro"],
         features: [
@@ -262,7 +263,6 @@ const projectData = [
         link: "https://payhip.com/b/kpJtj",
         file: "Davinci Scripting Plugin/Auto Cap's Style.zip",
         youtube: "https://www.youtube.com/watch?v=yOxGSA35InI",
-        image: "images/auto_caps_style.png",
         isNew: true,
         tags: ["scripting", "captions", "subtitles", "viral", "reels", "shorts", "hormozi", "mrbeast", "retention"],
         features: [
