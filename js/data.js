@@ -117,6 +117,24 @@ const projectData = [
 
     // Plugins
     {
+        id: "AlokGridReveal",
+        type: "plugin",
+        name: "Alok Grid Reveal",
+        description: "Modern, dynamic mosaic video transition for DaVinci Resolve that splits footage into a clean geometric grid and reveals the next scene block-by-block. Built in .drfx format for seamless 1-click installation.",
+        link: "https://payhip.com/b/dBYeV",
+        file: "Plugin/Alok Grid Reveal.drfx",
+        image: "images/alok_grid_reveal.png",
+        isNew: true,
+        tags: ["plugin", "transition", "grid reveal", "mosaic", "drfx", "davinci resolve", "edit page", "motion graphics", "free"],
+        features: [
+            "Modern mosaic grid scene transition",
+            "Splits footage and reveals the next scene block-by-block",
+            "Delivered in drag-and-drop .drfx template bundle format",
+            "Ideal for tech videos, YouTube intros, commercial promos, and 9:16 vertical edits",
+            "100% free direct download via Payhip"
+        ]
+    },
+    {
         id: "TextSelector",
         type: "plugin",
         name: "Text Selector (Plugin)",
